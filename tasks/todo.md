@@ -113,6 +113,7 @@ Detallar contratos e incrementos antes de implementar, con los criterios siguien
 
 ### 14. Entrega final
 - [x] Completar seed minimo: 10 pagos, 3 cajas abiertas/cerradas, abonos, anulaciones y saldos; conservar minimos operativos. Minimos y auditoria verificados en el helper de integracion.
-- [ ] Postman, capturas, README con autor/responsabilidades y ejecucion local reproducible.
+- [x] Preparar coleccion Postman y entorno ficticio, documentar dependencias/recorrido, verificar cobertura de 64 rutas y ejecutar 16 peticiones/scripts de lectura contra API local.
+- [ ] Ejecutar recorrido completo en Postman, preparar capturas y completar README con autor/responsabilidades y ejecucion local reproducible.
 - [ ] Ensayar seccion 16 del TXT y defensa individual; verificar instalacion desde checkout limpio.
 - Dependencias: 13. Incrementos de datos, documentacion/coleccion y evidencias, independientes del codigo funcional.

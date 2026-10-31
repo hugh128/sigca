@@ -1,0 +1,2313 @@
+{
+  "info": {
+    "name": "SIGCA - API REST",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Catalogo completo de rutas y carpeta de lectura ejecutable. Los ejemplos de escritura son individuales y requieren datos preparados; ver README."
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "00 - Lectura y sesion (apta para Runner)",
+      "item": [
+        {
+          "name": "Iniciar sesion (guarda token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Token presente', () => pm.expect(pm.response.json().token).to.be.a('string'));",
+                  "if (pm.response.code === 200) pm.environment.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/health",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar contenido",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/contenido",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar horarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/horarios",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar servicios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/servicios",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar auth/me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/auth/me",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar usuarios/profesionales",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/usuarios/profesionales",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar pacientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/pacientes",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar responsables",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/responsables",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar citas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/citas",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar solicitudes-cita",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/solicitudes-cita",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar materiales",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/materiales",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar pagos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/pagos",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar cajas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/cajas",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar cajas/actual",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/cajas/actual",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar contacto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/contacto",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "Iniciar sesion (guarda token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Token presente', () => pm.expect(pm.response.json().token).to.be.a('string'));",
+                  "if (pm.response.code === 200) pm.environment.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /auth/me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/auth/me",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "contacto",
+      "item": [
+        {
+          "name": "POST /contacto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/contacto",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Visitante Demo\",\n  \"correo\": \"demo@example.test\",\n  \"telefono\": \"55551234\",\n  \"asunto\": \"Consulta de demostracion\",\n  \"mensaje\": \"Mensaje ficticio para evaluar el formulario.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /contacto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/contacto",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "solicitudes-cita",
+      "item": [
+        {
+          "name": "POST /solicitudes-cita",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/solicitudes-cita",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Visitante Demo\",\n  \"correo\": \"demo@example.test\",\n  \"telefono\": \"55551234\",\n  \"servicioId\": \"{{servicioId}}\",\n  \"fechaPreferida\": \"{{fecha}}\",\n  \"mensaje\": \"Solicitud ficticia\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /solicitudes-cita",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/solicitudes-cita",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /solicitudes-cita/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/solicitudes-cita/{{solicitudId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /solicitudes-cita/:id/convertir",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/solicitudes-cita/{{solicitudId}}/convertir",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pacienteId\": \"{{pacienteId}}\",\n  \"profesionalId\": \"{{profesionalId}}\",\n  \"fecha\": \"{{fecha}}\",\n  \"horaInicio\": \"{{horaInicio}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PATCH /solicitudes-cita/:id/rechazar",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/solicitudes-cita/{{solicitudId}}/rechazar",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"motivo\": \"Solicitud duplicada de demostracion\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "materiales",
+      "item": [
+        {
+          "name": "GET /materiales/pacientes/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/materiales/pacientes/{{pacienteId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /materiales/pacientes/:id",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/materiales/pacientes/{{pacienteId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"materialId\": \"{{materialId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /materiales",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/materiales",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /materiales/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/materiales/{{materialId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /materiales",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/materiales",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Material Demo\",\n  \"descripcion\": \"Actividad ficticia de apoyo\",\n  \"tipo\": \"Actividad\",\n  \"enlace\": \"https://example.com/actividad\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) pm.environment.set('materialId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT /materiales/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/materiales/{{materialId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descripcion\": \"Descripcion actualizada de demostracion\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PATCH /materiales/:id/estado",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/materiales/{{materialId}}/estado",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"INACTIVO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cajas",
+      "item": [
+        {
+          "name": "POST /cajas/abrir",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/cajas/abrir",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"montoInicialCentavos\": 20000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) pm.environment.set('cajaId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /cajas/actual",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/cajas/actual",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /cajas/:id/movimientos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/cajas/{{cajaId}}/movimientos",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /cajas/:id/cerrar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/cajas/{{cajaId}}/cerrar",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"efectivoContadoCentavos\": 30000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /cajas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/cajas",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /cajas/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/cajas/{{cajaId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pagos",
+      "item": [
+        {
+          "name": "GET /pagos/citas/:id/resumen",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/pagos/citas/{{citaId}}/resumen",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /pagos/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/pagos/{{pagoId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PATCH /pagos/:id/anular",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/pagos/{{pagoId}}/anular",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"motivo\": \"Registro duplicado de demostracion\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /pagos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/pagos",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /pagos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/pagos",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"citaId\": \"{{citaId}}\",\n  \"montoCentavos\": 10000,\n  \"metodo\": \"EFECTIVO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) pm.environment.set('pagoId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "usuarios",
+      "item": [
+        {
+          "name": "GET /usuarios/profesionales",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/usuarios/profesionales",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /usuarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/usuarios",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /usuarios/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/usuarios/{{usuarioId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /usuarios",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/usuarios",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Usuario Demo\",\n  \"email\": \"{{nuevoEmail}}\",\n  \"password\": \"{{password}}\",\n  \"rol\": \"RECEPCIONISTA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) pm.environment.set('usuarioId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT /usuarios/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/usuarios/{{usuarioId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Usuario Actualizado\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PATCH /usuarios/:id/estado",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/usuarios/{{usuarioId}}/estado",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PATCH /usuarios/:id/password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/usuarios/{{usuarioId}}/password",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "servicios",
+      "item": [
+        {
+          "name": "GET /servicios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/servicios",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /servicios/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/servicios/{{servicioId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /servicios",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/servicios",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Servicio Demo\",\n  \"descripcion\": \"Servicio ficticio de evaluacion\",\n  \"duracionMin\": 30,\n  \"precioCentavos\": 25000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) pm.environment.set('servicioId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT /servicios/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/servicios/{{servicioId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"precioCentavos\": 26000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PATCH /servicios/:id/estado",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/servicios/{{servicioId}}/estado",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"INACTIVO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "contenido",
+      "item": [
+        {
+          "name": "GET /contenido",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/contenido",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /contenido/:clave",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/contenido/{{claveContenido}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT /contenido/:clave",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/contenido/{{claveContenido}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mision\": \"Brindar atencion integral.\",\n  \"vision\": \"Ser un centro de referencia.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "horarios",
+      "item": [
+        {
+          "name": "GET /horarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/horarios",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT /horarios",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/horarios",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dias\": [\n    {\n      \"dia\": \"LUNES\",\n      \"atiende\": true,\n      \"franjas\": [\n        {\n          \"inicio\": \"08:00\",\n          \"fin\": \"17:00\"\n        }\n      ]\n    },\n    {\n      \"dia\": \"MARTES\",\n      \"atiende\": true,\n      \"franjas\": [\n        {\n          \"inicio\": \"08:00\",\n          \"fin\": \"17:00\"\n        }\n      ]\n    },\n    {\n      \"dia\": \"MIERCOLES\",\n      \"atiende\": true,\n      \"franjas\": [\n        {\n          \"inicio\": \"08:00\",\n          \"fin\": \"17:00\"\n        }\n      ]\n    },\n    {\n      \"dia\": \"JUEVES\",\n      \"atiende\": true,\n      \"franjas\": [\n        {\n          \"inicio\": \"08:00\",\n          \"fin\": \"17:00\"\n        }\n      ]\n    },\n    {\n      \"dia\": \"VIERNES\",\n      \"atiende\": true,\n      \"franjas\": [\n        {\n          \"inicio\": \"08:00\",\n          \"fin\": \"17:00\"\n        }\n      ]\n    },\n    {\n      \"dia\": \"SABADO\",\n      \"atiende\": false,\n      \"franjas\": []\n    },\n    {\n      \"dia\": \"DOMINGO\",\n      \"atiende\": false,\n      \"franjas\": []\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "uploads",
+      "item": [
+        {
+          "name": "POST /uploads",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/uploads",
+            "description": "Seleccionar una imagen local (maximo 5 MB). Postman establece el boundary de multipart; no agregar Content-Type manualmente.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "carpeta",
+                  "value": "general",
+                  "type": "text"
+                },
+                {
+                  "key": "archivo",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pacientes",
+      "item": [
+        {
+          "name": "GET /pacientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/pacientes",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /pacientes/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/pacientes/{{pacienteId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /pacientes",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/pacientes",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"Paciente\",\n  \"apellidos\": \"Demostracion\",\n  \"fechaNacimiento\": \"1995-01-15\",\n  \"sexo\": \"FEMENINO\",\n  \"telefono\": \"55551234\",\n  \"direccion\": \"Ciudad de Guatemala\",\n  \"responsables\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "if (pm.response.code === 201) pm.environment.set('pacienteId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT /pacientes/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/pacientes/{{pacienteId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"observaciones\": \"Actualizacion ficticia\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PATCH /pacientes/:id/estado",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/pacientes/{{pacienteId}}/estado",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"INACTIVO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /pacientes/:id/responsables",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/pacientes/{{pacienteId}}/responsables",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"responsableId\": \"{{responsableId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DELETE /pacientes/:id/responsables/:responsableId",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/pacientes/{{pacienteId}}/responsables/{{responsableId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "citas",
+      "item": [
+        {
+          "name": "GET /citas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/citas",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /citas/disponibilidad",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/citas/disponibilidad?profesionalId={{profesionalId}}&servicioId={{servicioId}}&fecha={{fecha}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /citas/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/citas/{{citaId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /citas",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/citas",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pacienteId\": \"{{pacienteId}}\",\n  \"servicioId\": \"{{servicioId}}\",\n  \"profesionalId\": \"{{profesionalId}}\",\n  \"fecha\": \"{{fecha}}\",\n  \"horaInicio\": \"{{horaInicio}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) pm.environment.set('citaId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT /citas/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/citas/{{citaId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha\": \"{{fecha}}\",\n  \"horaInicio\": \"{{horaInicio}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PATCH /citas/:id/estado",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/citas/{{citaId}}/estado",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"CONFIRMADA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "responsables",
+      "item": [
+        {
+          "name": "GET /responsables",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/responsables",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /responsables/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/responsables/{{responsableId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /responsables",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/responsables",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"Responsable\",\n  \"apellidos\": \"Demostracion\",\n  \"parentesco\": \"Madre\",\n  \"telefono\": \"55551234\",\n  \"email\": \"demo@example.test\",\n  \"direccion\": \"Ciudad de Guatemala\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "if (pm.response.code === 201) pm.environment.set('responsableId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT /responsables/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/responsables/{{responsableId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"55554321\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /responsables/:id/pacientes",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/responsables/{{responsableId}}/pacientes",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pacienteId\": \"{{pacienteId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DELETE /responsables/:id/pacientes/:pacienteId",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/responsables/{{responsableId}}/pacientes/{{pacienteId}}",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Validaciones y permisos (individual)",
+      "item": [
+        {
+          "name": "Sin sesion: 401",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/auth/me",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Pago cero: 400",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/pagos",
+            "description": "Ejecutar individualmente; revisar variables y permisos en postman/README.md.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"citaId\": \"{{citaId}}\",\n  \"montoCentavos\": 0,\n  \"metodo\": \"EFECTIVO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Profesional sin acceso a caja: 403",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/cajas",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenProfesional}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
