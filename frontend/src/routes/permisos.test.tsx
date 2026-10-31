@@ -4,6 +4,7 @@ import { useAuthStore } from "@/store/auth";
 import contenido from "@/test/fixtures/contenido.json";
 import serviciosAdmin from "@/test/fixtures/servicios-admin.json";
 import usuarios from "@/test/fixtures/usuarios.json";
+import horarios from "@/test/fixtures/horarios.json";
 import { reiniciarEstado, renderConRutas, simularApi } from "@/test/utils";
 import type { Usuario } from "@/types/api";
 import { rutas } from "./router";
@@ -16,6 +17,7 @@ beforeEach(() => {
     "GET /contenido": { body: contenido },
     "GET /usuarios": { body: usuarios },
     "GET /servicios": { body: serviciosAdmin },
+    "GET /horarios": { body: horarios },
   });
 });
 
@@ -25,6 +27,11 @@ function entrarComo(rol: Usuario["rol"], ruta: string) {
 }
 
 describe("permisos por rol (router real)", () => {
+  it("recepción puede consultar horarios por URL sin editar", async () => {
+    entrarComo("RECEPCIONISTA", "/admin/horarios");
+    expect(await screen.findByText("Lunes a viernes")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Guardar horarios" })).not.toBeInTheDocument();
+  });
   it("recepción no puede consultar materiales por URL", async () => {
     entrarComo("RECEPCIONISTA", "/admin/materiales");
     expect(await screen.findByText("No tienes acceso a esta sección")).toBeInTheDocument();
@@ -47,11 +54,11 @@ describe("permisos por rol (router real)", () => {
     expect(within(menu).queryByRole("link", { name: "Mis pacientes" })).not.toBeInTheDocument(); // es solo para profesionales
   });
 
-  it("la recepcionista ve Pacientes, Responsables y Servicios, pero no Usuarios, Contenido ni Horarios", async () => {
+  it("recepción consulta servicios y horarios, sin administración de usuarios ni contenido", async () => {
     entrarComo("RECEPCIONISTA", "/admin");
     const menu = (await screen.findAllByRole("navigation", { name: "Módulos" }))[0]!;
-    for (const nombre of ["Calendario", "Citas", "Solicitudes", "Pacientes", "Responsables", "Servicios"]) expect(within(menu).getByRole("link", { name: nombre })).toBeInTheDocument();
-    for (const nombre of ["Usuarios", "Contenido", "Horarios", "Mis pacientes", "Mensajes"]) expect(within(menu).queryByRole("link", { name: nombre })).not.toBeInTheDocument();
+    for (const nombre of ["Calendario", "Citas", "Solicitudes", "Pacientes", "Responsables", "Servicios", "Horarios"]) expect(within(menu).getByRole("link", { name: nombre })).toBeInTheDocument();
+    for (const nombre of ["Usuarios", "Contenido", "Mis pacientes", "Mensajes", "Materiales"]) expect(within(menu).queryByRole("link", { name: nombre })).not.toBeInTheDocument();
   });
 
   it("el profesional no puede abrir pacientes ni responsables escribiendo la dirección", async () => {

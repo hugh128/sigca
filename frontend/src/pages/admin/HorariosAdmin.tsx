@@ -16,6 +16,7 @@ import { nombreDia } from "@/lib/horarios";
 import { useDocumentTitle } from "@/lib/useDocumentTitle";
 import { horariosSchema } from "@/schemas/horarios";
 import { toast } from "@/store/toast";
+import { useAuthStore } from "@/store/auth";
 import type { DiaHorario, Horarios } from "@/types/api";
 
 const FRANJA_NUEVA = { inicio: "08:00", fin: "12:00" };
@@ -138,8 +139,7 @@ function FormularioHorarios({ datos, alCambiarSucio }: { datos: Horarios; alCamb
   );
 }
 
-export default function HorariosAdmin() {
-  useDocumentTitle("Horarios de atención", "SIGCA");
+function EdicionHorarios() {
   const { data, listo, isError, error, refetch } = useHorariosParaEditar();
   const [sucio, setSucio] = useState(false);
 
@@ -154,4 +154,22 @@ export default function HorariosAdmin() {
       </div>
     </div>
   );
+}
+
+function ConsultaHorarios() {
+  const { data, listo, isError, error, refetch } = useHorariosParaEditar();
+  return <div className="mx-auto max-w-3xl">
+    <EncabezadoPagina titulo="Horarios de atención" descripcion="Consulta los días y las franjas de atención para coordinar las citas. Los cambios los realiza el administrador." />
+    <div className="mt-8">
+      {isError && <ErrorCarga error={error} onReintentar={() => refetch()} />}
+      {!listo && !isError && <Cargando texto="Cargando horarios…" />}
+      {listo && data && <div className="rounded-xl border border-marea-100 bg-white p-5"><ListaHorarios dias={data.dias} /></div>}
+    </div>
+  </div>;
+}
+
+export default function HorariosAdmin() {
+  useDocumentTitle("Horarios de atención", "SIGCA");
+  const admin = useAuthStore(s => s.usuario?.rol === "ADMINISTRADOR");
+  return admin ? <EdicionHorarios /> : <ConsultaHorarios />;
 }

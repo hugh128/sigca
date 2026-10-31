@@ -29,6 +29,16 @@ const hora = (el: HTMLElement, valor: string) => fireEvent.change(el, { target: 
 beforeEach(reiniciarEstado);
 
 describe("Horarios (panel)", () => {
+  it("recepción consulta los horarios sin controles de edición", async () => {
+    iniciar();
+    useAuthStore.setState({ usuario: usuarios.find(u => u.rol === "RECEPCIONISTA") as Usuario });
+    renderConRutas(rutas, "/admin/horarios");
+    expect(await screen.findByText("Lunes a viernes")).toBeInTheDocument();
+    expect(screen.getByText("Domingo")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Guardar horarios" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Contenido/ })).not.toBeInTheDocument();
+  });
   it("muestra los 7 días con sus franjas y una vista previa agrupada", async () => {
     iniciar();
     renderConRutas(rutas, "/admin/horarios");

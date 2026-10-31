@@ -94,7 +94,7 @@ El portal incluye `/contacto`: datos institucionales y formulario con TanStack F
 | `/admin/citas` | Citas | Todos (el profesional ve solo las suyas) | Listado por período, estado y profesional; historial de un paciente (`?paciente=`); confirmar desde la fila; detalle con historial y acciones según rol y estado |
 | `/admin/mis-pacientes` | Mis pacientes | Profesional | Los pacientes que atiende, solo con información básica, con enlace a su historial de citas |
 | `/admin/contenido` | Contenido del portal | Administrador | Editar las 6 secciones: General, Inicio (carrusel de 5 a 12 imágenes), Misión y visión, Contacto, Corporativo y Contenido educativo |
-| `/admin/horarios` | Horarios de atención | Administrador | Días y franjas (varias por día), con vista previa de cómo se verá en el portal |
+| `/admin/horarios` | Horarios de atención | Administrador y recepcionista | Administrador edita días/franjas con vista previa; recepción consulta sin controles de edición |
 
 Patrones que los siguientes módulos reutilizan:
 - **Listado + modal + confirmación:** `Usuarios.tsx` es el modelo (tabla, filtros, `Modal` basado en `<dialog>`, `ConfirmDialog`).

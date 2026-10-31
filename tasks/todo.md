@@ -80,9 +80,9 @@ Plan y orden aprobados por el usuario. Dependencias y criterios generales: `plan
 - Dependencias: 9. Incrementos separados para modelo/servicio/pruebas (3), API/rutas/permisos/pruebas (4) e interfaz/API/pruebas (3).
 
 ### Cierre del avance 2
-- Materiales verificados: 251 pruebas frontend, 25 backend, 357 comprobaciones HTTP, 2 contratos, builds y navegador (administrador, profesional y movil). Pendiente OK para publicar esta entrega.
-- [ ] Revisar acceso de recepcion a consulta de horarios y todos los permisos RF-02.
-- [ ] Completar seed operativo y verificar RF-01 a RF-09 y RN-01 a RN-14.
+- Materiales integrados mediante PR #5. Revision de cierre: 253 pruebas frontend, 25 backend, 358 comprobaciones HTTP, 2 contratos, builds y navegador de horarios para recepcion en escritorio/movil.
+- [x] Revisar acceso de recepcion a consulta de horarios y todos los permisos RF-02.
+- [x] Completar seed operativo y verificar alcance operativo RF-01 a RF-09 y RN-01 a RN-14; consulta de pagos de RF-03 pendiente en finanzas. Evidencia y recorrido en `verificacion-avance-2.md`.
 - [ ] Solicitar OK antes de publicar cada entrega; no agrupar todos los modulos en un solo PR.
 
 ## Entregas financieras
