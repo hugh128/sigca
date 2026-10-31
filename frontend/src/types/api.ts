@@ -240,3 +240,7 @@ export interface Material {
 export interface AsignacionMaterial {
   id: string; material: Material; asignadoPor: { id: string; nombre: string }; createdAt: string;
 }
+export interface Caja {
+  id: string; usuario: { id: string; nombre: string }; apertura: string;
+  montoInicialCentavos: number; estado: "ABIERTA" | "CERRADA";
+}

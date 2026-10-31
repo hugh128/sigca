@@ -10,6 +10,7 @@ import { Servicio } from "../models/Servicio";
 import { SolicitudCita } from "../models/SolicitudCita";
 import { Material } from "../models/Material";
 import { AsignacionMaterial } from "../models/AsignacionMaterial";
+import { Caja } from "../models/Caja";
 import { Usuario, type Rol } from "../models/Usuario";
 import { esquemasContenido } from "../schemas/contenido.schema";
 import { CONTENIDO_POR_DEFECTO } from "../services/contenido.defaults";
@@ -165,6 +166,7 @@ async function main() {
     SolicitudCita.deleteMany({}),
     Material.deleteMany({}),
     AsignacionMaterial.deleteMany({}),
+    Caja.deleteMany({}),
     MensajeContacto.deleteMany({}),
   ]);
 
@@ -224,6 +226,9 @@ async function main() {
     }
   }
   const citasCreadas = await Cita.insertMany(aInsertar);
+  // Deja admin y recepcion1 sin caja para ensayar la apertura desde la interfaz.
+  await Caja.init();
+  await Caja.create({ usuario: usuariosCreados.find(u => u.email === "recepcion2@sigca.test")!._id, montoInicialCentavos: 20000 });
   const materiales = await Material.insertMany([
     { titulo: "Reconocer emociones", descripcion: "Actividad ficticia para identificar y nombrar emociones.", tipo: "Actividad", enlace: "https://example.com/recursos/emociones" },
     { titulo: "Rutinas de escucha", descripcion: "Guía ficticia de apoyo a la estimulación auditiva.", tipo: "Documento", enlace: "https://example.com/recursos/escucha" },
