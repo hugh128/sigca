@@ -64,7 +64,7 @@ El pago anulado se conserva y se excluye del saldo. Si queda otro pago valido, l
 
 La revision operativa de RF-01 a RF-09 y RN-01 a RN-14, con evidencias y pendientes financieros, esta en [verificacion del avance 2](../tasks/verificacion-avance-2.md). `npm run test:e2e` comprueba tambien los minimos del seed y la coherencia de referencias, duraciones y precios antes del recorrido HTTP, sobre una base temporal.
 
-- Node.js 20 o superior
+- Node.js 22.22 o superior para ejecutar ambos proyectos (verificado con 24.17.0).
 - MongoDB Server local (Compass es opcional). La instancia del proyecto usa un replica set de un nodo para desarrollo, independiente del servicio de Windows.
 
 ## Instalacion

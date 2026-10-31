@@ -511,6 +511,7 @@ r = await subir(admin, { buffer: pequena, carpeta: "../../etc" }); ok(r.s === 40
 
 r = await subir(admin, { buffer: pequena }); ok(r.s === 201 && r.j.key.startsWith("general/") && r.j.key.endsWith(".webp"), "subir PNG válido 201: carpeta general por defecto y .webp", JSON.stringify(r));
 const sub = r.j;
+ok(new URL(sub.url).origin === new URL(B).origin, "la imagen apunta a la misma API del recorrido");
 ok(sub.ancho === 64 && sub.alto === 64 && sub.bytes > 0 && /^https?:\/\//.test(sub.url), "respuesta con url, key, ancho, alto y bytes");
 const img = await fetch(sub.url);
 ok(img.status === 200 && img.headers.get("content-type") === "image/webp", "la imagen subida se sirve como image/webp");

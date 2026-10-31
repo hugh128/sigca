@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { createRequire } from "node:module";
+import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
 import mongoose from "mongoose";
 
@@ -60,11 +61,16 @@ try {
   for (const p of anuladosSeed) assert.ok(p.motivoAnulacion && p.anuladoPor && p.fechaAnulacion >= p.fecha, "Anulacion del seed sin auditoria coherente");
   console.log("Seed operativo verificado: minimos, roles, referencias, duraciones y precios.");
   const require = createRequire(import.meta.url);
-  const { createApp } = require("../dist/app.js");
   const servir = process.argv.includes("--servir");
-  server = createApp().listen(0);
+  // Reservar el puerto antes de cargar env/storage: las URLs de imagen deben
+  // apuntar a esta API, aunque .env no declare API_PUBLIC_URL o use otra URL.
+  server = createServer();
+  server.listen(0);
   await new Promise((resolve, reject) => { server.once("listening", resolve); server.once("error", reject); });
-  const api = `http://localhost:${server.address().port}/api`;
+  process.env.API_PUBLIC_URL = `http://localhost:${server.address().port}`;
+  const { createApp } = require("../dist/app.js");
+  server.on("request", createApp());
+  const api = `${process.env.API_PUBLIC_URL}/api`;
   console.log(`API temporal de verificacion: ${api}`);
   if (servir) {
     await new Promise(resolve => {
