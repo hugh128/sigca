@@ -11,6 +11,7 @@ const ENLACES = [
   { to: "/contenido-educativo", etiqueta: "Contenido educativo" },
   { to: "/corporativo", etiqueta: "Corporativo" },
   { to: "/horarios", etiqueta: "Horarios" },
+  { to: "/contacto", etiqueta: "Contacto" },
 ];
 
 const claseEnlace = ({ isActive }: { isActive: boolean }) =>
@@ -31,7 +32,7 @@ export function PublicHeader({ nombre, logoUrl }: { nombre: string; logoUrl?: st
           <Logo nombre={nombre} logoUrl={logoUrl} />
         </Link>
 
-        <nav aria-label="Principal" className="hidden items-center gap-1 md:flex">
+        <nav aria-label="Principal" className="hidden items-center gap-1 xl:flex">
           {ENLACES.map((e) => (
             <NavLink key={e.to} to={e.to} end={e.end} className={claseEnlace}>
               {e.etiqueta}
@@ -41,7 +42,7 @@ export function PublicHeader({ nombre, logoUrl }: { nombre: string; logoUrl?: st
 
         <button
           type="button"
-          className="grid size-10 place-items-center rounded-lg text-marea-900 hover:bg-marea-50 md:hidden"
+          className="grid size-10 place-items-center rounded-lg text-marea-900 hover:bg-marea-50 xl:hidden"
           aria-expanded={abierto}
           aria-controls="menu-movil"
           aria-label={abierto ? "Cerrar menú" : "Abrir menú"}
@@ -52,7 +53,7 @@ export function PublicHeader({ nombre, logoUrl }: { nombre: string; logoUrl?: st
       </div>
 
       {abierto && (
-        <nav id="menu-movil" aria-label="Principal" className="border-t border-marea-100 px-4 pb-4 pt-2 md:hidden">
+        <nav id="menu-movil" aria-label="Principal" className="border-t border-marea-100 px-4 pb-4 pt-2 xl:hidden">
           <ul className="flex flex-col">
             {ENLACES.map((e) => (
               <li key={e.to}>

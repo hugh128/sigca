@@ -17,21 +17,21 @@ cd backend
 npm install
 cp .env.example .env     # luego edita los valores (ver abajo)
 npm run db:start         # replica set local en puerto 27018
-npm run seed             # carga datos de prueba (BORRA usuarios y servicios)
-npm run dev              # API en http://localhost:4000/api
+npm run seed             # recrea las colecciones de prueba, incluidos los mensajes
+npm run dev              # API en http://localhost:4100/api
 ```
 
 ## Variables de entorno
 
 | Variable | Descripcion | Ejemplo |
 |---|---|---|
-| `PORT` | Puerto de la API | `4000` |
+| `PORT` | Puerto de la API | `4100` |
 | `CLIENT_URL` | Origen del frontend permitido por CORS | `http://localhost:5173` |
 | `MONGODB_URI` | Cadena de conexion | `mongodb://localhost:27018/sigca?replicaSet=sigca-rs` |
 | `JWT_SECRET` | Secreto para firmar tokens (min. 32 caracteres) | ver `.env.example` |
 | `JWT_EXPIRES_IN` | Vigencia del token | `8h` |
 | `STORAGE_DRIVER` | Donde se guardan las imagenes: `local` (carpeta `uploads/`) o `r2` (Cloudflare R2) | `local` |
-| `API_PUBLIC_URL` | URL publica de esta API (solo modo local) | `http://localhost:4000` |
+| `API_PUBLIC_URL` | URL publica de esta API (solo modo local) | `http://localhost:4100` |
 | `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`, `R2_PUBLIC_URL` | Credenciales y URL publica del bucket. Obligatorias solo con `STORAGE_DRIVER=r2` | ver seccion R2 |
 
 La aplicacion valida las variables al arrancar y se detiene con un mensaje claro si falta alguna.
@@ -98,6 +98,21 @@ Contrasena de todos los usuarios: `Sigca2026!`
 - Los permisos se verifican en el backend (middleware `authorize`).
 
 ## Endpoints del Avance 1
+
+### Contacto
+
+| Metodo | Ruta | Acceso |
+|---|---|---|
+| POST | `/api/contacto` | Publico, hasta 20 envios por IP por hora |
+| GET | `/api/contacto?page=&limit=` | Solo ADMINISTRADOR; orden mas reciente primero |
+
+El POST recibe `{ nombre, correo, telefono, asunto, mensaje }`. Todos son obligatorios: nombre 2–120 caracteres, correo valido hasta 254, telefono valido hasta 20, asunto 3–150 y mensaje 10–3000. El servidor normaliza correo y espacios, asigna `fecha` y descarta campos adicionales. Responde `201` con una confirmacion, sin devolver los datos personales ni el identificador del mensaje. No envia correo electronico.
+
+El listado devuelve `{ items, total, page, limit, pages }`, con un maximo de 100 mensajes por pagina. Cada mensaje incluye `id`, los cinco campos y `fecha`. No hay lectura publica, edicion ni eliminacion por API. Recepcion y profesionales reciben `403`; sin sesion, `401`.
+
+Los errores de entrada usan `400` y la estructura habitual por campo. El POST no admite claves de idempotencia: no reintentar automaticamente tras un fallo de red, porque el mensaje podria haberse guardado. La interfaz bloquea el boton mientras envia y conserva los datos ante errores.
+
+El seed incluye tres mensajes ficticios. `tests/contacto.test.ts` verifica persistencia, normalizacion, permisos, paginacion, fecha y limites de envio sobre una base temporal. El verificador HTTP incluye el flujo publico a bandeja administrativa.
 
 ### Autenticacion
 | Metodo | Ruta | Acceso |

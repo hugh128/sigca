@@ -21,6 +21,8 @@ npm run dev              # http://localhost:5173
 
 El backend debe tener `CLIENT_URL=http://localhost:5173` para que CORS permita las peticiones.
 
+La API usa `http://localhost:4100/api`. Vite usa `5173` con `strictPort`: si el puerto esta ocupado, muestra un error en lugar de cambiar automaticamente a `5174`. Cierra la instancia anterior o configura explicitamente el puerto del frontend y el mismo origen en `CLIENT_URL` del backend; reinicia la API al cambiar esa variable.
+
 ## Scripts
 
 | Comando | Acción |
@@ -61,9 +63,12 @@ src/
 
 ## Módulos administrativos
 
+El portal incluye `/contacto`: datos institucionales y formulario con TanStack Form/Zod, confirmacion tras guardar, bloqueo durante el envio y conservacion de los datos ante errores. Las peticiones de envio no llevan token, aunque exista una sesion del personal. Hay enlaces desde el menu publico y el pie de pagina.
+
 | Ruta | Módulo | Roles | Qué permite |
 |---|---|---|---|
 | `/admin` | Panel | todos | Resumen |
+| `/admin/mensajes` | Mensajes | Administrador | Consultar mensajes de contacto por fecha descendente, paginar y abrir el texto completo con correo y telefono |
 | `/admin/usuarios` | Usuarios | Administrador | Crear, editar, buscar y filtrar; activar o desactivar; restablecer contraseña |
 | `/admin/servicios` | Servicios | Administrador (gestiona), Recepcionista (consulta) | Crear, editar, activar o desactivar; precio en quetzales |
 | `/admin/pacientes` | Pacientes | Administrador, Recepcionista | Listado con búsqueda (sin tildes), filtros por edad y estado, paginación y filtros guardados en la URL; registrar, editar, desactivar y reactivar. Muestra la edad al escribir la fecha de nacimiento |

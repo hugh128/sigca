@@ -1,6 +1,6 @@
 import { useAuthStore } from "@/store/auth";
 
-export const API_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:4000/api").replace(/\/$/, "");
+export const API_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:4100/api").replace(/\/$/, "");
 
 export interface ErrorCampo {
   campo: string;

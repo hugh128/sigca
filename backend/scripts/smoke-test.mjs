@@ -1,5 +1,5 @@
 import sharp from "sharp";
-const B = process.env.TEST_API_URL ?? "http://localhost:4000/api";
+const B = process.env.TEST_API_URL ?? "http://localhost:4100/api";
 let pass = 0, fail = 0;
 const ok = (c, name, extra = "") => { c ? pass++ : fail++; console.log(`${c ? "PASS" : "FAIL"}  ${name}${c ? "" : "  -> " + extra}`); };
 async function req(method, path, { token, body, raw } = {}) {
@@ -541,6 +541,21 @@ for (const ruta of ["/uploads/%2e%2e/package.json", "/uploads/..%2f..%2f.env", "
   const x = await fetch(B.replace("/api", "") + ruta);
   ok(x.status !== 200, `no se puede salir de la carpeta de subidas (${ruta} -> ${x.status})`);
 }
+
+// --- contacto: persistencia publica y lectura privada
+const mensajeContacto = { nombre: "Visitante de prueba", correo: "visitante@example.test", telefono: "5555-0901", asunto: "Prueba de contacto", mensaje: "Quisiera información sobre los servicios de atención del centro." };
+r = await req("GET", "/contacto"); ok(r.s === 401, "contacto: listado privado 401");
+r = await req("GET", "/contacto", { token: recep }); ok(r.s === 403, "contacto: recepcion sin acceso 403");
+r = await req("GET", "/contacto", { token: prof }); ok(r.s === 403, "contacto: profesional sin acceso 403");
+r = await req("GET", "/contacto", { token: admin }); const mensajesAntes = r.j.total;
+ok(r.s === 200 && mensajesAntes === 3, "contacto: seed incluye tres mensajes ficticios");
+r = await req("POST", "/contacto", { body: mensajeContacto }); ok(r.s === 201 && !r.j.id && !r.j.correo, "contacto: envio publico confirma sin exponer datos");
+r = await req("GET", "/contacto?limit=1", { token: admin });
+ok(r.s === 200 && r.j.total === mensajesAntes + 1 && r.j.items[0].asunto === mensajeContacto.asunto, "contacto: el administrador recibe el mensaje persistido mas reciente");
+ok(r.j.items[0].fecha && r.j.items[0].id && !r.j.items[0]._id, "contacto: fecha del servidor e id de API");
+r = await req("POST", "/contacto", { body: { ...mensajeContacto, correo: "incorrecto" } }); ok(r.s === 400 && r.j.errors.some(e => e.campo === "correo"), "contacto: correo invalido 400 con campo");
+r = await req("POST", "/contacto", { body: { ...mensajeContacto, mensaje: "" } }); ok(r.s === 400, "contacto: mensaje vacio 400");
+r = await req("GET", "/contacto", { token: admin }); ok(r.j.total === mensajesAntes + 1, "contacto: datos invalidos no se guardan");
 
 // --- rate limit login
 let got429 = false;

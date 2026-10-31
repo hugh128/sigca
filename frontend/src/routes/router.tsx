@@ -31,6 +31,8 @@ const responsables = async () => ({ Component: (await import("@/pages/admin/resp
 const calendario = async () => ({ Component: (await import("@/pages/admin/citas/Calendario")).default });
 const citasPagina = async () => ({ Component: (await import("@/pages/admin/citas/Citas")).default });
 const misPacientes = async () => ({ Component: (await import("@/pages/admin/pacientes/MisPacientes")).default });
+const mensajes = async () => ({ Component: (await import("@/pages/admin/Mensajes")).default });
+const contacto = async () => ({ Component: (await import("@/pages/public/Contacto")).default });
 const prohibido = async () => ({ Component: (await import("@/pages/admin/Prohibido")).default });
 
 /**
@@ -42,6 +44,7 @@ const prohibido = async () => ({ Component: (await import("@/pages/admin/Prohibi
 export const rutas: RouteObject[] = [
   {
     element: <PublicLayout />,
+    HydrateFallback: PantallaCarga,
     children: [
       { index: true, element: <Inicio /> },
       { path: "mision-vision", element: <MisionVision /> },
@@ -49,6 +52,7 @@ export const rutas: RouteObject[] = [
       { path: "contenido-educativo", element: <Educativo /> },
       { path: "corporativo", element: <Corporativo /> },
       { path: "horarios", element: <Horarios /> },
+      { path: "contacto", lazy: contacto },
     ],
   },
   {
@@ -65,6 +69,11 @@ export const rutas: RouteObject[] = [
         lazy: adminLayout,
         children: [
           { index: true, lazy: panel },
+          {
+            path: "mensajes",
+            element: <RequireRole roles={["ADMINISTRADOR"]} />,
+            children: [{ index: true, lazy: mensajes }],
+          },
           {
             path: "usuarios",
             element: <RequireRole roles={["ADMINISTRADOR"]} />,
