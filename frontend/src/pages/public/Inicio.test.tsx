@@ -101,7 +101,7 @@ describe("Portal público", () => {
     renderConRutas(rutas, "/");
     const menu = (await screen.findAllByRole("navigation", { name: "Principal" }))[0]!;
     expect(within(menu).getAllByRole("link").map((l) => l.textContent)).toEqual([
-      "Inicio", "Misión y visión", "Servicios", "Contenido educativo", "Corporativo", "Horarios",
+      "Inicio", "Misión y visión", "Servicios", "Contenido educativo", "Corporativo", "Horarios", "Contacto",
     ]);
   });
 

@@ -3,6 +3,7 @@ import { isProd } from "../config/env";
 import { CLAVES_CONTENIDO, ContenidoInstitucional } from "../models/ContenidoInstitucional";
 import { Cita, ESTADOS_QUE_BLOQUEAN, type EstadoCita, type IMovimientoCita } from "../models/Cita";
 import { Horario, type DiaSemana } from "../models/Horario";
+import { MensajeContacto } from "../models/MensajeContacto";
 import { Paciente, type Sexo } from "../models/Paciente";
 import { Responsable } from "../models/Responsable";
 import { Servicio } from "../models/Servicio";
@@ -158,6 +159,7 @@ async function main() {
     Paciente.deleteMany({}),
     Responsable.deleteMany({}),
     Cita.deleteMany({}),
+    MensajeContacto.deleteMany({}),
   ]);
 
   const passwordHash = await hashPassword(PASSWORD_DEMO);
@@ -216,6 +218,11 @@ async function main() {
     }
   }
   await Cita.insertMany(aInsertar);
+  await MensajeContacto.insertMany([
+    { nombre: "Andrea Molina", correo: "andrea@example.test", telefono: "5555-0301", asunto: "Información de servicios", mensaje: "Quisiera conocer los servicios de atención psicológica disponibles para adultos." },
+    { nombre: "Luis Herrera", correo: "luis@example.test", telefono: "5555-0302", asunto: "Orientación para padres", mensaje: "Me gustaría recibir información sobre las actividades de orientación para padres." },
+    { nombre: "Escuela de demostración", correo: "escuela@example.test", telefono: "5555-0303", asunto: "Consulta sobre capacitaciones", mensaje: "Nuestra institución desea información sobre las capacitaciones para docentes." },
+  ]);
 
   console.log(
     `Usuarios: ${usuarios.length} | Servicios: ${servicios.length} | Secciones de contenido: ${CLAVES_CONTENIDO.length} | Días de horario: ${horarioSemana.length} | Pacientes: ${pacientesDemo.length} | Responsables: ${responsablesDemo.length} | Citas: ${citasDemo.length}`,

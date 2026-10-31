@@ -11,7 +11,7 @@ import Contenido from "@/pages/admin/Contenido";
 import ServiciosAdmin from "@/pages/admin/ServiciosAdmin";
 
 const admin = usuarios.find((u) => u.rol === "ADMINISTRADOR") as Usuario;
-const subidaOk = { url: "http://localhost:4000/uploads/general/2026/abc.webp", key: "general/2026/abc.webp", ancho: 400, alto: 300, bytes: 9000 };
+const subidaOk = { url: "http://localhost:4100/uploads/general/2026/abc.webp", key: "general/2026/abc.webp", ancho: 400, alto: 300, bytes: 9000 };
 const archivo = (nombre = "logo.png", tipo = "image/png", bytes = 1024) => new File([new Uint8Array(bytes)], nombre, { type: tipo });
 
 let contenido: ContenidoApi;
@@ -164,7 +164,7 @@ describe("ControlImagen (subida de imágenes)", () => {
     const api = iniciar({
       "POST /uploads": (init) => {
         expect((init?.body as FormData).get("carpeta")).toBe("carrusel");
-        return { status: 201, body: { ...subidaOk, url: "http://localhost:4000/uploads/carrusel/2026/z.webp", key: "carrusel/2026/z.webp" } };
+        return { status: 201, body: { ...subidaOk, url: "http://localhost:4100/uploads/carrusel/2026/z.webp", key: "carrusel/2026/z.webp" } };
       },
       "PUT /contenido/inicio": (init) => ({ body: JSON.parse(String(init?.body)) }),
     });
@@ -176,7 +176,7 @@ describe("ControlImagen (subida de imágenes)", () => {
     await user.click(screen.getByRole("button", { name: "Guardar cambios" }));
     await screen.findByText(/Cambios guardados/);
     const enviado = JSON.parse(String(puts(api, "/contenido/inicio")[0]![1]!.body));
-    expect(enviado.carrusel[2]).toMatchObject({ url: "http://localhost:4000/uploads/carrusel/2026/z.webp", key: "carrusel/2026/z.webp" });
+    expect(enviado.carrusel[2]).toMatchObject({ url: "http://localhost:4100/uploads/carrusel/2026/z.webp", key: "carrusel/2026/z.webp" });
     expect(enviado.carrusel[0].url).toBe(contenido.inicio.carrusel[0]!.url); // las demás no cambian
   });
 
@@ -213,7 +213,7 @@ describe("ControlImagen (subida de imágenes)", () => {
       "GET /servicios": () => ({ body: servicios }),
       "POST /uploads": (init) => {
         expect((init?.body as FormData).get("carpeta")).toBe("servicios");
-        return { status: 201, body: { ...subidaOk, url: "http://localhost:4000/uploads/servicios/2026/s.webp", key: "servicios/2026/s.webp" } };
+        return { status: 201, body: { ...subidaOk, url: "http://localhost:4100/uploads/servicios/2026/s.webp", key: "servicios/2026/s.webp" } };
       },
       [`PUT /servicios/${atencion.id}`]: (init) => ({ body: { ...atencion, ...JSON.parse(String(init?.body)) } }),
     });
@@ -226,7 +226,7 @@ describe("ControlImagen (subida de imágenes)", () => {
     await user.click(within(modal).getByRole("button", { name: "Guardar cambios" }));
     await screen.findByText("Servicio actualizado");
     expect(JSON.parse(String(puts(api, `/servicios/${atencion.id}`)[0]![1]!.body))).toMatchObject({
-      imagenUrl: "http://localhost:4000/uploads/servicios/2026/s.webp", imagenKey: "servicios/2026/s.webp",
+      imagenUrl: "http://localhost:4100/uploads/servicios/2026/s.webp", imagenKey: "servicios/2026/s.webp",
     });
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   });

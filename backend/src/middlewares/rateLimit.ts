@@ -20,7 +20,7 @@ export const limiteLogin = rateLimit({
   message: { message: "Demasiados intentos de inicio de sesión, intenta de nuevo en unos minutos" },
 });
 
-/** Para formularios publicos (contacto, solicitudes de cita). Se usara en etapas posteriores. */
+/** Para contacto y futuras solicitudes publicas de cita. */
 export const limiteFormularioPublico = rateLimit({
   ...opcionesBase,
   windowMs: 60 * 60 * 1000,

@@ -1,4 +1,4 @@
-import { CalendarCheck, CalendarClock, CalendarDays, ClipboardList, FileText, LayoutDashboard, UserRound, Users, UsersRound, type LucideIcon } from "lucide-react";
+import { CalendarCheck, CalendarClock, CalendarDays, ClipboardList, FileText, LayoutDashboard, Mail, UserRound, Users, UsersRound, type LucideIcon } from "lucide-react";
 import type { Rol } from "@/types/api";
 
 export interface ItemNav {
@@ -26,5 +26,6 @@ export const NAV_ADMIN: ItemNav[] = [
   { to: "/admin/servicios", etiqueta: "Servicios", icono: ClipboardList, roles: ["ADMINISTRADOR", "RECEPCIONISTA"] },
   { to: "/admin/horarios", etiqueta: "Horarios", icono: CalendarClock, roles: ["ADMINISTRADOR"] },
   { to: "/admin/contenido", etiqueta: "Contenido", icono: FileText, roles: ["ADMINISTRADOR"] },
+  { to: "/admin/mensajes", etiqueta: "Mensajes", icono: Mail, roles: ["ADMINISTRADOR"] },
   { to: "/admin/usuarios", etiqueta: "Usuarios", icono: Users, roles: ["ADMINISTRADOR"] },
 ];

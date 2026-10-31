@@ -5,11 +5,11 @@ Fecha: 2026-10-31. Base revisada: `adcb498` (PR #1 integrado).
 ## Estado verificado
 
 - Implementados: autenticacion y roles, usuarios y profesionales, servicios, contenido institucional, horarios, almacenamiento local/R2, pacientes, responsables, citas, disponibilidad y calendario.
-- Pendientes: formulario de contacto y consulta de mensajes, solicitudes de cita y conversion, materiales y asignaciones, pagos, caja y entregables finales.
-- El portal muestra informacion de contacto en el pie; esto no sustituye el formulario con persistencia requerido por RF-01.
+- Contacto implementado en `feature/contacto`, pendiente de revision y autorizacion para publicar: formulario `/contacto`, persistencia y bandeja `/admin/mensajes` exclusiva del administrador.
+- Pendientes: solicitudes de cita y conversion, materiales y asignaciones, pagos, caja y entregables finales.
 - Recepcion consulta los horarios publicos, pero no tiene una vista administrativa de consulta. Revisar ese acceso al cerrar el avance 2.
 - MongoDB original en 27017 se conserva. Instancia de SIGCA en 27018 con replica set local `sigca-rs`, respaldo y copia verificada de documentos e indices. Comandos y conexion documentados en backend/README.md.
-- Ultima validacion de codigo: 229 pruebas frontend, 6 regresiones MongoDB, 325 comprobaciones HTTP, 2 contratos, builds y verificacion en navegador. No se han repetido en esta sesion de planificacion porque no cambio el codigo.
+- Validacion de contacto: 238 pruebas frontend, 13 pruebas backend con MongoDB, 335 comprobaciones HTTP, 2 contratos, builds y recorrido de envio/lectura en navegador.
 
 ## Orden propuesto
 
@@ -46,7 +46,7 @@ Cada modulo incluye API, interfaz y pruebas. Los pasos internos estan en `todo.m
 
 ## Flujo de Git
 
-- Main local actualizado al PR #1. Plan aprobado; configuracion del replica set preparada en `chore/mongodb-replica-set`, pendiente de OK para publicar.
+- Main actualizado al PR #2 (`2db710f`). Contacto implementado en `feature/contacto`, con cambios sin commit pendientes del OK del usuario.
 - Las implementaciones salen del main actualizado en ramas propias. No mezclar contacto, solicitudes, materiales y finanzas en un unico PR.
 - Commit, push y PR requieren el OK del usuario para cada entrega. El usuario aprueba y fusiona.
 - El usuario aprobo el plan y autorizo configurar el replica set. Los modulos se desarrollan por entrega; publicar cambios requiere su OK.
@@ -63,4 +63,4 @@ Cada modulo incluye API, interfaz y pruebas. Los pasos internos estan en `todo.m
 
 ## Siguiente entrega recomendada
 
-Contacto completo: `/contacto`, `POST /api/contacto`, `GET /api/contacto` protegido, bandeja `/admin/mensajes`, pruebas y documentacion. No incluye envio de correo electronico: el requisito pide guardar el mensaje en MongoDB.
+Revisar y publicar contacto con el OK del usuario. Despues, implementar solicitudes de cita y su conversion consistente usando el replica set ya configurado. Contacto no incluye envio de correo electronico: el requisito pide guardar el mensaje en MongoDB.

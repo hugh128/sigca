@@ -10,6 +10,7 @@ coverage/
 *.key
 .aws/
 .local/
+.playwright-mcp/
 .DS_Store
 Thumbs.db
 /proyecto-final-desarrollo.txt

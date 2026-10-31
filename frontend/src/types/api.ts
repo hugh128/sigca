@@ -2,6 +2,16 @@
 
 export type Rol = "ADMINISTRADOR" | "RECEPCIONISTA" | "PROFESIONAL";
 
+export interface MensajeContacto {
+  id: string;
+  nombre: string;
+  correo: string;
+  telefono: string;
+  asunto: string;
+  mensaje: string;
+  fecha: string;
+}
+
 export interface Usuario {
   id: string;
   nombre: string;

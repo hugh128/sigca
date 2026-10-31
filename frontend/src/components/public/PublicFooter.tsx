@@ -21,6 +21,7 @@ export function PublicFooter({ contenido }: { contenido: Pick<Contenido, "genera
 
         <div>
           <h2 className="font-medium text-white">Contacto</h2>
+          <Link to="/contacto" className="mt-3 inline-block rounded text-sm text-white underline underline-offset-4">Escríbenos</Link>
           <ul className="mt-4 space-y-3 text-sm">
             <li className="flex gap-3">
               <MapPin className="mt-0.5 size-4 shrink-0 text-sol-400" aria-hidden="true" />

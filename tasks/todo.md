@@ -5,32 +5,32 @@ Plan y orden aprobados por el usuario. Dependencias y criterios generales: `plan
 ## Entrega 1: Contacto
 
 ### 1. Persistencia de mensajes
-- [ ] Definir campos RF-01 y esquema Zod; rechazar entradas invalidas sin persistirlas.
-- [ ] Crear modelo y servicio con alta y listado paginado; preservar mensajes completos para el administrador.
+- [x] Definir campos RF-01 y esquema Zod; rechazar entradas invalidas sin persistirlas.
+- [x] Crear modelo y servicio con alta y listado paginado; preservar mensajes completos para el administrador.
 - Verificacion: pruebas de servicio en base temporal, incluyendo fechas y paginacion; build backend.
 - Dependencias: ninguna. Archivos previstos: modelo, schema, servicio y prueba de contacto (4).
 
 ### 2. API de contacto
-- [ ] Exponer POST publico limitado y GET solo administrador; registrar rutas.
-- [ ] Probar 201, 400, 401, 403 y rate limit sin devolver datos privados al visitante.
+- [x] Exponer POST publico limitado y GET solo administrador; registrar rutas.
+- [x] Probar 201, 400, 401, 403 y rate limit sin devolver datos privados al visitante.
 - Verificacion: pruebas HTTP en entorno aislado y build backend.
 - Dependencias: 1. Archivos previstos: controlador, rutas de contacto, indice de rutas y prueba HTTP (4).
 
 ### 3. Formulario publico
-- [ ] Crear `/contacto` con datos institucionales existentes y TanStack Form/Zod.
-- [ ] Mostrar confirmacion solo tras persistir; preservar valores ante error y prevenir doble envio durante la peticion.
+- [x] Crear `/contacto` con datos institucionales existentes y TanStack Form/Zod.
+- [x] Mostrar confirmacion solo tras persistir; preservar valores ante error y prevenir doble envio durante la peticion.
 - Verificacion: Testing Library, build frontend y navegador.
 - Dependencias: 2. Archivos previstos: pagina, schema, cliente API y prueba de formulario (4).
 
 ### 4. Bandeja administrativa
-- [ ] Administrador consulta mensajes con paginacion y detalle; otros roles carecen de acceso.
-- [ ] Integrar rutas y enlaces publicos/administrativos del modulo.
+- [x] Administrador consulta mensajes con paginacion y detalle; otros roles carecen de acceso.
+- [x] Integrar rutas y enlaces publicos/administrativos del modulo.
 - Verificacion: pruebas de permisos, navegacion y navegador en pantalla pequena.
 - Dependencias: 3. Archivos previstos: bandeja, router, menus publico y privado, prueba de permisos (5).
 
 ### Cierre de entrega 1
-- [ ] Actualizar README y datos ficticios de mensajes.
-- [ ] Suites y builds correctos; formulario y bandeja conectados a MongoDB real.
+- [x] Actualizar README y datos ficticios de mensajes.
+- [x] Suites y builds correctos; formulario y bandeja conectados a MongoDB real.
 - [ ] Revisar diff con el usuario; esperar OK antes de commit, push y PR.
 
 ## Entrega 2: Base transaccional
@@ -39,7 +39,7 @@ Plan y orden aprobados por el usuario. Dependencias y criterios generales: `plan
 - [x] Acordar replica set local y documentar arranque sin publicar credenciales.
 - [x] Probar commit, rollback y aislamiento de las bases temporales con la configuracion elegida.
 - Verificacion: pruebas MongoDB y `npm run test:e2e`.
-- Dependencias: decision del usuario aprobada (replica set local). Configuracion, respaldo/copia, ejemplo de entorno, README y pruebas preparados; pendiente de OK para publicar.
+- Dependencias: decision del usuario aprobada (replica set local). Configuracion y pruebas integradas en main mediante PR #2.
 
 ## Entrega 3: Solicitudes de cita
 
