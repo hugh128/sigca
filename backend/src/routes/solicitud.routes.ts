@@ -1,0 +1,15 @@
+import { Router } from "express";
+import * as ctrl from "../controllers/solicitud.controller";
+import { authenticate, authorize } from "../middlewares/auth";
+import { limiteFormularioPublico } from "../middlewares/rateLimit";
+import { validate } from "../middlewares/validate";
+import { idParams } from "../schemas/common.schema";
+import { convertirSolicitudBody, crearSolicitudBody, listarSolicitudesQuery, rechazarSolicitudBody } from "../schemas/solicitud.schema";
+const router = Router();
+router.post("/", limiteFormularioPublico, validate({ body: crearSolicitudBody }), ctrl.crear);
+router.use(authenticate, authorize("ADMINISTRADOR", "RECEPCIONISTA"));
+router.get("/", validate({ query: listarSolicitudesQuery }), ctrl.listar);
+router.get("/:id", validate({ params: idParams }), ctrl.obtener);
+router.post("/:id/convertir", validate({ params: idParams, body: convertirSolicitudBody }), ctrl.convertir);
+router.patch("/:id/rechazar", validate({ params: idParams, body: rechazarSolicitudBody }), ctrl.rechazar);
+export default router;

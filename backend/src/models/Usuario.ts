@@ -12,6 +12,8 @@ export interface IUsuario {
   activo: boolean;
   /** Si se define, los tokens emitidos antes de esta fecha dejan de ser validos. */
   passwordChangedAt?: Date;
+  /** Escritura compartida que serializa las reservas de agenda dentro de transacciones. */
+  revisionAgenda?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,11 +28,12 @@ const usuarioSchema = new Schema<IUsuario>(
     rol: { type: String, enum: ROLES, required: true, index: true },
     activo: { type: Boolean, default: true },
     passwordChangedAt: { type: Date, select: false },
+    revisionAgenda: { type: Number, default: 0, select: false },
   },
   {
     timestamps: true,
     collection: "usuarios",
-    toJSON: { transform: jsonTransform(["passwordHash", "passwordChangedAt"]) },
+    toJSON: { transform: jsonTransform(["passwordHash", "passwordChangedAt", "revisionAgenda"]) },
   },
 );
 

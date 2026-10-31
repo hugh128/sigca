@@ -1,4 +1,4 @@
-import type { QueryFilter } from "mongoose";
+import mongoose, { type ClientSession, type QueryFilter } from "mongoose";
 import { Cita, ESTADOS_QUE_BLOQUEAN, type CitaDoc, type EstadoCita, type ICita } from "../models/Cita";
 import { Horario } from "../models/Horario";
 import { Paciente } from "../models/Paciente";
@@ -40,8 +40,8 @@ const textoFecha = (fecha: string, hora: string) => `${fecha.slice(8, 10)}/${fec
  * Validaciones de la agenda
  * ---------------------------------------------------------------------------------------------- */
 
-/** RN-11, RN-02 y RN-01. Debe ejecutarse dentro del bloqueo del profesional. */
-async function validarAgenda(p: { profesionalId: string; inicio: Date; fin: Date; excluirCitaId?: string }) {
+/** RN-11, RN-02 y RN-01. Al reservar, se ejecuta tras la escritura transaccional de agenda. */
+async function validarAgenda(p: { profesionalId: string; inicio: Date; fin: Date; excluirCitaId?: string }, session: ClientSession | null = null) {
   // RN-11: no se programa en el pasado
   if (p.inicio.getTime() < Date.now()) throw AppError.unprocessable("No se pueden programar citas en fechas u horas pasadas");
 
@@ -50,7 +50,7 @@ async function validarAgenda(p: { profesionalId: string; inicio: Date; fin: Date
 
   // RN-02: dentro del horario de atencion configurado
   const dia = diaSemana(fecha);
-  const horario = await Horario.findOne({ dia });
+  const horario = await Horario.findOne({ dia }).session(session);
   if (!horario?.atiende || horario.franjas.length === 0) {
     throw AppError.unprocessable(`El centro no atiende los ${NOMBRE_DIA_PLURAL[dia]}`);
   }
@@ -70,7 +70,7 @@ async function validarAgenda(p: { profesionalId: string; inicio: Date; fin: Date
     inicio: { $lt: p.fin },
     fin: { $gt: p.inicio },
     ...(p.excluirCitaId ? { _id: { $ne: p.excluirCitaId } } : {}),
-  });
+  }).session(session);
   if (choque) {
     const ci = partesGuatemala(choque.inicio).hora;
     const cf = partesGuatemala(choque.fin).hora;
@@ -78,16 +78,16 @@ async function validarAgenda(p: { profesionalId: string; inicio: Date; fin: Date
   }
 }
 
-async function profesionalValido(id: string) {
-  const u = await Usuario.findById(id);
+async function profesionalValido(id: string, session: ClientSession | null = null) {
+  const u = await Usuario.findById(id).session(session);
   if (!u) throw AppError.notFound("Profesional no encontrado");
   if (u.rol !== "PROFESIONAL") throw AppError.unprocessable("El usuario elegido no es un profesional");
   if (!u.activo) throw AppError.unprocessable("El profesional está inactivo");
   return u;
 }
 
-async function pacienteValido(id: string) {
-  const paciente = await Paciente.findById(id);
+async function pacienteValido(id: string, session: ClientSession | null = null) {
+  const paciente = await Paciente.findById(id).session(session);
   if (!paciente) throw AppError.notFound("Paciente no encontrado");
   if (paciente.estado !== "ACTIVO") throw AppError.unprocessable("El paciente está inactivo y no puede recibir nuevas citas");
   if (calcularEdad(paciente.fechaNacimiento) < MAYORIA_DE_EDAD && paciente.responsables.length === 0) {
@@ -223,35 +223,42 @@ export interface DatosCita {
 }
 
 export async function crear(d: DatosCita, actor: Actor) {
-  const [paciente, servicio] = await Promise.all([pacienteValido(d.pacienteId), Servicio.findById(d.servicioId)]);
+  const id = await conBloqueo(`profesional:${d.profesionalId}`, () =>
+    mongoose.connection.transaction(session => crearEnTransaccion(d, actor, session)),
+  );
+  return obtener(id, actor);
+}
+
+/** Compartida por citas normales y conversiones. No abre una transaccion anidada. */
+export async function crearEnTransaccion(d: DatosCita, actor: Actor, session: ClientSession) {
+  // La escritura compartida evita que dos snapshots distintos reserven el mismo horario.
+  await Usuario.updateOne({ _id: d.profesionalId }, { $inc: { revisionAgenda: 1 } }, { session });
+  await profesionalValido(d.profesionalId, session);
+  const paciente = await pacienteValido(d.pacienteId, session);
+  const servicio = await Servicio.findById(d.servicioId).session(session);
   if (!servicio) throw AppError.notFound("Servicio no encontrado");
 
   // RN-07 y RN-03: servicio activo
   if (servicio.estado !== "ACTIVO") throw AppError.unprocessable("El servicio está inactivo y no puede seleccionarse para nuevas citas");
-  // RN-03: profesional activo
-  await profesionalValido(d.profesionalId);
 
   const inicio = aInstante(d.fecha, d.horaInicio);
   const fin = sumarMinutos(inicio, servicio.duracionMin); // RN-12: la duracion sale del servicio
 
-  const id = await conBloqueo(`profesional:${d.profesionalId}`, async () => {
-    await validarAgenda({ profesionalId: d.profesionalId, inicio, fin });
-    const cita = await Cita.create({
-      paciente: paciente.id,
-      servicio: servicio.id,
-      profesional: d.profesionalId,
-      inicio,
-      fin,
-      duracionMin: servicio.duracionMin, // se COPIAN: si el servicio cambia despues, esta cita conserva los suyos
-      precioCentavos: servicio.precioCentavos,
-      estado: "PENDIENTE",
-      observaciones: d.observaciones || undefined,
-      creadoPor: actor.id,
-      historial: [{ estado: "PENDIENTE", fecha: new Date(), usuario: actor.id, nota: "Cita programada" }],
-    });
-    return cita.id as string;
-  });
-  return obtener(id, actor);
+  await validarAgenda({ profesionalId: d.profesionalId, inicio, fin }, session);
+  const [cita] = await Cita.create([{
+    paciente: paciente.id,
+    servicio: servicio.id,
+    profesional: d.profesionalId,
+    inicio,
+    fin,
+    duracionMin: servicio.duracionMin, // se COPIAN: si el servicio cambia despues, esta cita conserva los suyos
+    precioCentavos: servicio.precioCentavos,
+    estado: "PENDIENTE",
+    observaciones: d.observaciones || undefined,
+    creadoPor: actor.id,
+    historial: [{ estado: "PENDIENTE", fecha: new Date(), usuario: actor.id, nota: "Cita programada" }],
+  }], { session });
+  return cita!.id as string;
 }
 
 /* ------------------------------------------------------------------------------------------------
@@ -262,25 +269,25 @@ export async function actualizar(
   cambios: { fecha?: string; horaInicio?: string; profesionalId?: string; observaciones?: string },
   actor: Actor,
 ) {
-  const cita = await Cita.findById(id);
-  if (!cita) throw AppError.notFound("Cita no encontrada");
-  // RN-06: una cita completada no se reprograma (y una cancelada tampoco: se programa otra)
-  validarEditable(cita);
+  await mongoose.connection.transaction(async session => {
+    const cita = await Cita.findById(id).session(session);
+    if (!cita) throw AppError.notFound("Cita no encontrada");
+    validarEditable(cita);
 
-  const actual = partesGuatemala(cita.inicio);
-  const fecha = cambios.fecha ?? actual.fecha;
-  const horaInicio = cambios.horaInicio ?? actual.hora;
-  const profesionalId = cambios.profesionalId ?? String(cita.profesional);
-  const cambiaAgenda = fecha !== actual.fecha || horaInicio !== actual.hora || profesionalId !== String(cita.profesional);
+    const actual = partesGuatemala(cita.inicio);
+    const fecha = cambios.fecha ?? actual.fecha;
+    const horaInicio = cambios.horaInicio ?? actual.hora;
+    const profesionalId = cambios.profesionalId ?? String(cita.profesional);
+    const cambiaAgenda = fecha !== actual.fecha || horaInicio !== actual.hora || profesionalId !== String(cita.profesional);
 
-  if (cambiaAgenda) {
-    await Promise.all([pacienteValido(String(cita.paciente)), profesionalValido(profesionalId)]);
-    const inicio = aInstante(fecha, horaInicio);
-    const fin = sumarMinutos(inicio, cita.duracionMin);
-
-    await conBloqueo(`profesional:${profesionalId}`, async () => {
-      await validarAgenda({ profesionalId, inicio, fin, excluirCitaId: id });
-      const antes = `${textoFecha(actual.fecha, actual.hora)}`;
+    if (cambiaAgenda) {
+      await Usuario.updateOne({ _id: profesionalId }, { $inc: { revisionAgenda: 1 } }, { session });
+      await profesionalValido(profesionalId, session);
+      await pacienteValido(String(cita.paciente), session);
+      const inicio = aInstante(fecha, horaInicio);
+      const fin = sumarMinutos(inicio, cita.duracionMin);
+      await validarAgenda({ profesionalId, inicio, fin, excluirCitaId: id }, session);
+      const antes = textoFecha(actual.fecha, actual.hora);
       cita.inicio = inicio;
       cita.fin = fin;
       cita.profesional = profesionalId as unknown as typeof cita.profesional;
@@ -289,12 +296,12 @@ export async function actualizar(
         estado: cita.estado, fecha: new Date(), usuario: actor.id as unknown as ICita["creadoPor"],
         nota: `Reprogramada: ${antes} → ${textoFecha(fecha, horaInicio)}`,
       });
-      await cita.save();
-    });
-  } else if (cambios.observaciones !== undefined) {
-    cita.observaciones = cambios.observaciones || undefined;
-    await cita.save();
-  }
+      await cita.save({ session });
+    } else if (cambios.observaciones !== undefined) {
+      cita.observaciones = cambios.observaciones || undefined;
+      await cita.save({ session });
+    }
+  });
   return obtener(id, actor);
 }
 

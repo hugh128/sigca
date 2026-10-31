@@ -23,6 +23,14 @@ El backend debe tener `CLIENT_URL=http://localhost:5173` para que CORS permita l
 
 La API usa `http://localhost:4100/api`. Vite usa `5173` con `strictPort`: si el puerto esta ocupado, muestra un error en lugar de cambiar automaticamente a `5174`. Cierra la instancia anterior o configura explicitamente el puerto del frontend y el mismo origen en `CLIENT_URL` del backend; reinicia la API al cambiar esa variable.
 
+## Solicitudes de cita
+
+El portal incluye `/solicitar-cita`. Desde cada servicio se preselecciona su identificador en `?servicio=...`. TanStack Form/Zod valida nombre, correo, telefono, servicio activo, fecha preferida y mensaje opcional. La confirmacion aparece tras guardar y explica que todavia no se reserva un horario.
+
+Administrador y recepcionista acceden a `/admin/solicitudes`: listado paginado por estado, detalle de contacto, rechazo con motivo opcional y conversion. Para convertir se elige expresamente un paciente registrado, profesional, fecha y horario libre mediante el formulario de citas. El servicio solicitado se conserva. Hay un enlace para registrar al paciente en otra pestana sin perder el formulario. Al guardar se abre el detalle de la cita; la solicitud atendida mantiene un enlace para consultarla despues. El calendario y la disponibilidad se actualizan. El profesional no tiene acceso a esta bandeja.
+
+Las pruebas simulan tambien que el horario desaparece de disponibilidad tras reservarse, antes de terminar otras consultas: el formulario debe completar el guardado y abrir el detalle, sin quedar abierto ni permitir duplicar la conversion.
+
 ## Scripts
 
 | Comando | Acción |

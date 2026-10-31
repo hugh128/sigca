@@ -44,25 +44,25 @@ Plan y orden aprobados por el usuario. Dependencias y criterios generales: `plan
 ## Entrega 3: Solicitudes de cita
 
 ### 6. Recepcion de solicitudes
-- [ ] Modelo/validacion/servicio para datos RF-06, estado inicial PENDIENTE y servicio activo; no crear citas ni ocupar horarios.
-- [ ] Registrar cinco solicitudes ficticias en seed.
+- [x] Modelo/validacion/servicio para datos RF-06, estado inicial PENDIENTE y servicio activo; no crear citas ni ocupar horarios.
+- [x] Registrar cinco solicitudes ficticias en seed.
 - Verificacion: pruebas de servicio con MongoDB.
 - Dependencias: ninguna para recepcion; 5 antes de conversion. Archivos previstos: modelo, schema, servicio, seed, prueba (5).
 
 ### 7. Endpoints y conversion
-- [ ] POST publico limitado, listado protegido y rechazo solo de solicitudes pendientes.
-- [ ] Conversion transaccional: paciente registrado, reglas de citas, referencia conservada, repeticion/concurrencia sin duplicados y rollback si falla.
+- [x] POST publico limitado, listado protegido y rechazo solo de solicitudes pendientes.
+- [x] Conversion transaccional: paciente registrado, reglas de citas, referencia conservada, repeticion/concurrencia sin duplicados y rollback si falla.
 - Verificacion: HTTP, transacciones y dos conversiones concurrentes.
 - Dependencias: 5 y 6. Archivos previstos: controlador, rutas, indice, servicio y pruebas HTTP (5).
 
 ### 8. Portal y revision interna
-- [ ] Formulario publico con servicio preseleccionado desde servicios y aviso de que la solicitud no reserva horario.
-- [ ] Bandeja para administrador/recepcion; elegir paciente, profesional y horario al convertir; ofrecer registro del paciente cuando no exista.
+- [x] Formulario publico con servicio preseleccionado desde servicios y aviso de que la solicitud no reserva horario.
+- [x] Bandeja para administrador/recepcion; elegir paciente, profesional y horario al convertir; ofrecer registro del paciente cuando no exista.
 - Verificacion: componentes, contratos y flujo visitante → solicitud → cita → calendario.
 - Dependencias: 7. Dividir en dos incrementos: formulario/API/schema/pruebas; bandeja/rutas/menu/pruebas (4 archivos por incremento, segun reutilizacion).
 
 ### Cierre de entrega 3
-- [ ] Revisar seed y documentacion; ejecutar suites, builds y navegador.
+- [x] Revisar seed y documentacion; ejecutar suites, builds y navegador.
 - [ ] Solicitar OK antes de commit, push y PR.
 
 ## Entrega 4: Materiales

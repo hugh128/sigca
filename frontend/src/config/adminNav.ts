@@ -20,6 +20,7 @@ export const NAV_ADMIN: ItemNav[] = [
   { to: "/admin", etiqueta: "Panel", icono: LayoutDashboard, roles: TODOS, end: true },
   { to: "/admin/calendario", etiqueta: "Calendario", icono: CalendarDays, roles: TODOS },
   { to: "/admin/citas", etiqueta: "Citas", icono: CalendarCheck, roles: TODOS },
+  { to: "/admin/solicitudes", etiqueta: "Solicitudes", icono: ClipboardList, roles: ["ADMINISTRADOR", "RECEPCIONISTA"] },
   { to: "/admin/mis-pacientes", etiqueta: "Mis pacientes", icono: UserRound, roles: ["PROFESIONAL"] },
   { to: "/admin/pacientes", etiqueta: "Pacientes", icono: UserRound, roles: ["ADMINISTRADOR", "RECEPCIONISTA"] },
   { to: "/admin/responsables", etiqueta: "Responsables", icono: UsersRound, roles: ["ADMINISTRADOR", "RECEPCIONISTA"] },

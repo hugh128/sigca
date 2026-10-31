@@ -33,6 +33,8 @@ const citasPagina = async () => ({ Component: (await import("@/pages/admin/citas
 const misPacientes = async () => ({ Component: (await import("@/pages/admin/pacientes/MisPacientes")).default });
 const mensajes = async () => ({ Component: (await import("@/pages/admin/Mensajes")).default });
 const contacto = async () => ({ Component: (await import("@/pages/public/Contacto")).default });
+const solicitarCita = async () => ({ Component: (await import("@/pages/public/SolicitarCita")).default });
+const solicitudes = async () => ({ Component: (await import("@/pages/admin/Solicitudes")).default });
 const prohibido = async () => ({ Component: (await import("@/pages/admin/Prohibido")).default });
 
 /**
@@ -53,6 +55,7 @@ export const rutas: RouteObject[] = [
       { path: "corporativo", element: <Corporativo /> },
       { path: "horarios", element: <Horarios /> },
       { path: "contacto", lazy: contacto },
+      { path: "solicitar-cita", lazy: solicitarCita },
     ],
   },
   {
@@ -91,6 +94,11 @@ export const rutas: RouteObject[] = [
           },
           { path: "calendario", lazy: calendario },
           { path: "citas", lazy: citasPagina },
+          {
+            path: "solicitudes",
+            element: <RequireRole roles={["ADMINISTRADOR", "RECEPCIONISTA"]} />,
+            children: [{ index: true, lazy: solicitudes }],
+          },
           {
             path: "mis-pacientes",
             element: <RequireRole roles={["PROFESIONAL"]} />,

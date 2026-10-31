@@ -1,4 +1,5 @@
 import { Clock } from "lucide-react";
+import { Link } from "react-router";
 import { formatearDuracion } from "@/lib/format";
 import type { Servicio } from "@/types/api";
 import { MarcaOndas } from "./Marca";
@@ -26,6 +27,7 @@ export function FilaServicio({ servicio, grande = false }: { servicio: Servicio;
         <p className={`mt-1.5 max-w-2xl font-serif leading-relaxed text-ink-soft ${grande ? "" : "line-clamp-2"}`}>
           {servicio.descripcion}
         </p>
+        <Link to={`/solicitar-cita?servicio=${servicio.id}`} className="mt-3 inline-block rounded text-sm font-medium text-marea-700 underline underline-offset-4" aria-label={`Solicitar cita de ${servicio.nombre}`}>Solicitar cita</Link>
       </div>
     </li>
   );

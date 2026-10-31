@@ -7,10 +7,11 @@ import { MensajeContacto } from "../models/MensajeContacto";
 import { Paciente, type Sexo } from "../models/Paciente";
 import { Responsable } from "../models/Responsable";
 import { Servicio } from "../models/Servicio";
+import { SolicitudCita } from "../models/SolicitudCita";
 import { Usuario, type Rol } from "../models/Usuario";
 import { esquemasContenido } from "../schemas/contenido.schema";
 import { CONTENIDO_POR_DEFECTO } from "../services/contenido.defaults";
-import { aInstante, diaSemana, hoyGuatemala, sumarDias, sumarMinutos } from "../utils/fechas";
+import { aInstante, diaSemana, hoyGuatemala, partesGuatemala, sumarDias, sumarMinutos } from "../utils/fechas";
 import { hashPassword } from "../utils/password";
 import { sinUndefined } from "../utils/sinUndefined";
 
@@ -159,6 +160,7 @@ async function main() {
     Paciente.deleteMany({}),
     Responsable.deleteMany({}),
     Cita.deleteMany({}),
+    SolicitudCita.deleteMany({}),
     MensajeContacto.deleteMany({}),
   ]);
 
@@ -217,7 +219,14 @@ async function main() {
       }
     }
   }
-  await Cita.insertMany(aInsertar);
+  const citasCreadas = await Cita.insertMany(aInsertar);
+  await SolicitudCita.insertMany([
+    { nombre: "Familia Castillo", correo: "castillo@example.test", telefono: "5555-0401", servicio: serviciosCreados[0]!._id, fechaPreferida: diaHabil(4), mensaje: "Consulta para coordinar atención psicológica." },
+    { nombre: "María de demostración", correo: "maria@example.test", telefono: "5555-0402", servicio: serviciosCreados[1]!._id, fechaPreferida: diaHabil(5) },
+    { nombre: "Familia Morales", correo: "morales@example.test", telefono: "5555-0403", servicio: serviciosCreados[2]!._id, fechaPreferida: diaHabil(6), mensaje: "Preferimos atención por la mañana." },
+    { nombre: "Solicitud atendida de demostración", correo: "atendida@example.test", telefono: "5555-0404", servicio: citasCreadas[0]!.servicio, fechaPreferida: partesGuatemala(citasCreadas[0]!.inicio).fecha, estado: "ATENDIDA", cita: citasCreadas[0]!._id, gestionadoPor: recepcion._id, fechaGestion: new Date() },
+    { nombre: "Solicitud rechazada de demostración", correo: "rechazada@example.test", telefono: "5555-0405", servicio: serviciosCreados[0]!._id, fechaPreferida: diaHabil(7), estado: "RECHAZADA", motivoRechazo: "El solicitante desistió.", gestionadoPor: recepcion._id, fechaGestion: new Date() },
+  ]);
   await MensajeContacto.insertMany([
     { nombre: "Andrea Molina", correo: "andrea@example.test", telefono: "5555-0301", asunto: "Información de servicios", mensaje: "Quisiera conocer los servicios de atención psicológica disponibles para adultos." },
     { nombre: "Luis Herrera", correo: "luis@example.test", telefono: "5555-0302", asunto: "Orientación para padres", mensaje: "Me gustaría recibir información sobre las actividades de orientación para padres." },

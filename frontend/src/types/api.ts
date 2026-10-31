@@ -171,6 +171,22 @@ export interface Paciente {
 }
 
 export type EstadoCita = "PENDIENTE" | "CONFIRMADA" | "COMPLETADA" | "CANCELADA";
+export type EstadoSolicitud = "PENDIENTE" | "ATENDIDA" | "RECHAZADA";
+export interface SolicitudCita {
+  id: string;
+  nombre: string;
+  correo: string;
+  telefono: string;
+  servicio: { id: string; nombre: string; estado: "ACTIVO" | "INACTIVO"; duracionMin: number };
+  fechaPreferida: string;
+  mensaje?: string;
+  estado: EstadoSolicitud;
+  cita?: { id: string; fecha: string; horaInicio: string; horaFin: string; estado: EstadoCita };
+  gestionadoPor?: { id: string; nombre: string };
+  fechaGestion?: string;
+  motivoRechazo?: string;
+  createdAt: string;
+}
 
 export interface Cita {
   id: string;
