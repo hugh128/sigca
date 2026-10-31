@@ -9,6 +9,7 @@ coverage/
 *.pem
 *.key
 .aws/
+.local/
 .DS_Store
 Thumbs.db
 /proyecto-final-desarrollo.txt

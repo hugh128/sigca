@@ -14,6 +14,7 @@ Proyecto final del curso de Desarrollo Web.
 cd backend
 npm install
 cp .env.example .env        # configura MONGODB_URI y JWT_SECRET
+npm run db:start            # MongoDB local con transacciones (puerto 27018)
 npm run seed                # datos de prueba
 npm run dev                 # http://localhost:4000/api
 

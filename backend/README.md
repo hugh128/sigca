@@ -8,7 +8,7 @@ Node.js + Express 5 + TypeScript + MongoDB (Mongoose).
 ## Requisitos
 
 - Node.js 20 o superior
-- MongoDB (local o MongoDB Atlas)
+- MongoDB Server local (Compass es opcional). La instancia del proyecto usa un replica set de un nodo para desarrollo, independiente del servicio de Windows.
 
 ## Instalacion
 
@@ -16,6 +16,7 @@ Node.js + Express 5 + TypeScript + MongoDB (Mongoose).
 cd backend
 npm install
 cp .env.example .env     # luego edita los valores (ver abajo)
+npm run db:start         # replica set local en puerto 27018
 npm run seed             # carga datos de prueba (BORRA usuarios y servicios)
 npm run dev              # API en http://localhost:4000/api
 ```
@@ -26,7 +27,7 @@ npm run dev              # API en http://localhost:4000/api
 |---|---|---|
 | `PORT` | Puerto de la API | `4000` |
 | `CLIENT_URL` | Origen del frontend permitido por CORS | `http://localhost:5173` |
-| `MONGODB_URI` | Cadena de conexion | `mongodb://127.0.0.1:27017/sigca` |
+| `MONGODB_URI` | Cadena de conexion | `mongodb://localhost:27018/sigca?replicaSet=sigca-rs` |
 | `JWT_SECRET` | Secreto para firmar tokens (min. 32 caracteres) | ver `.env.example` |
 | `JWT_EXPIRES_IN` | Vigencia del token | `8h` |
 | `STORAGE_DRIVER` | Donde se guardan las imagenes: `local` (carpeta `uploads/`) o `r2` (Cloudflare R2) | `local` |
@@ -35,14 +36,42 @@ npm run dev              # API en http://localhost:4000/api
 
 La aplicacion valida las variables al arrancar y se detiene con un mensaje claro si falta alguna.
 
+## MongoDB local y Compass
+
+Instala MongoDB Server y ejecuta `npm run db:start` desde `backend/`. En Windows se busca `mongod.exe` en las versiones instaladas bajo `Program Files/MongoDB/Server`; en otros sistemas se usa `mongod` del PATH. Puedes indicar una ruta diferente con `MONGOD_PATH` en `.env`.
+
+La instancia de SIGCA usa `localhost:27018` y el replica set `sigca-rs`. Solo escucha en la interfaz local. Es un nodo para desarrollo, sin redundancia ni autenticacion de base de datos; no debe exponerse a Internet. El servicio habitual de Windows en `27017` conserva su configuracion y sus bases.
+
+Conexion para `.env` y para **Compass → Add new connection**:
+
+```text
+mongodb://localhost:27018/sigca?replicaSet=sigca-rs
+```
+
+Los datos, logs y respaldos se guardan en `.local/mongodb/` en la raiz del repositorio, excluida de Git. No borres esa carpeta para actualizar el codigo. Despues de reiniciar Windows, ejecuta `npm run db:start` antes de iniciar la API; `db:status` confirma que el miembro esta en estado `PRIMARY`. `db:stop` realiza un apagado normal de esa instancia; verifica su directorio de datos antes de apagar y no toca el servicio de Windows.
+
+### Copiar una base local existente (una sola vez)
+
+Con la API detenida y `.env` todavia apuntando a `mongodb://127.0.0.1:27017/sigca`, ejecuta `npm run db:migrate`. El comando crea un respaldo Extended JSON con tipos BSON, verifica su lectura y copia documentos e indices al destino **solo si esta vacio**. No borra ni sobrescribe el origen; falla si encuentra colecciones en el destino.
+
+Tras una copia correcta, cambia `MONGODB_URI` a la conexion de `27018` y reinicia la API. No ejecutes `seed` para migrar: recrea datos de demostracion. El respaldo EJSON del comando cubre las colecciones ordinarias de SIGCA; no es un respaldo completo del servidor ni sustituye `mongodump` para administracion general.
+
+Para volver al estado anterior, detiene la API, restaura su URI de `27017` y reiniciala. La base original permanece disponible; las escrituras realizadas despues del cambio a `27018` no se transfieren automaticamente al origen. Los datos y respaldos quedan conservados al ejecutar `db:stop`.
+
+Guia oficial: [convertir a replica set](https://www.mongodb.com/docs/manual/tutorial/convert-standalone-to-replica-set/) y [configuracion para desarrollo](https://www.mongodb.com/docs/manual/tutorial/deploy-replica-set-for-testing/).
+
 ## Scripts
 
 | Comando | Accion |
 |---|---|
+| `npm run db:start` | Inicia MongoDB local, inicializa el replica set una sola vez y espera al primario; repetirlo no borra datos |
+| `npm run db:status` | Muestra el estado de la instancia de SIGCA |
+| `npm run db:stop` | Apaga solo la instancia local del proyecto |
+| `npm run db:migrate` | Respalda y copia SIGCA desde 27017 a un destino vacio en 27018; usar solo con la conexion antigua en `.env` |
 | `npm run dev` | Servidor en modo desarrollo con recarga |
 | `npm run build` / `npm start` | Compila a `dist/` y ejecuta |
 | `npm run typecheck` | Verifica tipos sin compilar |
-| `npm test` | Regresiones de citas con MongoDB real en una base temporal independiente |
+| `npm test` | Regresiones de citas y transacciones (commit, rollback y concurrencia) con MongoDB real en bases temporales independientes |
 | `npm run test:e2e` | Compila y ejecuta pruebas HTTP y contratos del frontend en una base temporal (requiere MongoDB local y dependencias del frontend) |
 | `npm run seed` | Carga datos de prueba ficticios |
 | `npm run test:r2` | Prueba el driver de R2 contra un servidor S3 simulado (no necesita credenciales ni internet) |

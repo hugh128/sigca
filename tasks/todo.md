@@ -1,0 +1,113 @@
+# Tareas de continuacion
+
+Plan y orden aprobados por el usuario. Dependencias y criterios generales: `plan.md`. Publicar cada entrega requiere un OK separado.
+
+## Entrega 1: Contacto
+
+### 1. Persistencia de mensajes
+- [ ] Definir campos RF-01 y esquema Zod; rechazar entradas invalidas sin persistirlas.
+- [ ] Crear modelo y servicio con alta y listado paginado; preservar mensajes completos para el administrador.
+- Verificacion: pruebas de servicio en base temporal, incluyendo fechas y paginacion; build backend.
+- Dependencias: ninguna. Archivos previstos: modelo, schema, servicio y prueba de contacto (4).
+
+### 2. API de contacto
+- [ ] Exponer POST publico limitado y GET solo administrador; registrar rutas.
+- [ ] Probar 201, 400, 401, 403 y rate limit sin devolver datos privados al visitante.
+- Verificacion: pruebas HTTP en entorno aislado y build backend.
+- Dependencias: 1. Archivos previstos: controlador, rutas de contacto, indice de rutas y prueba HTTP (4).
+
+### 3. Formulario publico
+- [ ] Crear `/contacto` con datos institucionales existentes y TanStack Form/Zod.
+- [ ] Mostrar confirmacion solo tras persistir; preservar valores ante error y prevenir doble envio durante la peticion.
+- Verificacion: Testing Library, build frontend y navegador.
+- Dependencias: 2. Archivos previstos: pagina, schema, cliente API y prueba de formulario (4).
+
+### 4. Bandeja administrativa
+- [ ] Administrador consulta mensajes con paginacion y detalle; otros roles carecen de acceso.
+- [ ] Integrar rutas y enlaces publicos/administrativos del modulo.
+- Verificacion: pruebas de permisos, navegacion y navegador en pantalla pequena.
+- Dependencias: 3. Archivos previstos: bandeja, router, menus publico y privado, prueba de permisos (5).
+
+### Cierre de entrega 1
+- [ ] Actualizar README y datos ficticios de mensajes.
+- [ ] Suites y builds correctos; formulario y bandeja conectados a MongoDB real.
+- [ ] Revisar diff con el usuario; esperar OK antes de commit, push y PR.
+
+## Entrega 2: Base transaccional
+
+### 5. Preparar ejecucion y pruebas
+- [x] Acordar replica set local y documentar arranque sin publicar credenciales.
+- [x] Probar commit, rollback y aislamiento de las bases temporales con la configuracion elegida.
+- Verificacion: pruebas MongoDB y `npm run test:e2e`.
+- Dependencias: decision del usuario aprobada (replica set local). Configuracion, respaldo/copia, ejemplo de entorno, README y pruebas preparados; pendiente de OK para publicar.
+
+## Entrega 3: Solicitudes de cita
+
+### 6. Recepcion de solicitudes
+- [ ] Modelo/validacion/servicio para datos RF-06, estado inicial PENDIENTE y servicio activo; no crear citas ni ocupar horarios.
+- [ ] Registrar cinco solicitudes ficticias en seed.
+- Verificacion: pruebas de servicio con MongoDB.
+- Dependencias: ninguna para recepcion; 5 antes de conversion. Archivos previstos: modelo, schema, servicio, seed, prueba (5).
+
+### 7. Endpoints y conversion
+- [ ] POST publico limitado, listado protegido y rechazo solo de solicitudes pendientes.
+- [ ] Conversion transaccional: paciente registrado, reglas de citas, referencia conservada, repeticion/concurrencia sin duplicados y rollback si falla.
+- Verificacion: HTTP, transacciones y dos conversiones concurrentes.
+- Dependencias: 5 y 6. Archivos previstos: controlador, rutas, indice, servicio y pruebas HTTP (5).
+
+### 8. Portal y revision interna
+- [ ] Formulario publico con servicio preseleccionado desde servicios y aviso de que la solicitud no reserva horario.
+- [ ] Bandeja para administrador/recepcion; elegir paciente, profesional y horario al convertir; ofrecer registro del paciente cuando no exista.
+- Verificacion: componentes, contratos y flujo visitante → solicitud → cita → calendario.
+- Dependencias: 7. Dividir en dos incrementos: formulario/API/schema/pruebas; bandeja/rutas/menu/pruebas (4 archivos por incremento, segun reutilizacion).
+
+### Cierre de entrega 3
+- [ ] Revisar seed y documentacion; ejecutar suites, builds y navegador.
+- [ ] Solicitar OK antes de commit, push y PR.
+
+## Entrega 4: Materiales
+
+### 9. Catalogo
+- [ ] Administrador registra, edita, consulta y desactiva materiales con enlace; profesional puede consultar activos.
+- [ ] Diferenciar este catalogo de las publicaciones publicas existentes.
+- Verificacion: validacion de enlaces y permisos, API, formulario y listado.
+- Dependencias: ninguna de solicitudes. Incrementos: modelo/schema/servicio/pruebas; controlador/rutas/indice/pruebas; API/pagina/rutas/menu/pruebas (4–5 archivos cada uno).
+
+### 10. Asignaciones
+- [ ] Asignar solo materiales y pacientes activos; profesional limitado a pacientes propios; conservar fecha y usuario.
+- [ ] Consultar asignaciones desde paciente y vista del profesional, sin duplicados involuntarios.
+- Verificacion: casos RN-09, propiedad de paciente y flujo en navegador.
+- Dependencias: 9. Incrementos separados para modelo/servicio/pruebas (3), API/rutas/permisos/pruebas (4) e interfaz/API/pruebas (3).
+
+### Cierre del avance 2
+- [ ] Revisar acceso de recepcion a consulta de horarios y todos los permisos RF-02.
+- [ ] Completar seed operativo y verificar RF-01 a RF-09 y RN-01 a RN-14.
+- [ ] Solicitar OK antes de publicar cada entrega; no agrupar todos los modulos en un solo PR.
+
+## Entregas financieras
+
+Detallar contratos e incrementos antes de implementar, con los criterios siguientes como alcance obligatorio.
+
+### 11. Apertura de caja
+- [ ] Usuario autorizado abre su caja con monto inicial; indice impide dos cajas abiertas, incluso bajo concurrencia.
+- [ ] Recepcion consulta solo propias; administrador consulta todas.
+- Verificacion: API, concurrencia y apertura desde interfaz.
+- Dependencias: 5. Incrementos: modelo/schema/servicio/pruebas; controlador/rutas/indice/pruebas; API/pagina/menu/rutas/pruebas (4–5 archivos).
+
+### 12. Pagos y saldos
+- [ ] Pago/abono en centavos asociado a cita y caja propia abierta; no superar costo incluso con peticiones concurrentes.
+- [ ] Comprobante unico y saldo/estado financiero derivados de pagos validos, visibles en cita y paciente.
+- Verificacion: RN-15 a RN-20, RN-24 a RN-26 y RN-28; carrera entre dos abonos.
+- Dependencias: 11. Descomponer antes de implementar: persistencia/contador; servicio transaccional; API; interfaz de registro; consulta de historial.
+
+### 13. Anulacion y cierre
+- [ ] Anular con motivo, fecha y usuario solo en caja abierta; impedir cancelar cita con pagos validos.
+- [ ] Cierre calcula totales/efectivo/diferencia, conserva detalle y bloquea pagos, anulaciones y cambios posteriores.
+- Verificacion: RN-19 a RN-29, carreras pago/cierre y anulacion/cierre; demostracion completa.
+- Dependencias: 12. Descomponer antes de implementar: anulacion; integracion con cancelacion; calculo/cierre; API; interfaz/historial.
+
+### 14. Entrega final
+- [ ] Completar seed minimo: 10 pagos, 3 cajas abiertas/cerradas, abonos, anulaciones y saldos; conservar minimos operativos.
+- [ ] Postman, capturas, README con autor/responsabilidades y ejecucion local reproducible.
+- [ ] Ensayar seccion 16 del TXT y defensa individual; verificar instalacion desde checkout limpio.
+- Dependencias: 13. Incrementos de datos, documentacion/coleccion y evidencias, independientes del codigo funcional.

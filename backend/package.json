@@ -5,6 +5,10 @@
   "description": "SIGCA - API REST (Express + TypeScript + MongoDB)",
   "main": "dist/server.js",
   "scripts": {
+    "db:start": "node scripts/mongodb-local.mjs start",
+    "db:status": "node scripts/mongodb-local.mjs status",
+    "db:stop": "node scripts/mongodb-local.mjs stop",
+    "db:migrate": "node scripts/migrar-mongodb-local.mjs",
     "dev": "tsx watch src/server.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
