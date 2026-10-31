@@ -114,6 +114,8 @@ Detallar contratos e incrementos antes de implementar, con los criterios siguien
 ### 14. Entrega final
 - [x] Completar seed minimo: 10 pagos, 3 cajas abiertas/cerradas, abonos, anulaciones y saldos; conservar minimos operativos. Minimos y auditoria verificados en el helper de integracion.
 - [x] Preparar coleccion Postman y entorno ficticio, documentar dependencias/recorrido, verificar cobertura de 64 rutas y ejecutar 16 peticiones/scripts de lectura contra API local.
-- [ ] Ejecutar recorrido completo en Postman, preparar capturas y completar README con autor/responsabilidades y ejecucion local reproducible.
-- [ ] Ensayar seccion 16 del TXT y defensa individual; verificar instalacion desde checkout limpio.
+- [x] Completar README con Hugo Ordo?ez, carne 2690-23-10929, responsabilidades y requisito real de Node; documentar ejecucion local y guion de defensa.
+- [x] Verificar npm ci, suites y builds desde exportacion limpia: 271 frontend, 49 backend, 397 HTTP, 2 contratos. Corregir origen de imagenes de API temporal, con comprobacion de regresion.
+- [ ] Ejecutar recorrido manual completo en navegador/Postman y preparar capturas y ZIP.
+- [ ] Ensayar manualmente seccion 16 y defensa individual usando `../docs/entrega-final.md`; instalacion desde copia limpia ya verificada.
 - Dependencias: 13. Incrementos de datos, documentacion/coleccion y evidencias, independientes del codigo funcional.

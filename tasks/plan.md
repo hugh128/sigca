@@ -15,9 +15,9 @@ Fecha: 2026-10-31. Base revisada: `adcb498` (PR #1 integrado).
 - Anulacion auditada integrada mediante PR #9. Detalle fresco, motivo obligatorio y caja abierta; contrato en `anulacion-pagos.md`.
 - Movimientos, totales y cierre de caja integrados en main mediante PR #10. Contrato en `cierre-caja.md`; seed con tres cajas y cierres generados por el servicio.
 - Coleccion Postman y entorno ficticio preparados: 64 rutas de modulos, carpeta de 16 peticiones de lectura/sesion verificada contra API local y guia financiera. Ver `../postman/README.md`.
-- Pendientes: revision integral final, ejecucion del recorrido completo en Postman, capturas, autor/responsabilidades y ensayo del flujo de evaluacion.
+- Pendientes: ejecucion manual del recorrido completo en navegador/Postman, capturas y ZIP. Autor/responsabilidades e instalacion reproducible documentados.
 - MongoDB original en 27017 se conserva. Instancia de SIGCA en 27018 con replica set local `sigca-rs`, respaldo y copia verificada de documentos e indices. Comandos y conexion documentados en backend/README.md.
-- Validacion de cierre: 253 pruebas frontend, 25 backend con MongoDB, 358 comprobaciones HTTP, 2 contratos y ambos builds. Seed verificado antes del smoke. Navegador: recepcion consulta horarios en escritorio/movil, sin formulario ni errores de consola. Bases temporales para pruebas con escrituras.
+- Validacion en copia limpia: npm ci en ambos proyectos, 271 pruebas frontend, 49 backend, 397 comprobaciones HTTP, 2 contratos y ambos builds. Corregido origen de imagenes del helper temporal, sin cambiar API de desarrollo. Autor documentado: Hugo Ordo?ez, carne 2690-23-10929. Evidencia y guion en `../docs/entrega-final.md`.
 
 ## Orden propuesto
 
@@ -54,7 +54,7 @@ Cada modulo incluye API, interfaz y pruebas. Los pasos internos estan en `todo.m
 
 ## Flujo de Git
 
-- Main actualizado al PR #10 (`d9d0a45`). Coleccion Postman en `docs/coleccion-postman`, revisada y con publicacion autorizada por el usuario.
+- Main actualizado al PR #11 (`160852f`). Verificacion de entrega final en `docs/verificacion-entrega-final`, con publicacion autorizada por el usuario.
 - Las implementaciones salen del main actualizado en ramas propias. No mezclar contacto, solicitudes, materiales y finanzas en un unico PR.
 - Commit, push y PR requieren el OK del usuario para cada entrega. El usuario aprueba y fusiona.
 - El usuario aprobo el plan y autorizo configurar el replica set. Los modulos se desarrollan por entrega; publicar cambios requiere su OK.
@@ -71,4 +71,4 @@ Cada modulo incluye API, interfaz y pruebas. Los pasos internos estan en `todo.m
 
 ## Siguiente entrega recomendada
 
-Revisar la coleccion Postman y su guia; publicar solo con el OK del usuario. Despues, ensayar el flujo completo de evaluacion, verificar instalacion desde checkout limpio y preparar capturas y datos del autor para la defensa individual. Contacto y solicitudes no envian correo automatico: el equipo coordina la atencion con los datos guardados.
+Revisar y publicar la verificacion de entrega final solo con el OK del usuario. Despues, ensayar el flujo completo en navegador/Postman, preparar capturas y el ZIP de entrega para la defensa individual. Instalacion limpia, datos del autor y guion ya documentados. Contacto y solicitudes no envian correo automatico: el equipo coordina la atencion con los datos guardados.

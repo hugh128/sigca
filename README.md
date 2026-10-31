@@ -2,6 +2,14 @@
 
 Proyecto final del curso de Desarrollo Web.
 
+Autor: **Hugo Ordoñez**. Carné: **2690-23-10929**.
+
+Proyecto individual autorizado por el catedrático. Responsabilidades del autor: backend y API REST, modelos y base de datos, frontend e integración, pruebas, documentación y presentación. El cambio de Vue a React y la elección de las bibliotecas complementarias fueron autorizados por el catedrático, según confirmación del autor.
+
+Tecnologías: React, TypeScript, Vite, React Router, Zustand, TanStack Query/Form, Tailwind CSS, Zod, Express, Mongoose y MongoDB. Autenticación JWT; imágenes en almacenamiento local o Cloudflare R2.
+
+Requisitos: **Node.js 22.22 o superior** y MongoDB Server con replica set. Instalación verificada con Node.js 24.17.0 y npm 11.13.0. Compass es opcional y no sustituye al servidor MongoDB.
+
 | Carpeta | Contenido | Documentación |
 |---|---|---|
 | `backend/` | API REST: Node.js, Express, TypeScript, MongoDB (Mongoose) | `backend/README.md` |
@@ -24,6 +32,10 @@ npm install
 cp .env.example .env
 npm run dev                 # http://localhost:5173
 ```
+
+El seed recrea los datos de la base configurada: ejecutarlo únicamente sobre una base de demostración. Para instalar desde los archivos lock usar `npm ci` en cada carpeta. En PowerShell se puede copiar la configuración con `Copy-Item .env.example .env`.
+
+La [verificación de entrega final](docs/entrega-final.md) registra la instalación limpia, los comandos de prueba y el guion de evaluación. Los detalles de variables de entorno, MongoDB y almacenamiento están en el [README del backend](backend/README.md).
 
 Las imágenes se guardan en la carpeta `backend/uploads/` por defecto. Para usar Cloudflare R2 (solo se guarda la URL en la base de datos) sigue la sección «Cloudflare R2» de `backend/README.md`.
 
