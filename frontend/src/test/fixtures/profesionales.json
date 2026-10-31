@@ -1,0 +1,17 @@
+[
+    {
+        "nombre": "Dra. Ana López",
+        "email": "profesional1@sigca.test",
+        "id": "6adb76f193e4e8e352d4038a"
+    },
+    {
+        "nombre": "Lic. Mario Pérez",
+        "email": "profesional2@sigca.test",
+        "id": "6adb76f193e4e8e352d4038b"
+    },
+    {
+        "nombre": "Licda. Sofía Castillo",
+        "email": "profesional3@sigca.test",
+        "id": "6adb76f193e4e8e352d4038c"
+    }
+]

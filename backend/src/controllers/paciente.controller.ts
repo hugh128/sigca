@@ -4,10 +4,10 @@ import * as service from "../services/paciente.service";
 const id = (req: Parameters<RequestHandler>[0]) => String(req.params.id);
 
 export const listar: RequestHandler = async (req, res) => {
-  res.json(await service.listar(req.query as unknown as service.FiltrosPacientes));
+  res.json(await service.listar(req.query as unknown as service.FiltrosPacientes, { id: req.user!.id, rol: req.user!.rol }));
 };
 export const obtener: RequestHandler = async (req, res) => {
-  res.json(await service.obtener(id(req)));
+  res.json(await service.obtener(id(req), { id: req.user!.id, rol: req.user!.rol }));
 };
 export const crear: RequestHandler = async (req, res) => {
   res.status(201).json(await service.crear(req.body));

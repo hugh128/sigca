@@ -21,7 +21,10 @@ function esErrorDuplicado(e: unknown): e is { code: number; keyValue?: Record<st
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   // Errores controlados
   if (err instanceof AppError) {
-    return res.status(err.status).json({ message: err.message, ...(err.details ? { errors: err.details } : {}) });
+    // `errors` es SIEMPRE una lista de errores por campo ({ campo, mensaje }). Cualquier otro dato
+    // (p. ej. el horario con el que choca una cita) va aparte, en `detalles`.
+    const extra = err.details === undefined ? {} : Array.isArray(err.details) ? { errors: err.details } : { detalles: err.details };
+    return res.status(err.status).json({ message: err.message, ...extra });
   }
 
   // Validacion de Mongoose

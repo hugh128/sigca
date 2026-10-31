@@ -3,7 +3,7 @@
 API REST del **Sistema Integral de Gestion de Citas y Atencion (SIGCA)**.
 Node.js + Express 5 + TypeScript + MongoDB (Mongoose).
 
-> Estado: **Avance 1 + Avance 2 (en curso: pacientes y responsables)**. Avance 1: (configuracion, autenticacion, usuarios, servicios, contenido institucional, horarios e imagenes en Cloudflare R2).
+> Estado: **Avance 1 + Avance 2 (en curso: pacientes, responsables y citas)**. Avance 1: (configuracion, autenticacion, usuarios, servicios, contenido institucional, horarios e imagenes en Cloudflare R2).
 
 ## Requisitos
 
@@ -42,6 +42,8 @@ La aplicacion valida las variables al arrancar y se detiene con un mensaje claro
 | `npm run dev` | Servidor en modo desarrollo con recarga |
 | `npm run build` / `npm start` | Compila a `dist/` y ejecuta |
 | `npm run typecheck` | Verifica tipos sin compilar |
+| `npm test` | Regresiones de citas con MongoDB real en una base temporal independiente |
+| `npm run test:e2e` | Compila y ejecuta pruebas HTTP y contratos del frontend en una base temporal (requiere MongoDB local y dependencias del frontend) |
 | `npm run seed` | Carga datos de prueba ficticios |
 | `npm run test:r2` | Prueba el driver de R2 contra un servidor S3 simulado (no necesita credenciales ni internet) |
 | `npm run storage:probar` | Verifica TU configuracion de almacenamiento: sube una imagen de prueba, la descarga y la borra |
@@ -134,6 +136,8 @@ Cada dia: `{ dia, atiende, franjas: [{ inicio: "HH:mm", fin: "HH:mm" }] }`. Un d
 
 Las listas devuelven `{ items, total, page, limit, pages }` (maximo 100 por pagina).
 
+Las pruebas `npm test` y `npm run test:e2e` crean bases con prefijo `sigca_test_` y nombre aleatorio; no ejecutan el seed sobre la base de desarrollo y eliminan su base al terminar normalmente.
+
 Decisiones de diseno:
 - **La edad no se guarda: se calcula** al responder (`edad` y `esMenor`), con la fecha de hoy en **America/Guatemala**. Quien cumple 18 hoy ya no es menor; quien los cumple manana todavia lo es. El filtro `menores` usa la misma regla.
 - Las fechas de nacimiento y de inicio son **fechas de calendario** (`AAAA-MM-DD`, sin hora), asi no se "corren" un dia por la zona horaria.
@@ -141,6 +145,44 @@ Decisiones de diseno:
 - **No existe DELETE** de pacientes ni de responsables: los pacientes se desactivan y conservan su historial. Un `PUT` nunca cambia el estado.
 - Los menores de edad pueden registrarse sin responsable (el sistema lo senala), pero **no podran agendar citas hasta tener uno** (RN-04, se aplica en el modulo de citas).
 - La busqueda usa campos normalizados internos (`busqueda`, `orden`) que no se exponen en la API; los caracteres de expresion regular se buscan como texto.
+
+### Citas
+| Metodo | Ruta | Acceso |
+|---|---|---|
+| GET | `/api/citas?desde=&hasta=&estado=&profesionalId=&pacienteId=&servicioId=&orden=&page=&limit=` | Admin y recepcion: todas. **Profesional: solo las suyas** |
+| GET | `/api/citas/disponibilidad?profesionalId=&servicioId=&fecha=&excluirCitaId=` | Admin y recepcion |
+| GET | `/api/citas/:id` | Igual que el listado (con historial) |
+| POST | `/api/citas` | Admin y recepcion |
+| PUT | `/api/citas/:id` | Admin y recepcion (reprogramar / editar observaciones) |
+| PATCH | `/api/citas/:id/estado` | Segun el rol (ver abajo) |
+
+Crear: `{ pacienteId, servicioId, profesionalId, fecha: "AAAA-MM-DD", horaInicio: "HH:mm", observaciones? }` — la fecha y la hora son **de Guatemala** (UTC-6, sin horario de verano). La hora de fin la calcula el servidor con la duracion del servicio. Las respuestas traen `fecha`, `horaInicio` y `horaFin` ya en hora de Guatemala, mas `inicio` y `fin` como instantes UTC.
+
+Al reprogramar, la disponibilidad usa la duracion guardada en la cita indicada por `excluirCitaId`; el servicio debe coincidir con el de esa cita. Se conservan duracion y precio aunque el servicio cambie o se desactive (no puede elegirse para citas nuevas). Se vuelven a validar el paciente activo, el responsable del menor y el profesional activo.
+
+**Reglas de negocio** (todas en `services/cita.service.ts`):
+
+| Regla | Que hace el sistema |
+|---|---|
+| RN-01 | Un profesional no puede tener dos citas pendientes/confirmadas que se traslapen (`409` con el horario del choque en `detalles`). Dos citas **pegadas** (una termina cuando la otra empieza) no se traslapan |
+| RN-02 | La cita debe caber **entera** dentro de una franja del horario de atencion de ese dia (no cruza el receso ni el cierre) |
+| RN-03 / RN-14 | Paciente, servicio y profesional deben estar activos |
+| RN-04 | Un menor de edad sin responsable no puede tener citas |
+| RN-05 / RN-06 | Una cita cancelada no pasa a completada; una completada no se reprograma ni cambia de estado |
+| RN-07 | Un servicio inactivo no se puede elegir |
+| RN-11 | No se programa ni reprograma en fechas u horas pasadas |
+| RN-12 / RF-07 | La duracion y el **precio se copian** del servicio al programar: si el servicio cambia despues, la cita conserva los suyos |
+| RN-13 | Las citas canceladas y completadas no bloquean horarios |
+
+**Estados:** `PENDIENTE → CONFIRMADA → COMPLETADA`; se puede cancelar desde pendiente o confirmada. `CANCELADA` y `COMPLETADA` son finales (mas estricto que la RN-05). Quien puede asignar cada estado: recepcion confirma y cancela; el **profesional solo completa sus propias citas** (y no ve precios); el administrador puede todo. Cada cambio queda en `historial` con quien lo hizo.
+
+**Integridad con otros modulos:** no se puede desactivar a un paciente o profesional con citas pendientes o confirmadas, ni quitar al unico responsable de un menor que tiene citas.
+
+**Concurrencia:** dos peticiones simultaneas para el mismo horario no pueden crear ambas la cita: se serializan por profesional (`utils/bloqueo.ts`) y solo una gana (la otra recibe `409`). Esto protege dentro de una instancia del servidor; con varias instancias haria falta una transaccion o un bloqueo en la base de datos.
+
+**Profesionales:** pueden consultar `GET /api/pacientes` con informacion basica de **sus** pacientes (nombre, edad, sexo, foto), sin telefono, direccion ni responsables.
+
+**Formato de errores:** `errors` es siempre una **lista** de `{ campo, mensaje }`; cualquier otro dato (p. ej. el horario con el que choca una cita) va en `detalles`.
 
 ### Imagenes
 | Metodo | Ruta | Acceso |

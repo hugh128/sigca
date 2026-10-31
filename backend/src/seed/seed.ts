@@ -1,6 +1,7 @@
 import { connectDB, disconnectDB } from "../config/db";
 import { isProd } from "../config/env";
 import { CLAVES_CONTENIDO, ContenidoInstitucional } from "../models/ContenidoInstitucional";
+import { Cita, ESTADOS_QUE_BLOQUEAN, type EstadoCita, type IMovimientoCita } from "../models/Cita";
 import { Horario, type DiaSemana } from "../models/Horario";
 import { Paciente, type Sexo } from "../models/Paciente";
 import { Responsable } from "../models/Responsable";
@@ -8,7 +9,7 @@ import { Servicio } from "../models/Servicio";
 import { Usuario, type Rol } from "../models/Usuario";
 import { esquemasContenido } from "../schemas/contenido.schema";
 import { CONTENIDO_POR_DEFECTO } from "../services/contenido.defaults";
-import { hoyGuatemala } from "../utils/fechas";
+import { aInstante, diaSemana, hoyGuatemala, sumarDias, sumarMinutos } from "../utils/fechas";
 import { hashPassword } from "../utils/password";
 import { sinUndefined } from "../utils/sinUndefined";
 
@@ -111,6 +112,36 @@ const pacientesDemo: { nombres: string; apellidos: string; nac: string; sexo: Se
   { nombres: "Elena", apellidos: "Barrios Quiñónez", nac: nacimientoHace(52, 6), sexo: "FEMENINO", telefono: "5555-0209", direccion: "7a avenida 20-12, zona 11", resp: [], inactivo: true, observaciones: "Concluyó su proceso." },
 ];
 
+/** Dia habil (no domingo) a `n` dias de hoy: hacia adelante si n > 0, hacia atras si n < 0. */
+function diaHabil(n: number): string {
+  let f = sumarDias(hoyGuatemala(), n);
+  while (diaSemana(f) === "DOMINGO") f = sumarDias(f, n >= 0 ? 1 : -1);
+  return f;
+}
+
+// servicio (indice en `servicios`), profesional (indice en los usuarios PROFESIONAL), paciente (por nombre)
+const citasDemo: { dia: number; hora: string; paciente: string; servicio: number; prof: number; estado: EstadoCita; nota?: string }[] = [
+  // pasadas
+  { dia: -14, hora: "08:00", paciente: "Mateo", servicio: 2, prof: 1, estado: "COMPLETADA" },
+  { dia: -12, hora: "09:00", paciente: "Valeria", servicio: 0, prof: 0, estado: "COMPLETADA" },
+  { dia: -10, hora: "08:00", paciente: "Mateo", servicio: 2, prof: 1, estado: "COMPLETADA" },
+  { dia: -9, hora: "10:00", paciente: "Camila", servicio: 0, prof: 0, estado: "COMPLETADA" },
+  { dia: -7, hora: "08:00", paciente: "Mateo", servicio: 2, prof: 1, estado: "COMPLETADA" },
+  { dia: -6, hora: "09:00", paciente: "Jorge", servicio: 1, prof: 2, estado: "COMPLETADA" },
+  { dia: -5, hora: "10:00", paciente: "Sofía", servicio: 0, prof: 0, estado: "CANCELADA", nota: "La paciente avisó que no podía asistir" },
+  { dia: -3, hora: "11:00", paciente: "Diego", servicio: 3, prof: 2, estado: "COMPLETADA" },
+  // futuras
+  { dia: 1, hora: "08:00", paciente: "Mateo", servicio: 2, prof: 1, estado: "CONFIRMADA" },
+  { dia: 1, hora: "09:00", paciente: "Valeria", servicio: 0, prof: 0, estado: "CONFIRMADA" },
+  { dia: 2, hora: "10:00", paciente: "Camila", servicio: 0, prof: 0, estado: "PENDIENTE" },
+  { dia: 3, hora: "08:00", paciente: "Mateo", servicio: 2, prof: 1, estado: "PENDIENTE" },
+  { dia: 3, hora: "09:00", paciente: "Sebastián", servicio: 0, prof: 0, estado: "CONFIRMADA" },
+  { dia: 4, hora: "08:30", paciente: "Pedro", servicio: 1, prof: 2, estado: "CONFIRMADA" },
+  { dia: 5, hora: "10:00", paciente: "Diego", servicio: 3, prof: 2, estado: "PENDIENTE" },
+  { dia: 6, hora: "09:00", paciente: "Jorge", servicio: 1, prof: 2, estado: "PENDIENTE" },
+  { dia: 7, hora: "08:00", paciente: "Sofía", servicio: 0, prof: 0, estado: "CANCELADA", nota: "Cambio de planes de la paciente" },
+];
+
 async function main() {
   if (isProd && !process.argv.includes("--force")) {
     console.error("Estas en produccion: el seed borra datos. Usa --force si realmente quieres ejecutarlo.");
@@ -126,11 +157,12 @@ async function main() {
     Horario.deleteMany({}),
     Paciente.deleteMany({}),
     Responsable.deleteMany({}),
+    Cita.deleteMany({}),
   ]);
 
   const passwordHash = await hashPassword(PASSWORD_DEMO);
-  await Usuario.insertMany(usuarios.map((u) => ({ ...u, passwordHash })));
-  await Servicio.insertMany(servicios);
+  const usuariosCreados = await Usuario.insertMany(usuarios.map((u) => ({ ...u, passwordHash })));
+  const serviciosCreados = await Servicio.insertMany(servicios);
 
   // El contenido pasa por los mismos esquemas Zod que usa la API (asigna ids, valida, normaliza).
   for (const clave of CLAVES_CONTENIDO) {
@@ -142,18 +174,51 @@ async function main() {
   // Responsables y pacientes (se usa .create/.save para que se calculen los campos de busqueda)
   const responsables: Record<string, string> = {};
   for (const { clave, ...r } of responsablesDemo) responsables[clave] = (await Responsable.create(r)).id;
+  const idPaciente: Record<string, string> = {};
   for (const { nac, resp, inactivo, ...p } of pacientesDemo) {
-    await Paciente.create({
+    const creado = await Paciente.create({
       ...p,
       fechaNacimiento: nac,
       fechaInicio: haceMeses(3),
       estado: inactivo ? "INACTIVO" : "ACTIVO",
       responsables: resp.map((c) => responsables[c]),
     });
+    idPaciente[p.nombres] = creado.id;
   }
 
+  // Citas de demostracion. Se insertan directo (las pasadas no pasarian la RN-11), pero se verifica que las
+  // activas no se traslapen entre si para el mismo profesional (RN-01).
+  const profesionales = usuariosCreados.filter((u) => u.rol === "PROFESIONAL");
+  const recepcion = usuariosCreados.find((u) => u.rol === "RECEPCIONISTA")!;
+  const aInsertar = citasDemo.map((c) => {
+    const servicio = serviciosCreados[c.servicio]!;
+    const inicio = aInstante(diaHabil(c.dia), c.hora);
+    const registro = (estado: EstadoCita, nota?: string, antes = 0): IMovimientoCita => ({
+      estado, usuario: recepcion._id, nota, fecha: new Date(inicio.getTime() - antes * 3_600_000),
+    });
+    const historial = [registro("PENDIENTE", "Cita programada", 72)];
+    if (c.estado !== "PENDIENTE") historial.push(registro(c.estado === "CANCELADA" ? "CANCELADA" : "CONFIRMADA", c.estado === "CANCELADA" ? `Cancelada: ${c.nota}` : undefined, 48));
+    if (c.estado === "COMPLETADA") historial.push({ ...registro("COMPLETADA"), fecha: sumarMinutos(inicio, servicio.duracionMin) });
+    return {
+      paciente: idPaciente[c.paciente]!, servicio: servicio._id, profesional: profesionales[c.prof]!._id,
+      inicio, fin: sumarMinutos(inicio, servicio.duracionMin),
+      duracionMin: servicio.duracionMin, precioCentavos: servicio.precioCentavos,
+      estado: c.estado, motivoCancelacion: c.estado === "CANCELADA" ? c.nota : undefined,
+      creadoPor: recepcion._id, historial,
+    };
+  });
+  const activas = aInsertar.filter((c) => ESTADOS_QUE_BLOQUEAN.includes(c.estado));
+  for (const a of activas) {
+    for (const b of activas) {
+      if (a !== b && String(a.profesional) === String(b.profesional) && a.inicio < b.fin && a.fin > b.inicio) {
+        throw new Error("El seed de citas tiene un traslape: revisa citasDemo");
+      }
+    }
+  }
+  await Cita.insertMany(aInsertar);
+
   console.log(
-    `Usuarios: ${usuarios.length} | Servicios: ${servicios.length} | Secciones de contenido: ${CLAVES_CONTENIDO.length} | Días de horario: ${horarioSemana.length} | Pacientes: ${pacientesDemo.length} | Responsables: ${responsablesDemo.length}`,
+    `Usuarios: ${usuarios.length} | Servicios: ${servicios.length} | Secciones de contenido: ${CLAVES_CONTENIDO.length} | Días de horario: ${horarioSemana.length} | Pacientes: ${pacientesDemo.length} | Responsables: ${responsablesDemo.length} | Citas: ${citasDemo.length}`,
   );
   console.log("\nCredenciales de demostración (contraseña para todos: " + PASSWORD_DEMO + ")");
   for (const u of usuarios) console.log(`  ${u.rol.padEnd(14)} ${u.email}`);

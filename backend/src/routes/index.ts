@@ -1,5 +1,6 @@
 import { Router } from "express";
 import authRoutes from "./auth.routes";
+import citaRoutes from "./cita.routes";
 import contenidoRoutes from "./contenido.routes";
 import horarioRoutes from "./horario.routes";
 import pacienteRoutes from "./paciente.routes";
@@ -21,6 +22,7 @@ router.use("/contenido", contenidoRoutes);
 router.use("/horarios", horarioRoutes);
 router.use("/uploads", uploadRoutes);
 router.use("/pacientes", pacienteRoutes);
+router.use("/citas", citaRoutes);
 router.use("/responsables", responsableRoutes);
 
 export default router;

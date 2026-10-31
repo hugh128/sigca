@@ -3,7 +3,7 @@
 Proyecto final del curso de Desarrollo Web.
 
 | Carpeta | Contenido | Documentación |
-| --- | --- | --- |
+|---|---|---|
 | `backend/` | API REST: Node.js, Express, TypeScript, MongoDB (Mongoose) | `backend/README.md` |
 | `frontend/` | Portal y sistema administrativo: React, TypeScript, Tailwind | `frontend/README.md` |
 
@@ -26,5 +26,5 @@ npm run dev                 # http://localhost:5173
 
 Las imágenes se guardan en la carpeta `backend/uploads/` por defecto. Para usar Cloudflare R2 (solo se guarda la URL en la base de datos) sigue la sección «Cloudflare R2» de `backend/README.md`.
 
-Ingreso al sistema: <http://localhost:5173/admin> — usuario `admin@sigca.test`, contraseña `Sigca2026!`
+Ingreso al sistema: http://localhost:5173/admin — usuario `admin@sigca.test`, contraseña `Sigca2026!`
 (todos los usuarios de prueba usan la misma contraseña; ver `backend/README.md`).

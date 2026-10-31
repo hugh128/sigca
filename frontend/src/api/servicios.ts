@@ -11,10 +11,11 @@ export function useServiciosPublicos() {
 }
 
 /** Todos los servicios con precio, para el personal autenticado. */
-export function useServiciosAdmin() {
+export function useServiciosAdmin(habilitado = true) {
   return useQuery({
     queryKey: ["servicios", "admin"],
     queryFn: ({ signal }) => api<Servicio[]>("/servicios", { signal }),
+    enabled: habilitado,
   });
 }
 

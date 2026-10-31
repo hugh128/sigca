@@ -1,4 +1,5 @@
 import rateLimit from "express-rate-limit";
+import { env } from "../config/env";
 
 const opcionesBase = { standardHeaders: "draft-8" as const, legacyHeaders: false };
 
@@ -6,7 +7,7 @@ const opcionesBase = { standardHeaders: "draft-8" as const, legacyHeaders: false
 export const limiteGeneral = rateLimit({
   ...opcionesBase,
   windowMs: 15 * 60 * 1000,
-  limit: 500,
+  limit: env.RATE_LIMIT_GENERAL,
   message: { message: "Demasiadas peticiones, intenta de nuevo más tarde" },
 });
 

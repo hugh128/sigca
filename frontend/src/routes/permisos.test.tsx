@@ -25,19 +25,21 @@ function entrarComo(rol: Usuario["rol"], ruta: string) {
 }
 
 describe("permisos por rol (router real)", () => {
-  it("el administrador ve Panel, Servicios y Usuarios en el menú", async () => {
+  it("el administrador ve el menú completo, incluidas las citas", async () => {
     entrarComo("ADMINISTRADOR", "/admin");
     const menu = (await screen.findAllByRole("navigation", { name: "Módulos" }))[0]!;
     expect(within(menu).getByRole("link", { name: "Panel" })).toBeInTheDocument();
-    expect(within(menu).getByRole("link", { name: "Servicios" })).toBeInTheDocument();
-    expect(within(menu).getByRole("link", { name: "Usuarios" })).toBeInTheDocument();
+    for (const nombre of ["Calendario", "Citas", "Pacientes", "Responsables", "Servicios", "Horarios", "Contenido", "Usuarios"]) {
+      expect(within(menu).getByRole("link", { name: nombre })).toBeInTheDocument();
+    }
+    expect(within(menu).queryByRole("link", { name: "Mis pacientes" })).not.toBeInTheDocument(); // es solo para profesionales
   });
 
   it("la recepcionista ve Pacientes, Responsables y Servicios, pero no Usuarios, Contenido ni Horarios", async () => {
     entrarComo("RECEPCIONISTA", "/admin");
     const menu = (await screen.findAllByRole("navigation", { name: "Módulos" }))[0]!;
-    for (const nombre of ["Pacientes", "Responsables", "Servicios"]) expect(within(menu).getByRole("link", { name: nombre })).toBeInTheDocument();
-    for (const nombre of ["Usuarios", "Contenido", "Horarios"]) expect(within(menu).queryByRole("link", { name: nombre })).not.toBeInTheDocument();
+    for (const nombre of ["Calendario", "Citas", "Pacientes", "Responsables", "Servicios"]) expect(within(menu).getByRole("link", { name: nombre })).toBeInTheDocument();
+    for (const nombre of ["Usuarios", "Contenido", "Horarios", "Mis pacientes"]) expect(within(menu).queryByRole("link", { name: nombre })).not.toBeInTheDocument();
   });
 
   it("el profesional no puede abrir pacientes ni responsables escribiendo la dirección", async () => {
@@ -45,10 +47,10 @@ describe("permisos por rol (router real)", () => {
     expect(await screen.findByText("No tienes acceso a esta sección")).toBeInTheDocument();
   });
 
-  it("el profesional solo ve el Panel", async () => {
+  it("el profesional ve Panel, Calendario, Citas y Mis pacientes (y nada más)", async () => {
     entrarComo("PROFESIONAL", "/admin");
     const menu = (await screen.findAllByRole("navigation", { name: "Módulos" }))[0]!;
-    expect(within(menu).getAllByRole("link")).toHaveLength(1);
+    expect(within(menu).getAllByRole("link").map((l) => l.textContent)).toEqual(["Panel", "Calendario", "Citas", "Mis pacientes"]);
   });
 
   it("escribir /admin/usuarios en la barra como recepcionista muestra 'No tienes acceso'", async () => {

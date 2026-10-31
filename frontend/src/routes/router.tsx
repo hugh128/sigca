@@ -28,6 +28,9 @@ const horariosAdmin = async () => ({ Component: (await import("@/pages/admin/Hor
 const pacientes = async () => ({ Component: (await import("@/pages/admin/pacientes/Pacientes")).default });
 const pacienteDetalle = async () => ({ Component: (await import("@/pages/admin/pacientes/PacienteDetalle")).default });
 const responsables = async () => ({ Component: (await import("@/pages/admin/responsables/Responsables")).default });
+const calendario = async () => ({ Component: (await import("@/pages/admin/citas/Calendario")).default });
+const citasPagina = async () => ({ Component: (await import("@/pages/admin/citas/Citas")).default });
+const misPacientes = async () => ({ Component: (await import("@/pages/admin/pacientes/MisPacientes")).default });
 const prohibido = async () => ({ Component: (await import("@/pages/admin/Prohibido")).default });
 
 /**
@@ -76,6 +79,13 @@ export const rutas: RouteObject[] = [
             path: "horarios",
             element: <RequireRole roles={["ADMINISTRADOR"]} />,
             children: [{ index: true, lazy: horariosAdmin }],
+          },
+          { path: "calendario", lazy: calendario },
+          { path: "citas", lazy: citasPagina },
+          {
+            path: "mis-pacientes",
+            element: <RequireRole roles={["PROFESIONAL"]} />,
+            children: [{ index: true, lazy: misPacientes }],
           },
           {
             path: "pacientes",

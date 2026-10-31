@@ -1,0 +1,44 @@
+{
+    "items": [
+        {
+            "id": "6adb76f193e4e8e352d403a6",
+            "nombres": "Valeria",
+            "apellidos": "Castillo Juárez",
+            "sexo": "FEMENINO",
+            "estado": "ACTIVO",
+            "edad": 9,
+            "esMenor": true
+        },
+        {
+            "id": "6adb76f193e4e8e352d403ab",
+            "nombres": "Sofía",
+            "apellidos": "Marroquín Díaz",
+            "sexo": "FEMENINO",
+            "estado": "ACTIVO",
+            "edad": 28,
+            "esMenor": false
+        },
+        {
+            "id": "6adb76f193e4e8e352d403a7",
+            "nombres": "Camila",
+            "apellidos": "Ortiz Barrios",
+            "sexo": "FEMENINO",
+            "estado": "ACTIVO",
+            "edad": 15,
+            "esMenor": true
+        },
+        {
+            "id": "6adb76f193e4e8e352d403a8",
+            "nombres": "Sebastián",
+            "apellidos": "Pérez Gómez",
+            "sexo": "MASCULINO",
+            "estado": "ACTIVO",
+            "edad": 17,
+            "esMenor": true
+        }
+    ],
+    "total": 4,
+    "page": 1,
+    "limit": 15,
+    "pages": 1
+}

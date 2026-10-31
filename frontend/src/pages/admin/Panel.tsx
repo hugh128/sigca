@@ -1,6 +1,8 @@
+import { useCitas } from "@/api/citas";
 import { useServiciosAdmin } from "@/api/servicios";
 import { useUsuarios } from "@/api/usuarios";
 import { Cargando } from "@/components/ui/Estados";
+import { hoyGuatemala } from "@/lib/fechas";
 import { ROL_ETIQUETA } from "@/lib/roles";
 import { useDocumentTitle } from "@/lib/useDocumentTitle";
 import { useAuthStore } from "@/store/auth";
@@ -19,7 +21,11 @@ export default function Panel() {
   useDocumentTitle("Panel", "SIGCA");
 
   const esAdmin = usuario?.rol === "ADMINISTRADOR";
-  const servicios = useServiciosAdmin();
+  const gestion = usuario?.rol === "ADMINISTRADOR" || usuario?.rol === "RECEPCIONISTA";
+  const hoy = hoyGuatemala();
+  const citasHoy = useCitas({ desde: hoy, hasta: hoy, estado: ["PENDIENTE", "CONFIRMADA"], limit: 1 });
+  const porConfirmar = useCitas({ desde: hoy, estado: ["PENDIENTE"], limit: 1 }, gestion);
+  const servicios = useServiciosAdmin(usuario?.rol !== "PROFESIONAL");
   const usuarios = useUsuarios(esAdmin);
 
   if (!usuario) return <Cargando />;
@@ -34,11 +40,13 @@ export default function Panel() {
 
       <h2 className="mt-10 text-lg font-semibold text-marea-900">Resumen</h2>
       <dl className="mt-2 divide-y divide-marea-100 border-y border-marea-100">
-        <Dato
+        <Dato etiqueta="Citas de hoy" cargando={citasHoy.isPending} valor={citasHoy.data ? String(citasHoy.data.total) : undefined} />
+        {gestion && <Dato etiqueta="Citas pendientes de confirmar" cargando={porConfirmar.isPending} valor={porConfirmar.data ? String(porConfirmar.data.total) : undefined} />}
+        {usuario.rol !== "PROFESIONAL" && <Dato
           etiqueta="Servicios activos"
           cargando={servicios.isPending}
           valor={servicios.data ? `${activosServicios} de ${servicios.data.length}` : undefined}
-        />
+        />}
         {esAdmin && (
           <Dato
             etiqueta="Usuarios activos"

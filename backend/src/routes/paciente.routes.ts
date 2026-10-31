@@ -10,11 +10,15 @@ import { z } from "zod";
 
 const router = Router();
 
-// Gestion de pacientes: administrador y recepcion.
-router.use(authenticate, authorize("ADMINISTRADOR", "RECEPCIONISTA"));
+router.use(authenticate);
 
-router.get("/", validate({ query: listarPacientesQuery }), ctrl.listar);
-router.get("/:id", validate({ params: idParams }), ctrl.obtener);
+// Consulta: el profesional ve solo informacion basica de los pacientes que atiende (lo aplica el servicio).
+const lectura = authorize("ADMINISTRADOR", "RECEPCIONISTA", "PROFESIONAL");
+router.get("/", lectura, validate({ query: listarPacientesQuery }), ctrl.listar);
+router.get("/:id", lectura, validate({ params: idParams }), ctrl.obtener);
+
+// Gestion de pacientes: administrador y recepcion.
+router.use(authorize("ADMINISTRADOR", "RECEPCIONISTA"));
 router.post("/", validate({ body: crearPacienteBody }), ctrl.crear);
 router.put("/:id", validate({ params: idParams, body: actualizarPacienteBody }), ctrl.actualizar);
 router.patch("/:id/estado", validate({ params: idParams, body: estadoPacienteBody }), ctrl.cambiarEstado);

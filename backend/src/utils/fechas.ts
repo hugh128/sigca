@@ -34,3 +34,45 @@ export const MAYORIA_DE_EDAD = 18;
 export function fechaLimiteMayoriaEdad(hoy: string = hoyGuatemala()): string {
   return `${Number(hoy.slice(0, 4)) - MAYORIA_DE_EDAD}${hoy.slice(4)}`;
 }
+
+/* ------------------------------------------------------------------------------------------------
+ * Citas: fecha + hora de pared en Guatemala <-> instante (UTC).
+ * Guatemala esta en UTC-6 todo el anio (no tiene horario de verano), asi que la conversion es exacta.
+ * ---------------------------------------------------------------------------------------------- */
+const OFFSET_GUATEMALA = "-06:00";
+
+/** "2026-10-20" + "09:30" (hora de Guatemala) -> instante exacto. */
+export function aInstante(fecha: string, hora: string): Date {
+  return new Date(`${fecha}T${hora}:00${OFFSET_GUATEMALA}`);
+}
+
+/** Instante -> fecha y hora de pared en Guatemala. */
+export function partesGuatemala(instante: Date): { fecha: string; hora: string } {
+  const p = Object.fromEntries(
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: ZONA_HORARIA, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+    }).formatToParts(instante).map((x) => [x.type, x.value]),
+  );
+  return { fecha: `${p.year}-${p.month}-${p.day}`, hora: `${p.hour}:${p.minute}` };
+}
+
+export const DIAS_DE_LA_SEMANA = ["DOMINGO", "LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO"] as const;
+export type DiaDeLaSemana = (typeof DIAS_DE_LA_SEMANA)[number];
+
+/** Dia de la semana de una fecha de calendario (no depende de la zona horaria). */
+export function diaSemana(fecha: string): DiaDeLaSemana {
+  return DIAS_DE_LA_SEMANA[new Date(`${fecha}T00:00:00Z`).getUTCDay()]!;
+}
+
+export function sumarDias(fecha: string, dias: number): string {
+  const d = new Date(`${fecha}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + dias);
+  return d.toISOString().slice(0, 10);
+}
+
+export const sumarMinutos = (instante: Date, minutos: number) => new Date(instante.getTime() + minutos * 60_000);
+
+/** "09:30" -> 570 */
+export const horaAMinutos = (hora: string) => Number(hora.slice(0, 2)) * 60 + Number(hora.slice(3, 5));
+/** 570 -> "09:30" */
+export const minutosAHora = (min: number) => `${String(Math.floor(min / 60)).padStart(2, "0")}:${String(min % 60).padStart(2, "0")}`;

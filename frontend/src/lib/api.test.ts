@@ -47,6 +47,20 @@ describe("cliente api", () => {
     expect(error.errores).toEqual([{ campo: "email", mensaje: "Correo inválido" }]);
   });
 
+  it("un 409 con `detalles` (objeto) no rompe: errores queda vacío y los detalles se conservan", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => json({ message: "El profesional ya tiene una cita de 14:00 a 14:50 ese día", detalles: { conflicto: { horaInicio: "14:00", horaFin: "14:50" } } }, 409)));
+    const error = (await api("/citas", { method: "POST", body: {} }).catch((e: unknown) => e)) as ApiError;
+    expect(error.status).toBe(409);
+    expect(error.errores).toBeUndefined();
+    expect(error.detalles).toEqual({ conflicto: { horaInicio: "14:00", horaFin: "14:50" } });
+  });
+
+  it("si `errors` llegara con una forma que no es lista, se ignora en vez de romper", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => json({ message: "Conflicto", errors: { conflicto: {} } }, 409)));
+    const error = (await api("/citas", { method: "POST", body: {} }).catch((e: unknown) => e)) as ApiError;
+    expect(error.errores).toBeUndefined();
+  });
+
   it("cierra la sesion cuando el servidor responde 401 a una peticion autenticada", async () => {
     useAuthStore.setState({ token: "vencido", estado: "autenticado" });
     vi.stubGlobal("fetch", vi.fn(async () => json({ message: "Sesión inválida o expirada" }, 401)));

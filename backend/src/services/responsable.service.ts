@@ -4,6 +4,7 @@ import { Responsable, type IResponsable } from "../models/Responsable";
 import { AppError } from "../utils/AppError";
 import { armarPagina } from "../utils/paginar";
 import { escaparRegex, normalizar } from "../utils/texto";
+import { validarQuedaConResponsable } from "./paciente.service";
 
 type PacienteResumen = { id: string; nombres: string; apellidos: string; estado: string };
 
@@ -69,6 +70,7 @@ export async function asociarPaciente(responsableId: string, pacienteId: string)
 
 export async function desasociarPaciente(responsableId: string, pacienteId: string) {
   if (!(await Responsable.exists({ _id: responsableId }))) throw AppError.notFound("Responsable no encontrado");
+  await validarQuedaConResponsable(pacienteId, responsableId);
   const r = await Paciente.updateOne({ _id: pacienteId }, { $pull: { responsables: responsableId } });
   if (r.matchedCount === 0) throw AppError.notFound("Paciente no encontrado");
   return obtener(responsableId);

@@ -29,6 +29,7 @@ El backend debe tener `CLIENT_URL=http://localhost:5173` para que CORS permita l
 | `npm run build` | Verifica tipos y genera `dist/` |
 | `npm run typecheck` | Solo verificación de tipos |
 | `npm test` | Pruebas (Vitest + Testing Library) |
+| `npm run test:contrato` | Pruebas de contrato contra el backend **real** (requiere el backend corriendo y `npm run seed`). Crean citas de prueba en fechas lejanas |
 
 ## Tecnologías (equivalencias con los lineamientos originales)
 
@@ -68,6 +69,9 @@ src/
 | `/admin/pacientes` | Pacientes | Administrador, Recepcionista | Listado con búsqueda (sin tildes), filtros por edad y estado, paginación y filtros guardados en la URL; registrar, editar, desactivar y reactivar. Muestra la edad al escribir la fecha de nacimiento |
 | `/admin/pacientes/:id` | Ficha del paciente | Administrador, Recepcionista | Datos y responsables; asociar uno existente (buscador), registrar uno nuevo ya asociado o quitarlo. Alerta si un menor no tiene responsable (RN-04) |
 | `/admin/responsables` | Responsables | Administrador, Recepcionista | Listado, registrar, editar y gestionar los pacientes de cada responsable |
+| `/admin/calendario` | Calendario | Todos (el profesional ve solo su agenda) | Vista de mes, semana y día (FullCalendar) con las citas por color de estado, franjas de atención resaltadas, filtro por profesional y opción de ver canceladas. Clic en una cita abre su detalle; clic en un día (admin/recepción) abre «Programar cita» |
+| `/admin/citas` | Citas | Todos (el profesional ve solo las suyas) | Listado por período, estado y profesional; historial de un paciente (`?paciente=`); confirmar desde la fila; detalle con historial y acciones según rol y estado |
+| `/admin/mis-pacientes` | Mis pacientes | Profesional | Los pacientes que atiende, solo con información básica, con enlace a su historial de citas |
 | `/admin/contenido` | Contenido del portal | Administrador | Editar las 6 secciones: General, Inicio (carrusel de 5 a 12 imágenes), Misión y visión, Contacto, Corporativo y Contenido educativo |
 | `/admin/horarios` | Horarios de atención | Administrador | Días y franjas (varias por día), con vista previa de cómo se verá en el portal |
 
@@ -79,6 +83,10 @@ Patrones que los siguientes módulos reutilizan:
 - **Listados paginados con filtros en la URL:** `Pacientes.tsx` guarda búsqueda, filtros y página en la barra de direcciones (se pueden compartir y «volver» no los pierde). La búsqueda espera a que se termine de escribir (`useDebounce`) antes de consultar.
 - **Asociar registros existentes:** `BuscadorAsociar` (buscar y elegir) sirve para responsable→paciente y paciente→responsable, y lo reutilizarán las citas.
 - **Modales:** `Modal` distingue «la persona lo cerró» de «lo cerré por código»; así se puede pasar de una ventana a otra sin que la segunda se cierre sola.
+- **Citas:** el formulario no deja «adivinar» una hora: pide al servidor los **horarios realmente libres** del profesional para ese servicio y fecha (`GET /citas/disponibilidad`) y los ofrece para elegir. `accionesDisponibles()` (`lib/citas.ts`) decide qué botones ve cada rol según el estado; es el espejo de las reglas del servidor y su coincidencia se verifica con la prueba de contrato.
+- **Calendario:** amplía las horas visibles para incluir las franjas de atención y las citas del período, aunque estén fuera de 07:00–19:00. El profesional no consulta el listado de profesionales, reservado a administración y recepción.
+- **Calendario:** las opciones de FullCalendar son constantes y los callbacks estables a propósito: si se recrearan en cada render, el calendario se reconfiguraría y avisaría el rango otra vez en un bucle infinito.
+- **Errores del servidor:** `ApiError.errores` es solo la lista de errores por campo; otros datos llegan en `ApiError.detalles`.
 - **Un solo origen para los valores iniciales:** `pages/admin/contenido/valores.ts` convierte lo que devuelve la API en los valores del formulario; la misma conversión usan los componentes y las pruebas.
 - **Dinero:** el formulario trabaja con quetzales como texto y `lib/dinero.ts` convierte a **centavos enteros** sin usar decimales de punto flotante (`19.99` → `1999`).
 - **Desactivar en lugar de eliminar:** conserva el historial (las citas y pagos futuros referencian usuarios y servicios).

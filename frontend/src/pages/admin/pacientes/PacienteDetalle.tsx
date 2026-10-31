@@ -1,27 +1,31 @@
-import { ArrowLeft, Cake, CalendarDays, MapPin, Pencil, Phone, Plus, PowerOff, Power, TriangleAlert, UserMinus } from "lucide-react";
+import { ArrowLeft, Cake, CalendarDays, CalendarPlus, MapPin, Pencil, Phone, Plus, PowerOff, Power, TriangleAlert, UserMinus } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Link, useParams } from "react-router";
 import { useAsociarResponsable, useCambiarEstadoPaciente, useDesasociarResponsable, usePaciente } from "@/api/pacientes";
+import { useCitas } from "@/api/citas";
 import { useResponsables } from "@/api/responsables";
 import { BuscadorAsociar } from "@/components/forms/BuscadorAsociar";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
+import { ETIQUETA_ESTADO, TONO_ESTADO } from "@/lib/citas";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Cargando, ErrorCarga } from "@/components/ui/Estados";
 import { Modal } from "@/components/ui/Modal";
 import { ApiError } from "@/lib/api";
 import { textoEdad } from "@/lib/fechas";
-import { formatearFecha } from "@/lib/format";
+import { formatearFecha, formatearFechaCorta, formatearHora } from "@/lib/format";
 import { useDocumentTitle } from "@/lib/useDocumentTitle";
 import { toast } from "@/store/toast";
 import type { ResponsableDePaciente } from "@/types/api";
+import { DetalleCita } from "../citas/DetalleCita";
+import { FormularioCita } from "../citas/FormularioCita";
 import { FormularioResponsable } from "../responsables/FormularioResponsable";
 import { FormularioPaciente } from "./FormularioPaciente";
 
 const SEXO: Record<string, string> = { MASCULINO: "Masculino", FEMENINO: "Femenino", OTRO: "Otro" };
 
-type Dialogo = "editar" | "desactivar" | "asociar" | "nuevoResponsable" | { quitar: ResponsableDePaciente } | null;
+type Dialogo = "editar" | "desactivar" | "asociar" | "nuevoResponsable" | "nuevaCita" | { quitar: ResponsableDePaciente } | null;
 
 function Dato({ icono: Icono, etiqueta, children }: { icono: typeof Phone; etiqueta: string; children: React.ReactNode }) {
   return (
@@ -48,6 +52,8 @@ export default function PacienteDetalle() {
   const alBuscar = useCallback((q: string) => setBusqueda(q), []);
   const cerrar = () => setDialogo(null);
   const buscando = useResponsables({ q: busqueda || undefined, limit: 6 }, dialogo === "asociar");
+  const citas = useCitas({ pacienteId: id, orden: "desc", limit: 5 });
+  const [citaAbierta, setCitaAbierta] = useState<string | null>(null);
 
   if (isPending) return <Cargando texto="Cargando paciente…" />;
   if (isError) return <ErrorCarga error={error} onReintentar={() => refetch()} />;
@@ -184,6 +190,43 @@ export default function PacienteDetalle() {
           )}
         </section>
       </div>
+
+      <section aria-labelledby="citas" className="mt-10">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 id="citas" className="text-lg font-semibold text-marea-900">Citas</h2>
+          <div className="flex gap-2">
+            <Link to={`/admin/citas?paciente=${p.id}`} className="rounded-lg px-4 py-2.5 text-sm font-medium text-marea-700 hover:bg-marea-50">Ver historial completo</Link>
+            <Button onClick={() => setDialogo("nuevaCita")} disabled={p.estado === "INACTIVO" || sinResponsable}>
+              <CalendarPlus className="size-4" aria-hidden="true" />
+              Programar cita
+            </Button>
+          </div>
+        </div>
+        {(p.estado === "INACTIVO" || sinResponsable) && (
+          <p className="mt-2 text-sm text-ink-soft">
+            {p.estado === "INACTIVO" ? "Reactiva al paciente para programarle citas." : "Registra un responsable para poder programarle citas."}
+          </p>
+        )}
+        {citas.data && citas.data.items.length === 0 && <p className="mt-3 rounded-xl border border-dashed border-marea-200 px-4 py-6 text-center text-ink-soft">Todavía no tiene citas.</p>}
+        {citas.data && citas.data.items.length > 0 && (
+          <ul className="mt-3 divide-y divide-marea-100 rounded-xl border border-marea-100 bg-white">
+            {citas.data.items.map((c) => (
+              <li key={c.id} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3">
+                <p className="w-32 font-medium capitalize">{formatearFechaCorta(c.fecha)}</p>
+                <p className="w-40 text-ink-soft">{formatearHora(c.horaInicio)} – {formatearHora(c.horaFin)}</p>
+                <p className="min-w-0 flex-1 truncate">{c.servicio.nombre} <span className="text-ink-soft">· {c.profesional.nombre}</span></p>
+                <Badge tono={TONO_ESTADO[c.estado]}>{ETIQUETA_ESTADO[c.estado]}</Badge>
+                <Button variante="texto" onClick={() => setCitaAbierta(c.id)} aria-label={`Ver la cita del ${c.fecha} a las ${c.horaInicio}`}>Ver</Button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      {citaAbierta && <DetalleCita citaId={citaAbierta} onCerrar={() => setCitaAbierta(null)} />}
+      <Modal abierto={dialogo === "nuevaCita"} onCerrar={cerrar} ancho="lg" titulo="Programar cita" descripcion={`Para ${nombre}.`}>
+        {dialogo === "nuevaCita" && <FormularioCita paciente={p} onCerrar={cerrar} />}
+      </Modal>
 
       <Modal abierto={dialogo === "editar"} onCerrar={cerrar} ancho="lg" titulo="Editar paciente">
         {dialogo === "editar" && <FormularioPaciente paciente={p} onCerrar={cerrar} />}

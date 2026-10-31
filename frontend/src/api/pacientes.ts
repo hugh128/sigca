@@ -103,3 +103,12 @@ export function useDesasociarResponsable() {
     onSuccess: invalidar,
   });
 }
+
+/** Pacientes que atiende un profesional (informacion basica, sin telefono ni responsables). */
+export function usePacientesBasicos(filtros: { q?: string; page?: number; limit?: number }) {
+  return useQuery({
+    queryKey: ["pacientes", "basicos", filtros],
+    queryFn: ({ signal }) => api<Pagina<import("@/types/api").PacienteBasico>>(`/pacientes${consulta(filtros)}`, { signal }),
+    placeholderData: keepPreviousData,
+  });
+}
