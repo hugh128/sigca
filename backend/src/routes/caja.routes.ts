@@ -1,0 +1,13 @@
+import { Router } from "express";
+import * as ctrl from "../controllers/caja.controller";
+import { authenticate, authorize } from "../middlewares/auth";
+import { validate } from "../middlewares/validate";
+import { idParams } from "../schemas/common.schema";
+import { abrirCajaBody, listarCajasQuery } from "../schemas/caja.schema";
+const router = Router();
+router.use(authenticate, authorize("ADMINISTRADOR", "RECEPCIONISTA"));
+router.post("/abrir", validate({ body: abrirCajaBody }), ctrl.abrir);
+router.get("/actual", ctrl.actual);
+router.get("/", validate({ query: listarCajasQuery }), ctrl.listar);
+router.get("/:id", validate({ params: idParams }), ctrl.obtener);
+export default router;

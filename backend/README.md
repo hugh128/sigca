@@ -5,6 +5,23 @@ Node.js + Express 5 + TypeScript + MongoDB (Mongoose).
 
 > Estado: **Avance 1 + módulos del Avance 2**: pacientes, responsables, citas/calendario, contacto, solicitudes y materiales/asignaciones. Pendientes revision de cierre operativo y finanzas.
 
+## Apertura y consulta de caja
+
+Primera entrega de RF-11: apertura y consulta, con RN-22 y montos en centavos (RN-28). Pagos, movimientos, totales y cierre se incorporaran en sus entregas; no hay endpoints de edicion ni borrado de cajas.
+
+| Metodo | Ruta | Acceso y respuesta |
+|---|---|---|
+| POST | `/api/cajas/abrir` | Administrador/recepcionista: abre la propia, 201; segunda apertura 409 |
+| GET | `/api/cajas/actual` | Caja abierta propia o `null` (200), tambien para administrador |
+| GET | `/api/cajas?page=&limit=&estado=&usuarioId=` | Administrador todas o filtro por usuario; recepcion solo propias |
+| GET | `/api/cajas/:id` | Propietario o administrador; caja ajena para recepcion devuelve 404 |
+
+El alta acepta `montoInicialCentavos`, numero entero de 0 a 999999999 (Q0.00 a Q9,999,999.99). Responsable, apertura y estado ABIERTA los asigna el servidor; no se aceptan valores arbitrarios para esos campos. Las respuestas contienen `id`, `usuario` (id/nombre), `apertura` UTC, `montoInicialCentavos` y `estado`. Listados paginados por apertura descendente; estado opcional ABIERTA/CERRADA. Filtrar otro usuario como recepcionista devuelve 403. Profesional sin acceso (403); sin sesion 401.
+
+El indice unico parcial por usuario cuando estado=ABIERTA garantiza una sola caja abierta aun entre peticiones simultaneas. La apertura espera la inicializacion del indice. Referencia: [indices parciales de MongoDB](https://www.mongodb.com/docs/manual/core/index-partial/). Una caja historica cerrada no impide abrir otra.
+
+El seed incluye una caja abierta de recepcion2 con Q200.00. Admin y recepcion1 quedan sin caja para ensayar apertura. Las tres cajas abiertas/cerradas requeridas para la entrega final se completaran al implementar cierres y pagos. Las pruebas financieras utilizan bases temporales y no abren cajas en la base de desarrollo.
+
 ## Requisitos
 
 La revision operativa de RF-01 a RF-09 y RN-01 a RN-14, con evidencias y pendientes financieros, esta en [verificacion del avance 2](../tasks/verificacion-avance-2.md). `npm run test:e2e` comprueba tambien los minimos del seed y la coherencia de referencias, duraciones y precios antes del recorrido HTTP, sobre una base temporal.

@@ -90,8 +90,9 @@ Plan y orden aprobados por el usuario. Dependencias y criterios generales: `plan
 Detallar contratos e incrementos antes de implementar, con los criterios siguientes como alcance obligatorio.
 
 ### 11. Apertura de caja
-- [ ] Usuario autorizado abre su caja con monto inicial; indice impide dos cajas abiertas, incluso bajo concurrencia.
-- [ ] Recepcion consulta solo propias; administrador consulta todas.
+- [x] Usuario autorizado abre su caja con monto inicial; indice impide dos cajas abiertas, incluso bajo concurrencia.
+- [x] Recepcion consulta solo propias; administrador consulta todas.
+- Verificado: 258 pruebas frontend, 30 backend, 369 comprobaciones HTTP, 2 contratos, ambos builds y navegador (apertura con Q19.99, consulta por administrador y movil). Seed con una caja de recepcion2; minimos finales de cajas/cierres pendientes de etapa 13. Publicacion pendiente del OK del usuario.
 - Verificacion: API, concurrencia y apertura desde interfaz.
 - Dependencias: 5. Incrementos: modelo/schema/servicio/pruebas; controlador/rutas/indice/pruebas; API/pagina/menu/rutas/pruebas (4–5 archivos).
 

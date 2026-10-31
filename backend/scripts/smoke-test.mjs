@@ -597,6 +597,20 @@ r = await req("POST", `/materiales/pacientes/${datosConversion.pacienteId}`, { t
 r = await req("PATCH", `/materiales/${materialDemo.id}/estado`, { token: admin, body: { estado: "INACTIVO" } }); ok(r.s === 200, "materiales: desactivar sin borrar");
 r = await req("GET", `/materiales/pacientes/${datosConversion.pacienteId}`, { token: admin }); ok(r.s === 200 && r.j.items[0].material.estado === "INACTIVO", "materiales: historial conserva recurso inactivo");
 
+// --- apertura de caja y propiedad
+r = await req("GET", "/cajas/actual"); ok(r.s === 401, "cajas: requiere sesion");
+r = await req("GET", "/cajas", { token: prof }); ok(r.s === 403, "cajas: profesional sin acceso");
+r = await req("GET", "/cajas", { token: admin }); ok(r.s === 200 && r.j.total === 1, "cajas: seed deja una caja de demostracion");
+const cajaAjena = r.j.items[0];
+r = await req("GET", `/cajas/${cajaAjena.id}`, { token: recep }); ok(r.s === 404, "cajas: recepcion no consulta caja ajena");
+r = await req("GET", "/cajas/actual", { token: recep }); ok(r.s === 200 && r.j === null, "cajas: recepcion1 aun sin caja");
+r = await req("POST", "/cajas/abrir", { token: recep, body: { montoInicialCentavos: -1 } }); ok(r.s === 400, "cajas: monto negativo rechazado");
+r = await req("POST", "/cajas/abrir", { token: recep, body: { montoInicialCentavos: 1999 } }); ok(r.s === 201 && r.j.montoInicialCentavos === 1999 && r.j.estado === "ABIERTA", "cajas: apertura con centavos exactos");
+r = await req("POST", "/cajas/abrir", { token: recep, body: { montoInicialCentavos: 0 } }); ok(r.s === 409, "cajas: segunda apertura rechazada");
+r = await req("GET", "/cajas", { token: recep }); ok(r.s === 200 && r.j.total === 1 && r.j.items[0].id !== cajaAjena.id, "cajas: recepcion lista solo propia");
+r = await req("GET", "/cajas", { token: admin }); ok(r.s === 200 && r.j.total === 2, "cajas: administrador lista todas");
+r = await req("GET", "/cajas/actual", { token: admin }); ok(r.s === 200 && r.j === null, "cajas: caja actual del admin es solo la propia");
+
 // --- rate limit login
 let got429 = false;
 for (let i = 0; i < 12; i++) { const x = await login("admin@sigca.test", "mal" + i + "xx"); if (x.s === 429) { got429 = true; break; } }

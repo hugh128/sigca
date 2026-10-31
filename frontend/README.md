@@ -39,6 +39,12 @@ Desde la ficha de un paciente (administrador) o desde **Mis pacientes** (profesi
 
 El contenido educativo del portal conserva su funcionamiento separado. El seed contiene recursos ficticios con enlaces ilustrativos; no se implementan subidas de PDF en esta entrega.
 
+## Caja diaria
+
+`/admin/caja`, para administrador y recepcionista, muestra la caja abierta propia o el formulario de apertura. El monto inicial se escribe en quetzales y se convierte a centavos con la utilidad existente, sin multiplicacion decimal de punto flotante. Permite cero; rechaza negativos, mas de dos decimales y valores fuera de rango. La confirmacion aparece tras guardar y el formulario desaparece al refrescar la caja actual. Si otra sesion ya abrio la caja, el conflicto 409 refresca y muestra la caja ganadora.
+
+El listado es paginado, filtra por estado y permite ver detalle. Administrador consulta todas las cajas y puede marcar Solo mis cajas; recepcion solo recibe las propias desde la API. El profesional no ve el menu ni puede entrar por URL. Esta entrega muestra apertura y monto inicial; pagos, ingresos calculados y cierre siguen pendientes. El seed deja libre recepcion1 para probar la apertura y contiene una caja de recepcion2 para verificar la vista del administrador.
+
 ## Scripts
 
 | Comando | Acción |
