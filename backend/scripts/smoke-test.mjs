@@ -140,6 +140,7 @@ const semana = (fn) => ({ dias: DIAS.map((d, i) => fn(d, i)) });
 const normal = (d) => ({ dia: d, atiende: !["SABADO","DOMINGO"].includes(d), franjas: ["SABADO","DOMINGO"].includes(d) ? [] : [{ inicio: "09:00", fin: "13:00" }] });
 r = await req("PUT", "/horarios", { body: semana(normal) }); ok(r.s === 401, "editar horarios sin token 401");
 r = await req("PUT", "/horarios", { token: recep, body: semana(normal) }); ok(r.s === 403, "editar horarios como recepcionista 403");
+r = await req("GET", "/horarios", { token: recep }); ok(r.s === 200 && r.j.dias.length === 7, "RF-02: recepcion consulta los siete dias de horario");
 r = await req("PUT", "/horarios", { token: admin, body: { dias: DIAS.slice(0, 6).map(normal) } }); ok(r.s === 400, "faltando un día 400");
 r = await req("PUT", "/horarios", { token: admin, body: semana((d, i) => normal(i === 6 ? "LUNES" : d)) }); ok(r.s === 400, "día repetido 400");
 r = await req("PUT", "/horarios", { token: admin, body: semana((d) => d === "LUNES" ? { dia: d, atiende: true, franjas: [{ inicio: "12:00", fin: "08:00" }] } : normal(d)) }); ok(r.s === 400, "inicio mayor que fin 400");

@@ -91,7 +91,7 @@ export const rutas: RouteObject[] = [
           },
           {
             path: "horarios",
-            element: <RequireRole roles={["ADMINISTRADOR"]} />,
+            element: <RequireRole roles={["ADMINISTRADOR", "RECEPCIONISTA"]} />,
             children: [{ index: true, lazy: horariosAdmin }],
           },
           { path: "calendario", lazy: calendario },

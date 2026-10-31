@@ -7,6 +7,8 @@ Node.js + Express 5 + TypeScript + MongoDB (Mongoose).
 
 ## Requisitos
 
+La revision operativa de RF-01 a RF-09 y RN-01 a RN-14, con evidencias y pendientes financieros, esta en [verificacion del avance 2](../tasks/verificacion-avance-2.md). `npm run test:e2e` comprueba tambien los minimos del seed y la coherencia de referencias, duraciones y precios antes del recorrido HTTP, sobre una base temporal.
+
 - Node.js 20 o superior
 - MongoDB Server local (Compass es opcional). La instancia del proyecto usa un replica set de un nodo para desarrollo, independiente del servicio de Windows.
 
