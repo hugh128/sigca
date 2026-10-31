@@ -6,11 +6,12 @@ Fecha: 2026-10-31. Base revisada: `adcb498` (PR #1 integrado).
 
 - Implementados: autenticacion y roles, usuarios y profesionales, servicios, contenido institucional, horarios, almacenamiento local/R2, pacientes, responsables, citas, disponibilidad y calendario.
 - Contacto integrado en main mediante PR #3: formulario `/contacto`, persistencia y bandeja `/admin/mensajes` exclusiva del administrador.
-- Solicitudes implementadas en `feature/solicitudes-cita`, pendientes de revision del usuario: formulario publico, bandeja de administrador/recepcion, rechazo y conversion transaccional a cita.
-- Pendientes: materiales y asignaciones, pagos, caja y entregables finales.
+- Solicitudes integradas en main mediante PR #4: formulario publico, bandeja de administrador/recepcion, rechazo y conversion transaccional a cita.
+- Materiales y asignaciones implementados en `feature/materiales`, pendientes de revision del usuario: catalogo privado, enlaces seguros e historial por paciente. Profesional limitado a pacientes propios; recepcion sin acceso.
+- Pendientes: revision de cierre del avance 2, pagos, caja y entregables finales.
 - Recepcion consulta los horarios publicos, pero no tiene una vista administrativa de consulta. Revisar ese acceso al cerrar el avance 2.
 - MongoDB original en 27017 se conserva. Instancia de SIGCA en 27018 con replica set local `sigca-rs`, respaldo y copia verificada de documentos e indices. Comandos y conexion documentados en backend/README.md.
-- Validacion con solicitudes: 245 pruebas frontend, 23 pruebas backend con MongoDB, 346 comprobaciones HTTP, 2 contratos, builds y recorrido de solicitud/conversion/calendario en navegador. Vista movil comprobada; bases temporales independientes.
+- Validacion con materiales: 251 pruebas frontend, 25 pruebas backend con MongoDB, 357 comprobaciones HTTP, 2 contratos y ambos builds. Navegador: alta y asignacion como administrador, consulta/asignacion como profesional y vista movil sin desbordamiento. Bases temporales independientes.
 
 ## Orden propuesto
 
@@ -47,7 +48,7 @@ Cada modulo incluye API, interfaz y pruebas. Los pasos internos estan en `todo.m
 
 ## Flujo de Git
 
-- Main actualizado al PR #3 (`e2c19c6`). Solicitudes implementadas en `feature/solicitudes-cita`, con cambios sin commit pendientes del OK del usuario.
+- Main actualizado al PR #4 (`5edc2aa`). Materiales implementados en `feature/materiales`, con cambios sin commit pendientes del OK del usuario.
 - Las implementaciones salen del main actualizado en ramas propias. No mezclar contacto, solicitudes, materiales y finanzas en un unico PR.
 - Commit, push y PR requieren el OK del usuario para cada entrega. El usuario aprueba y fusiona.
 - El usuario aprobo el plan y autorizo configurar el replica set. Los modulos se desarrollan por entrega; publicar cambios requiere su OK.
@@ -64,4 +65,4 @@ Cada modulo incluye API, interfaz y pruebas. Los pasos internos estan en `todo.m
 
 ## Siguiente entrega recomendada
 
-Revisar y publicar solicitudes con el OK del usuario. Despues, implementar catalogo de materiales y asignaciones por paciente. Contacto y solicitudes no envian correo automatico: el equipo coordina la atencion con los datos guardados.
+Revisar y publicar materiales con el OK del usuario. Despues, revisar el cierre del avance 2 (permisos, seed y recorrido RF-01 a RF-09 / RN-01 a RN-14) antes de comenzar caja y pagos. Contacto y solicitudes no envian correo automatico: el equipo coordina la atencion con los datos guardados.

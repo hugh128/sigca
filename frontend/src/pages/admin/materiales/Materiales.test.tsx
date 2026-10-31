@@ -1,0 +1,34 @@
+import { screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { beforeEach, expect, it } from "vitest";
+import { reiniciarEstado, renderConRutas, simularApi } from "@/test/utils";
+import { useAuthStore } from "@/store/auth";
+import { usuarioPorRol } from "@/test/datos";
+import Materiales from "./Materiales";
+const material = { id: "m1", titulo: "Guía de apoyo", descripcion: "Ejercicios de ejemplo", tipo: "Documento", enlace: "https://example.test/guia.pdf", estado: "ACTIVO", createdAt: "2026-10-31T12:00:00Z" };
+beforeEach(reiniciarEstado);
+it("admin registra un material con enlace seguro", async () => {
+  useAuthStore.setState({ token: "t", estado: "autenticado", usuario: usuarioPorRol("ADMINISTRADOR") });
+  const api = simularApi({ "GET /materiales": { body: { items: [material], total: 1, page: 1, pages: 1 } }, "POST /materiales": { status: 201, body: material } });
+  renderConRutas([{ path: "/", element: <Materiales /> }]);
+  const user = userEvent.setup();
+  await user.click(await screen.findByRole("button", { name: "Nuevo material" }));
+  await user.type(screen.getByLabelText("Título"), "Recurso nuevo");
+  await user.type(screen.getByLabelText("Descripción"), "Descripción de ejemplo");
+  await user.type(screen.getByLabelText("Tipo"), "Video");
+  await user.type(screen.getByLabelText("Enlace al recurso"), "javascript:alert(1)");
+  await user.click(screen.getByRole("button", { name: "Guardar material" }));
+  expect(api.mock.calls.some(([, o]) => o?.method === "POST")).toBe(false);
+  await user.clear(screen.getByLabelText("Enlace al recurso"));
+  await user.type(screen.getByLabelText("Enlace al recurso"), "https://example.test/recurso");
+  await user.click(screen.getByRole("button", { name: "Guardar material" }));
+  expect(await screen.findByText("Material guardado")).toBeInTheDocument();
+});
+it("profesional consulta enlaces sin acciones de edición", async () => {
+  useAuthStore.setState({ token: "t", estado: "autenticado", usuario: usuarioPorRol("PROFESIONAL") });
+  simularApi({ "GET /materiales": { body: { items: [material], total: 1, page: 1, pages: 1 } } });
+  renderConRutas([{ path: "/", element: <Materiales /> }]);
+  expect(await screen.findByRole("link", { name: "Abrir recurso: Guía de apoyo" })).toHaveAttribute("rel", "noopener noreferrer");
+  expect(screen.queryByRole("button", { name: "Nuevo material" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /Editar/ })).not.toBeInTheDocument();
+});

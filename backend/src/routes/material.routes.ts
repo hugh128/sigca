@@ -1,0 +1,17 @@
+import { Router } from "express";
+import * as ctrl from "../controllers/material.controller";
+import { authenticate, authorize } from "../middlewares/auth";
+import { validate } from "../middlewares/validate";
+import { idParams } from "../schemas/common.schema";
+import { actualizarMaterialBody, asignarMaterialBody, crearMaterialBody, estadoMaterialBody, listarMaterialesQuery, paginaAsignacionesQuery } from "../schemas/material.schema";
+const router = Router();
+router.use(authenticate, authorize("ADMINISTRADOR", "PROFESIONAL"));
+router.get("/pacientes/:id", validate({ params: idParams, query: paginaAsignacionesQuery }), ctrl.asignaciones);
+router.post("/pacientes/:id", validate({ params: idParams, body: asignarMaterialBody }), ctrl.asignar);
+router.get("/", validate({ query: listarMaterialesQuery }), ctrl.listar);
+router.get("/:id", validate({ params: idParams }), ctrl.obtener);
+router.use(authorize("ADMINISTRADOR"));
+router.post("/", validate({ body: crearMaterialBody }), ctrl.crear);
+router.put("/:id", validate({ params: idParams, body: actualizarMaterialBody }), ctrl.actualizar);
+router.patch("/:id/estado", validate({ params: idParams, body: estadoMaterialBody }), ctrl.actualizar);
+export default router;

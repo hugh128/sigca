@@ -233,3 +233,10 @@ export interface PacienteBasico {
   edad: number;
   esMenor: boolean;
 }
+export interface Material {
+  id: string; titulo: string; descripcion: string; tipo: string; enlace: string;
+  estado: "ACTIVO" | "INACTIVO"; createdAt: string; updatedAt: string;
+}
+export interface AsignacionMaterial {
+  id: string; material: Material; asignadoPor: { id: string; nombre: string }; createdAt: string;
+}

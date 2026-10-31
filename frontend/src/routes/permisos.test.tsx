@@ -25,6 +25,10 @@ function entrarComo(rol: Usuario["rol"], ruta: string) {
 }
 
 describe("permisos por rol (router real)", () => {
+  it("recepción no puede consultar materiales por URL", async () => {
+    entrarComo("RECEPCIONISTA", "/admin/materiales");
+    expect(await screen.findByText("No tienes acceso a esta sección")).toBeInTheDocument();
+  });
   it("el profesional no puede gestionar solicitudes por URL", async () => {
     entrarComo("PROFESIONAL", "/admin/solicitudes");
     expect(await screen.findByText("No tienes acceso a esta sección")).toBeInTheDocument();
@@ -58,7 +62,7 @@ describe("permisos por rol (router real)", () => {
   it("el profesional ve Panel, Calendario, Citas y Mis pacientes (y nada más)", async () => {
     entrarComo("PROFESIONAL", "/admin");
     const menu = (await screen.findAllByRole("navigation", { name: "Módulos" }))[0]!;
-    expect(within(menu).getAllByRole("link").map((l) => l.textContent)).toEqual(["Panel", "Calendario", "Citas", "Mis pacientes"]);
+    expect(within(menu).getAllByRole("link").map((l) => l.textContent)).toEqual(["Panel", "Calendario", "Citas", "Mis pacientes", "Materiales"]);
   });
 
   it("escribir /admin/usuarios en la barra como recepcionista muestra 'No tienes acceso'", async () => {
