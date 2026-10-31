@@ -68,18 +68,19 @@ Plan y orden aprobados por el usuario. Dependencias y criterios generales: `plan
 ## Entrega 4: Materiales
 
 ### 9. Catalogo
-- [ ] Administrador registra, edita, consulta y desactiva materiales con enlace; profesional puede consultar activos.
-- [ ] Diferenciar este catalogo de las publicaciones publicas existentes.
+- [x] Administrador registra, edita, consulta y desactiva materiales con enlace; profesional puede consultar activos.
+- [x] Diferenciar este catalogo de las publicaciones publicas existentes.
 - Verificacion: validacion de enlaces y permisos, API, formulario y listado.
 - Dependencias: ninguna de solicitudes. Incrementos: modelo/schema/servicio/pruebas; controlador/rutas/indice/pruebas; API/pagina/rutas/menu/pruebas (4–5 archivos cada uno).
 
 ### 10. Asignaciones
-- [ ] Asignar solo materiales y pacientes activos; profesional limitado a pacientes propios; conservar fecha y usuario.
-- [ ] Consultar asignaciones desde paciente y vista del profesional, sin duplicados involuntarios.
+- [x] Asignar solo materiales y pacientes activos; profesional limitado a pacientes propios; conservar fecha y usuario.
+- [x] Consultar asignaciones desde paciente y vista del profesional, sin duplicados involuntarios.
 - Verificacion: casos RN-09, propiedad de paciente y flujo en navegador.
 - Dependencias: 9. Incrementos separados para modelo/servicio/pruebas (3), API/rutas/permisos/pruebas (4) e interfaz/API/pruebas (3).
 
 ### Cierre del avance 2
+- Materiales verificados: 251 pruebas frontend, 25 backend, 357 comprobaciones HTTP, 2 contratos, builds y navegador (administrador, profesional y movil). Pendiente OK para publicar esta entrega.
 - [ ] Revisar acceso de recepcion a consulta de horarios y todos los permisos RF-02.
 - [ ] Completar seed operativo y verificar RF-01 a RF-09 y RN-01 a RN-14.
 - [ ] Solicitar OK antes de publicar cada entrega; no agrupar todos los modulos en un solo PR.

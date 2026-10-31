@@ -3,7 +3,7 @@
 API REST del **Sistema Integral de Gestion de Citas y Atencion (SIGCA)**.
 Node.js + Express 5 + TypeScript + MongoDB (Mongoose).
 
-> Estado: **Avance 1 + Avance 2 en curso**: pacientes, responsables, citas/calendario, contacto y solicitudes de cita. Pendientes materiales y finanzas.
+> Estado: **Avance 1 + módulos del Avance 2**: pacientes, responsables, citas/calendario, contacto, solicitudes y materiales/asignaciones. Pendientes revision de cierre operativo y finanzas.
 
 ## Requisitos
 
@@ -260,6 +260,26 @@ La conversion recibe `pacienteId`, `profesionalId`, `fecha`, `horaInicio` y `obs
 La conversion y la cita se guardan en una misma transaccion: un fallo revierte ambas. Crear y reprogramar citas tambien usan transacciones y una escritura compartida por profesional (`revisionAgenda`, campo interno oculto), para que reservas concurrentes desde distintas sesiones no produzcan traslapes. Se requiere el replica set configurado; las operaciones dentro de cada transaccion son secuenciales. Referencia: [transacciones de Mongoose](https://mongoosejs.com/docs/transactions.html).
 
 El seed recrea cinco solicitudes ficticias: tres pendientes, una atendida vinculada a una cita y una rechazada. Las pruebas cubren conversion repetida, carreras con reservas normales/rechazos y rollback despues de crear la cita. `npm run test:e2e` incluye el recorrido publico hasta su consulta en agenda, sobre una base temporal. El helper `node scripts/verificar-integracion.mjs --servir` imprime un puerto temporal libre para pruebas manuales; no ocupa el 4100 del desarrollo habitual.
+
+## Materiales y asignaciones (RF-09)
+
+Catalogo privado de apoyo, independiente del contenido educativo publicado en el portal. El administrador registra, consulta, modifica, activa y desactiva. El profesional consulta el catalogo activo y puede asignar recursos a pacientes que tiene o tuvo en sus citas (el mismo criterio de pertenencia de Mis pacientes). Recepcion no tiene acceso al modulo.
+
+| Metodo | Ruta | Uso |
+|---|---|---|
+| GET | `/api/materiales?page=&limit=&q=&estado=` | Listado paginado; el profesional solo recibe activos |
+| GET | `/api/materiales/:id` | Detalle; 404 para un material inactivo consultado por profesional |
+| POST | `/api/materiales` | Alta, solo administrador |
+| PUT | `/api/materiales/:id` | Edicion parcial, solo administrador |
+| PATCH | `/api/materiales/:id/estado` | `{ estado: "ACTIVO" \| "INACTIVO" }`, solo administrador |
+| GET | `/api/materiales/pacientes/:id?page=&limit=` | Historial, administrador o profesional del paciente |
+| POST | `/api/materiales/pacientes/:id` | `{ materialId }`, administrador o profesional del paciente |
+
+El material contiene `titulo` (2-160), `descripcion` (3-2000), `tipo` libre (2-60, por ejemplo Documento o Video), `enlace` HTTP/HTTPS sin credenciales (maximo 2000), `estado`, `createdAt` y `updatedAt`. La fecha de registro y el estado inicial ACTIVO los establece el servidor. Los enlaces se validan con [Zod](https://zod.dev/api); no se descargan desde la API ni requieren archivos fisicos.
+
+Solo se asignan materiales activos a pacientes activos (RN-09). La asignacion conserva `material`, `asignadoPor` (id/nombre) y `createdAt`; no acepta fecha ni autor arbitrarios. Un indice unico por paciente/material impide duplicados incluso con peticiones concurrentes (409). El profesional recibe 404 si intenta acceder a un paciente ajeno. Al desactivar paciente o material se conserva el historial, incluido el recurso inactivo. No hay borrado fisico ni reasignacion duplicada. Editar un recurso actualiza la informacion consultada desde su asignacion.
+
+El seed incluye cinco materiales ficticios (uno inactivo) y dos asignaciones. Los enlaces `example.com` son ilustrativos, no documentos reales. Las pruebas de `tests/materiales.test.ts` cubren permisos, URL inseguras, edicion, RN-09, historial y concurrencia; el verificador HTTP incluye el flujo de alta y asignacion.
 
 ## Cloudflare R2
 

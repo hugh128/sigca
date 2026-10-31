@@ -31,6 +31,14 @@ Administrador y recepcionista acceden a `/admin/solicitudes`: listado paginado p
 
 Las pruebas simulan tambien que el horario desaparece de disponibilidad tras reservarse, antes de terminar otras consultas: el formulario debe completar el guardado y abrir el detalle, sin quedar abierto ni permitir duplicar la conversion.
 
+## Materiales
+
+`/admin/materiales` ofrece catalogo, busqueda y paginacion. El administrador puede registrar, editar y cambiar el estado; el profesional consulta activos. Los formularios usan TanStack Form/Zod y restringen los enlaces a HTTP/HTTPS sin credenciales. Los recursos abren en otra pestana con `noopener noreferrer`.
+
+Desde la ficha de un paciente (administrador) o desde **Mis pacientes** (profesional), el enlace Materiales abre `/admin/materiales/pacientes/:id`. Permite consultar asignaciones y elegir un recurso activo con busqueda/paginacion. El servidor verifica paciente activo, pertenencia y duplicados. El historial muestra fecha, usuario y estado del recurso, incluso tras desactivarlo. Recepcion no ve enlaces ni puede entrar por URL; la API tambien protege el acceso.
+
+El contenido educativo del portal conserva su funcionamiento separado. El seed contiene recursos ficticios con enlaces ilustrativos; no se implementan subidas de PDF en esta entrega.
+
 ## Scripts
 
 | Comando | Acción |

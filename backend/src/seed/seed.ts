@@ -8,6 +8,8 @@ import { Paciente, type Sexo } from "../models/Paciente";
 import { Responsable } from "../models/Responsable";
 import { Servicio } from "../models/Servicio";
 import { SolicitudCita } from "../models/SolicitudCita";
+import { Material } from "../models/Material";
+import { AsignacionMaterial } from "../models/AsignacionMaterial";
 import { Usuario, type Rol } from "../models/Usuario";
 import { esquemasContenido } from "../schemas/contenido.schema";
 import { CONTENIDO_POR_DEFECTO } from "../services/contenido.defaults";
@@ -161,6 +163,8 @@ async function main() {
     Responsable.deleteMany({}),
     Cita.deleteMany({}),
     SolicitudCita.deleteMany({}),
+    Material.deleteMany({}),
+    AsignacionMaterial.deleteMany({}),
     MensajeContacto.deleteMany({}),
   ]);
 
@@ -220,6 +224,17 @@ async function main() {
     }
   }
   const citasCreadas = await Cita.insertMany(aInsertar);
+  const materiales = await Material.insertMany([
+    { titulo: "Reconocer emociones", descripcion: "Actividad ficticia para identificar y nombrar emociones.", tipo: "Actividad", enlace: "https://example.com/recursos/emociones" },
+    { titulo: "Rutinas de escucha", descripcion: "Guía ficticia de apoyo a la estimulación auditiva.", tipo: "Documento", enlace: "https://example.com/recursos/escucha" },
+    { titulo: "Respiración y calma", descripcion: "Video de demostración para practicar respiración pausada.", tipo: "Video", enlace: "https://example.com/recursos/respiracion" },
+    { titulo: "Orientación para familias", descripcion: "Lectura ficticia para acompañar el proceso de atención.", tipo: "Lectura", enlace: "https://example.com/recursos/familias" },
+    { titulo: "Actividad anterior", descripcion: "Recurso inactivo conservado para mostrar el historial.", tipo: "Actividad", enlace: "https://example.com/recursos/anterior", estado: "INACTIVO" },
+  ]);
+  await AsignacionMaterial.insertMany([
+    { paciente: citasCreadas[0]!.paciente, material: materiales[0]!._id, asignadoPor: citasCreadas[0]!.profesional },
+    { paciente: citasCreadas[0]!.paciente, material: materiales[4]!._id, asignadoPor: citasCreadas[0]!.profesional },
+  ]);
   await SolicitudCita.insertMany([
     { nombre: "Familia Castillo", correo: "castillo@example.test", telefono: "5555-0401", servicio: serviciosCreados[0]!._id, fechaPreferida: diaHabil(4), mensaje: "Consulta para coordinar atención psicológica." },
     { nombre: "María de demostración", correo: "maria@example.test", telefono: "5555-0402", servicio: serviciosCreados[1]!._id, fechaPreferida: diaHabil(5) },

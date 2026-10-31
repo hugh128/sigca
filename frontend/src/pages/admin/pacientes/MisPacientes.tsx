@@ -76,6 +76,7 @@ export default function MisPacientes() {
                         <History className="size-4" aria-hidden="true" />
                         Ver citas
                       </Link>
+                      <Link to={`/admin/materiales/pacientes/${p.id}`} className="inline-block rounded-lg px-3 py-2 text-marea-700 underline" aria-label={`Materiales de ${p.nombres} ${p.apellidos}`}>Materiales</Link>
                     </td>
                   </tr>
                 ))}

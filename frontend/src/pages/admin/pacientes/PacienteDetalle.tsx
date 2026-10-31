@@ -17,6 +17,7 @@ import { textoEdad } from "@/lib/fechas";
 import { formatearFecha, formatearFechaCorta, formatearHora } from "@/lib/format";
 import { useDocumentTitle } from "@/lib/useDocumentTitle";
 import { toast } from "@/store/toast";
+import { useAuthStore } from "@/store/auth";
 import type { ResponsableDePaciente } from "@/types/api";
 import { DetalleCita } from "../citas/DetalleCita";
 import { FormularioCita } from "../citas/FormularioCita";
@@ -41,6 +42,7 @@ function Dato({ icono: Icono, etiqueta, children }: { icono: typeof Phone; etiqu
 
 export default function PacienteDetalle() {
   const { id = "" } = useParams();
+  const admin = useAuthStore(s => s.usuario?.rol === "ADMINISTRADOR");
   const { data: p, isPending, isError, error, refetch } = usePaciente(id);
   useDocumentTitle(p ? `${p.nombres} ${p.apellidos}` : "Paciente", "SIGCA");
 
@@ -98,6 +100,8 @@ export default function PacienteDetalle() {
         <ArrowLeft className="size-4" aria-hidden="true" />
         Volver a pacientes
       </Link>
+
+      {admin && <Link to={`/admin/materiales/pacientes/${id}`} className="ml-4 inline-block rounded text-sm text-marea-700 underline">Materiales del paciente</Link>}
 
       <header className="mt-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4">

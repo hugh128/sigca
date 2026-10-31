@@ -581,6 +581,21 @@ r = await req("PATCH", `/solicitudes-cita/${pendienteRechazo}/rechazar`, { token
 ok(r.s === 200 && r.j.estado === "RECHAZADA" && r.j.fechaGestion && !r.j.cita, "solicitudes: rechazo auditado sin crear cita");
 r = await req("PATCH", `/solicitudes-cita/${pendienteRechazo}/rechazar`, { token: admin, body: {} }); ok(r.s === 409, "solicitudes: rechazo repetido bloqueado 409");
 
+// --- materiales: catalogo privado, asignacion e historial
+r = await req("GET", "/materiales"); ok(r.s === 401, "materiales: catalogo privado 401");
+r = await req("GET", "/materiales", { token: recep }); ok(r.s === 403, "materiales: recepcion sin acceso 403");
+r = await req("GET", "/materiales", { token: admin }); ok(r.s === 200 && r.j.total === 5, "materiales: cinco recursos ficticios en seed");
+r = await req("GET", "/materiales", { token: prof }); ok(r.s === 200 && r.j.items.every(m => m.estado === "ACTIVO"), "materiales: profesional consulta solo activos");
+const recursoDemo = { titulo: "Recurso de prueba", descripcion: "Descripcion ficticia para la verificacion integral", tipo: "Documento", enlace: "https://example.test/recurso" };
+r = await req("POST", "/materiales", { token: prof, body: recursoDemo }); ok(r.s === 403, "materiales: profesional no administra catalogo");
+r = await req("POST", "/materiales", { token: admin, body: { ...recursoDemo, enlace: "javascript:alert(1)" } }); ok(r.s === 400, "materiales: esquema de enlace inseguro rechazado");
+r = await req("POST", "/materiales", { token: admin, body: recursoDemo }); const materialDemo = r.j;
+ok(r.s === 201 && materialDemo.createdAt && materialDemo.estado === "ACTIVO", "materiales: alta con fecha del servidor");
+r = await req("POST", `/materiales/pacientes/${datosConversion.pacienteId}`, { token: admin, body: { materialId: materialDemo.id } }); ok(r.s === 201 && r.j.asignadoPor.nombre, "materiales: asignacion auditada");
+r = await req("POST", `/materiales/pacientes/${datosConversion.pacienteId}`, { token: admin, body: { materialId: materialDemo.id } }); ok(r.s === 409, "materiales: duplicado bloqueado");
+r = await req("PATCH", `/materiales/${materialDemo.id}/estado`, { token: admin, body: { estado: "INACTIVO" } }); ok(r.s === 200, "materiales: desactivar sin borrar");
+r = await req("GET", `/materiales/pacientes/${datosConversion.pacienteId}`, { token: admin }); ok(r.s === 200 && r.j.items[0].material.estado === "INACTIVO", "materiales: historial conserva recurso inactivo");
+
 // --- rate limit login
 let got429 = false;
 for (let i = 0; i < 12; i++) { const x = await login("admin@sigca.test", "mal" + i + "xx"); if (x.s === 429) { got429 = true; break; } }

@@ -35,6 +35,8 @@ const mensajes = async () => ({ Component: (await import("@/pages/admin/Mensajes
 const contacto = async () => ({ Component: (await import("@/pages/public/Contacto")).default });
 const solicitarCita = async () => ({ Component: (await import("@/pages/public/SolicitarCita")).default });
 const solicitudes = async () => ({ Component: (await import("@/pages/admin/Solicitudes")).default });
+const materiales = async () => ({ Component: (await import("@/pages/admin/materiales/Materiales")).default });
+const materialesPaciente = async () => ({ Component: (await import("@/pages/admin/materiales/MaterialesPaciente")).default });
 const prohibido = async () => ({ Component: (await import("@/pages/admin/Prohibido")).default });
 
 /**
@@ -93,6 +95,11 @@ export const rutas: RouteObject[] = [
             children: [{ index: true, lazy: horariosAdmin }],
           },
           { path: "calendario", lazy: calendario },
+          {
+            path: "materiales",
+            element: <RequireRole roles={["ADMINISTRADOR", "PROFESIONAL"]} />,
+            children: [{ index: true, lazy: materiales }, { path: "pacientes/:id", lazy: materialesPaciente }],
+          },
           { path: "citas", lazy: citasPagina },
           {
             path: "solicitudes",
