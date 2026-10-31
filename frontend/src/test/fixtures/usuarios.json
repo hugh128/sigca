@@ -4,53 +4,53 @@
         "email": "admin@sigca.test",
         "rol": "ADMINISTRADOR",
         "activo": true,
-        "createdAt": "2026-10-18T04:53:43.504Z",
-        "updatedAt": "2026-10-18T04:53:43.504Z",
-        "id": "6ad450d77b236e50118f04bc"
+        "createdAt": "2026-10-23T15:02:09.493Z",
+        "updatedAt": "2026-10-23T15:02:09.493Z",
+        "id": "6adb76f193e4e8e352d40387"
     },
     {
         "nombre": "Carlos Ruiz",
         "email": "recepcion2@sigca.test",
         "rol": "RECEPCIONISTA",
         "activo": true,
-        "createdAt": "2026-10-18T04:53:43.504Z",
-        "updatedAt": "2026-10-18T04:53:43.504Z",
-        "id": "6ad450d77b236e50118f04be"
+        "createdAt": "2026-10-23T15:02:09.494Z",
+        "updatedAt": "2026-10-23T15:02:09.494Z",
+        "id": "6adb76f193e4e8e352d40389"
     },
     {
         "nombre": "Dra. Ana López",
         "email": "profesional1@sigca.test",
         "rol": "PROFESIONAL",
         "activo": true,
-        "createdAt": "2026-10-18T04:53:43.504Z",
-        "updatedAt": "2026-10-18T04:53:43.504Z",
-        "id": "6ad450d77b236e50118f04bf"
+        "createdAt": "2026-10-23T15:02:09.494Z",
+        "updatedAt": "2026-10-23T15:02:09.494Z",
+        "id": "6adb76f193e4e8e352d4038a"
     },
     {
         "nombre": "Laura Méndez",
         "email": "recepcion1@sigca.test",
         "rol": "RECEPCIONISTA",
         "activo": true,
-        "createdAt": "2026-10-18T04:53:43.504Z",
-        "updatedAt": "2026-10-18T04:53:43.504Z",
-        "id": "6ad450d77b236e50118f04bd"
+        "createdAt": "2026-10-23T15:02:09.494Z",
+        "updatedAt": "2026-10-23T15:02:09.494Z",
+        "id": "6adb76f193e4e8e352d40388"
     },
     {
         "nombre": "Lic. Mario Pérez",
         "email": "profesional2@sigca.test",
         "rol": "PROFESIONAL",
         "activo": true,
-        "createdAt": "2026-10-18T04:53:43.504Z",
-        "updatedAt": "2026-10-18T04:53:43.504Z",
-        "id": "6ad450d77b236e50118f04c0"
+        "createdAt": "2026-10-23T15:02:09.494Z",
+        "updatedAt": "2026-10-23T15:02:09.494Z",
+        "id": "6adb76f193e4e8e352d4038b"
     },
     {
         "nombre": "Licda. Sofía Castillo",
         "email": "profesional3@sigca.test",
         "rol": "PROFESIONAL",
         "activo": true,
-        "createdAt": "2026-10-18T04:53:43.505Z",
-        "updatedAt": "2026-10-18T04:53:43.505Z",
-        "id": "6ad450d77b236e50118f04c1"
+        "createdAt": "2026-10-23T15:02:09.494Z",
+        "updatedAt": "2026-10-23T15:02:09.494Z",
+        "id": "6adb76f193e4e8e352d4038c"
     }
 ]

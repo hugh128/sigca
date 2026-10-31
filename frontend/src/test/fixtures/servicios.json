@@ -4,44 +4,44 @@
         "descripcion": "Sesión individual de atención psicológica para niños, adolescentes y adultos.",
         "duracionMin": 50,
         "estado": "ACTIVO",
-        "createdAt": "2026-10-17T23:26:20.487Z",
-        "updatedAt": "2026-10-17T23:26:20.487Z",
-        "id": "6ad4041cd7b0228539f00841"
+        "createdAt": "2026-10-23T15:02:09.503Z",
+        "updatedAt": "2026-10-23T15:02:09.503Z",
+        "id": "6adb76f193e4e8e352d4038d"
     },
     {
         "nombre": "Estimulación auditiva verbal",
         "descripcion": "Sesión de estimulación auditiva verbal orientada a mejorar la comunicación y el lenguaje.",
         "duracionMin": 45,
         "estado": "ACTIVO",
-        "createdAt": "2026-10-17T23:26:20.488Z",
-        "updatedAt": "2026-10-17T23:26:20.488Z",
-        "id": "6ad4041cd7b0228539f00843"
+        "createdAt": "2026-10-23T15:02:09.503Z",
+        "updatedAt": "2026-10-23T15:02:09.503Z",
+        "id": "6adb76f193e4e8e352d4038f"
     },
     {
         "nombre": "Evaluación psicológica",
         "descripcion": "Evaluación inicial para identificar necesidades y definir el plan de atención.",
         "duracionMin": 60,
         "estado": "ACTIVO",
-        "createdAt": "2026-10-17T23:26:20.488Z",
-        "updatedAt": "2026-10-17T23:26:20.488Z",
-        "id": "6ad4041cd7b0228539f00842"
+        "createdAt": "2026-10-23T15:02:09.503Z",
+        "updatedAt": "2026-10-23T15:02:09.503Z",
+        "id": "6adb76f193e4e8e352d4038e"
     },
     {
         "nombre": "Orientación para padres",
         "descripcion": "Sesión de acompañamiento y orientación para padres y responsables.",
         "duracionMin": 60,
         "estado": "ACTIVO",
-        "createdAt": "2026-10-17T23:26:20.488Z",
-        "updatedAt": "2026-10-17T23:26:20.488Z",
-        "id": "6ad4041cd7b0228539f00845"
+        "createdAt": "2026-10-23T15:02:09.503Z",
+        "updatedAt": "2026-10-23T15:02:09.503Z",
+        "id": "6adb76f193e4e8e352d40391"
     },
     {
         "nombre": "Terapia de lenguaje",
         "descripcion": "Sesión de terapia para el desarrollo y la corrección del lenguaje.",
         "duracionMin": 45,
         "estado": "ACTIVO",
-        "createdAt": "2026-10-17T23:26:20.488Z",
-        "updatedAt": "2026-10-17T23:26:20.488Z",
-        "id": "6ad4041cd7b0228539f00844"
+        "createdAt": "2026-10-23T15:02:09.503Z",
+        "updatedAt": "2026-10-23T15:02:09.503Z",
+        "id": "6adb76f193e4e8e352d40390"
     }
 ]

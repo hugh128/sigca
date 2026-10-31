@@ -9,6 +9,8 @@ const envSchema = z
   MONGODB_URI: z.string().min(1, "MONGODB_URI es obligatorio"),
   JWT_SECRET: z.string().min(32, "JWT_SECRET debe tener al menos 32 caracteres"),
   JWT_EXPIRES_IN: z.string().default("8h"),
+  /** Peticiones permitidas por IP cada 15 minutos. Una oficina entera suele salir con la misma IP, por eso es holgado. */
+  RATE_LIMIT_GENERAL: z.coerce.number().int().positive().default(1000),
 
   // --- Almacenamiento de imagenes ---
   /** "local" guarda en la carpeta /uploads (no requiere cuentas externas). "r2" usa Cloudflare R2. */

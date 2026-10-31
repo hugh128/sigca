@@ -5,9 +5,9 @@
         "duracionMin": 50,
         "precioCentavos": 25000,
         "estado": "ACTIVO",
-        "createdAt": "2026-10-18T04:53:43.511Z",
-        "updatedAt": "2026-10-18T04:53:43.511Z",
-        "id": "6ad450d77b236e50118f04c2"
+        "createdAt": "2026-10-23T15:02:09.503Z",
+        "updatedAt": "2026-10-23T15:02:09.503Z",
+        "id": "6adb76f193e4e8e352d4038d"
     },
     {
         "nombre": "Estimulación auditiva verbal",
@@ -15,9 +15,9 @@
         "duracionMin": 45,
         "precioCentavos": 20000,
         "estado": "ACTIVO",
-        "createdAt": "2026-10-18T04:53:43.511Z",
-        "updatedAt": "2026-10-18T04:53:43.511Z",
-        "id": "6ad450d77b236e50118f04c4"
+        "createdAt": "2026-10-23T15:02:09.503Z",
+        "updatedAt": "2026-10-23T15:02:09.503Z",
+        "id": "6adb76f193e4e8e352d4038f"
     },
     {
         "nombre": "Evaluación psicológica",
@@ -25,9 +25,9 @@
         "duracionMin": 60,
         "precioCentavos": 35000,
         "estado": "ACTIVO",
-        "createdAt": "2026-10-18T04:53:43.511Z",
-        "updatedAt": "2026-10-18T04:53:43.511Z",
-        "id": "6ad450d77b236e50118f04c3"
+        "createdAt": "2026-10-23T15:02:09.503Z",
+        "updatedAt": "2026-10-23T15:02:09.503Z",
+        "id": "6adb76f193e4e8e352d4038e"
     },
     {
         "nombre": "Orientación para padres",
@@ -35,9 +35,9 @@
         "duracionMin": 60,
         "precioCentavos": 18000,
         "estado": "ACTIVO",
-        "createdAt": "2026-10-18T04:53:43.511Z",
-        "updatedAt": "2026-10-18T04:53:43.511Z",
-        "id": "6ad450d77b236e50118f04c6"
+        "createdAt": "2026-10-23T15:02:09.503Z",
+        "updatedAt": "2026-10-23T15:02:09.503Z",
+        "id": "6adb76f193e4e8e352d40391"
     },
     {
         "nombre": "Terapia de lenguaje",
@@ -45,8 +45,8 @@
         "duracionMin": 45,
         "precioCentavos": 22000,
         "estado": "ACTIVO",
-        "createdAt": "2026-10-18T04:53:43.511Z",
-        "updatedAt": "2026-10-18T04:53:43.511Z",
-        "id": "6ad450d77b236e50118f04c5"
+        "createdAt": "2026-10-23T15:02:09.503Z",
+        "updatedAt": "2026-10-23T15:02:09.503Z",
+        "id": "6adb76f193e4e8e352d40390"
     }
 ]

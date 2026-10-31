@@ -1,0 +1,758 @@
+{
+    "items": [
+        {
+            "paciente": {
+                "nombres": "Mateo",
+                "apellidos": "Hernández Morales",
+                "fechaNacimiento": "2020-08-23",
+                "id": "6adb76f193e4e8e352d403a4",
+                "edad": 6,
+                "esMenor": true
+            },
+            "servicio": {
+                "nombre": "Estimulación auditiva verbal",
+                "id": "6adb76f193e4e8e352d4038f"
+            },
+            "profesional": {
+                "nombre": "Lic. Mario Pérez",
+                "id": "6adb76f193e4e8e352d4038b"
+            },
+            "inicio": "2026-10-09T14:00:00.000Z",
+            "fin": "2026-10-09T14:45:00.000Z",
+            "duracionMin": 45,
+            "precioCentavos": 20000,
+            "estado": "COMPLETADA",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-06T14:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                },
+                {
+                    "estado": "CONFIRMADA",
+                    "fecha": "2026-10-07T14:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                },
+                {
+                    "estado": "COMPLETADA",
+                    "fecha": "2026-10-09T14:45:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.615Z",
+            "updatedAt": "2026-10-23T15:02:09.615Z",
+            "id": "6adb76f193e4e8e352d403ae",
+            "fecha": "2026-10-09",
+            "horaInicio": "08:00",
+            "horaFin": "08:45"
+        },
+        {
+            "paciente": {
+                "nombres": "Valeria",
+                "apellidos": "Castillo Juárez",
+                "fechaNacimiento": "2017-09-23",
+                "id": "6adb76f193e4e8e352d403a6",
+                "edad": 9,
+                "esMenor": true
+            },
+            "servicio": {
+                "nombre": "Atención psicológica",
+                "id": "6adb76f193e4e8e352d4038d"
+            },
+            "profesional": {
+                "nombre": "Dra. Ana López",
+                "id": "6adb76f193e4e8e352d4038a"
+            },
+            "inicio": "2026-10-10T15:00:00.000Z",
+            "fin": "2026-10-10T15:50:00.000Z",
+            "duracionMin": 50,
+            "precioCentavos": 25000,
+            "estado": "COMPLETADA",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-07T15:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                },
+                {
+                    "estado": "CONFIRMADA",
+                    "fecha": "2026-10-08T15:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                },
+                {
+                    "estado": "COMPLETADA",
+                    "fecha": "2026-10-10T15:50:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.616Z",
+            "updatedAt": "2026-10-23T15:02:09.616Z",
+            "id": "6adb76f193e4e8e352d403af",
+            "fecha": "2026-10-10",
+            "horaInicio": "09:00",
+            "horaFin": "09:50"
+        },
+        {
+            "paciente": {
+                "nombres": "Mateo",
+                "apellidos": "Hernández Morales",
+                "fechaNacimiento": "2020-08-23",
+                "id": "6adb76f193e4e8e352d403a4",
+                "edad": 6,
+                "esMenor": true
+            },
+            "servicio": {
+                "nombre": "Estimulación auditiva verbal",
+                "id": "6adb76f193e4e8e352d4038f"
+            },
+            "profesional": {
+                "nombre": "Lic. Mario Pérez",
+                "id": "6adb76f193e4e8e352d4038b"
+            },
+            "inicio": "2026-10-13T14:00:00.000Z",
+            "fin": "2026-10-13T14:45:00.000Z",
+            "duracionMin": 45,
+            "precioCentavos": 20000,
+            "estado": "COMPLETADA",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-10T14:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                },
+                {
+                    "estado": "CONFIRMADA",
+                    "fecha": "2026-10-11T14:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                },
+                {
+                    "estado": "COMPLETADA",
+                    "fecha": "2026-10-13T14:45:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.616Z",
+            "updatedAt": "2026-10-23T15:02:09.616Z",
+            "id": "6adb76f193e4e8e352d403b0",
+            "fecha": "2026-10-13",
+            "horaInicio": "08:00",
+            "horaFin": "08:45"
+        },
+        {
+            "paciente": {
+                "nombres": "Camila",
+                "apellidos": "Ortiz Barrios",
+                "fechaNacimiento": "2011-03-23",
+                "id": "6adb76f193e4e8e352d403a7",
+                "edad": 15,
+                "esMenor": true
+            },
+            "servicio": {
+                "nombre": "Atención psicológica",
+                "id": "6adb76f193e4e8e352d4038d"
+            },
+            "profesional": {
+                "nombre": "Dra. Ana López",
+                "id": "6adb76f193e4e8e352d4038a"
+            },
+            "inicio": "2026-10-14T16:00:00.000Z",
+            "fin": "2026-10-14T16:50:00.000Z",
+            "duracionMin": 50,
+            "precioCentavos": 25000,
+            "estado": "COMPLETADA",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-11T16:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                },
+                {
+                    "estado": "CONFIRMADA",
+                    "fecha": "2026-10-12T16:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                },
+                {
+                    "estado": "COMPLETADA",
+                    "fecha": "2026-10-14T16:50:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.617Z",
+            "updatedAt": "2026-10-23T15:02:09.617Z",
+            "id": "6adb76f193e4e8e352d403b1",
+            "fecha": "2026-10-14",
+            "horaInicio": "10:00",
+            "horaFin": "10:50"
+        },
+        {
+            "paciente": {
+                "nombres": "Mateo",
+                "apellidos": "Hernández Morales",
+                "fechaNacimiento": "2020-08-23",
+                "id": "6adb76f193e4e8e352d403a4",
+                "edad": 6,
+                "esMenor": true
+            },
+            "servicio": {
+                "nombre": "Estimulación auditiva verbal",
+                "id": "6adb76f193e4e8e352d4038f"
+            },
+            "profesional": {
+                "nombre": "Lic. Mario Pérez",
+                "id": "6adb76f193e4e8e352d4038b"
+            },
+            "inicio": "2026-10-16T14:00:00.000Z",
+            "fin": "2026-10-16T14:45:00.000Z",
+            "duracionMin": 45,
+            "precioCentavos": 20000,
+            "estado": "COMPLETADA",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-13T14:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                },
+                {
+                    "estado": "CONFIRMADA",
+                    "fecha": "2026-10-14T14:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                },
+                {
+                    "estado": "COMPLETADA",
+                    "fecha": "2026-10-16T14:45:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.617Z",
+            "updatedAt": "2026-10-23T15:02:09.617Z",
+            "id": "6adb76f193e4e8e352d403b2",
+            "fecha": "2026-10-16",
+            "horaInicio": "08:00",
+            "horaFin": "08:45"
+        },
+        {
+            "paciente": {
+                "nombres": "Jorge",
+                "apellidos": "Alvarado Méndez",
+                "fechaNacimiento": "1992-06-23",
+                "id": "6adb76f193e4e8e352d403aa",
+                "edad": 34,
+                "esMenor": false
+            },
+            "servicio": {
+                "nombre": "Evaluación psicológica",
+                "id": "6adb76f193e4e8e352d4038e"
+            },
+            "profesional": {
+                "nombre": "Licda. Sofía Castillo",
+                "id": "6adb76f193e4e8e352d4038c"
+            },
+            "inicio": "2026-10-17T15:00:00.000Z",
+            "fin": "2026-10-17T16:00:00.000Z",
+            "duracionMin": 60,
+            "precioCentavos": 35000,
+            "estado": "COMPLETADA",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-14T15:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                },
+                {
+                    "estado": "CONFIRMADA",
+                    "fecha": "2026-10-15T15:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                },
+                {
+                    "estado": "COMPLETADA",
+                    "fecha": "2026-10-17T16:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.617Z",
+            "updatedAt": "2026-10-23T15:02:09.617Z",
+            "id": "6adb76f193e4e8e352d403b3",
+            "fecha": "2026-10-17",
+            "horaInicio": "09:00",
+            "horaFin": "10:00"
+        },
+        {
+            "paciente": {
+                "nombres": "Sofía",
+                "apellidos": "Marroquín Díaz",
+                "fechaNacimiento": "1998-01-23",
+                "id": "6adb76f193e4e8e352d403ab",
+                "edad": 28,
+                "esMenor": false
+            },
+            "servicio": {
+                "nombre": "Atención psicológica",
+                "id": "6adb76f193e4e8e352d4038d"
+            },
+            "profesional": {
+                "nombre": "Dra. Ana López",
+                "id": "6adb76f193e4e8e352d4038a"
+            },
+            "inicio": "2026-10-17T16:00:00.000Z",
+            "fin": "2026-10-17T16:50:00.000Z",
+            "duracionMin": 50,
+            "precioCentavos": 25000,
+            "estado": "CANCELADA",
+            "motivoCancelacion": "La paciente avisó que no podía asistir",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-14T16:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                },
+                {
+                    "estado": "CANCELADA",
+                    "fecha": "2026-10-15T16:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cancelada: La paciente avisó que no podía asistir"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.617Z",
+            "updatedAt": "2026-10-23T15:02:09.617Z",
+            "id": "6adb76f193e4e8e352d403b4",
+            "fecha": "2026-10-17",
+            "horaInicio": "10:00",
+            "horaFin": "10:50"
+        },
+        {
+            "paciente": {
+                "nombres": "Diego",
+                "apellidos": "Hernández Morales",
+                "fechaNacimiento": "2014-05-23",
+                "id": "6adb76f193e4e8e352d403a5",
+                "edad": 12,
+                "esMenor": true
+            },
+            "servicio": {
+                "nombre": "Terapia de lenguaje",
+                "id": "6adb76f193e4e8e352d40390"
+            },
+            "profesional": {
+                "nombre": "Licda. Sofía Castillo",
+                "id": "6adb76f193e4e8e352d4038c"
+            },
+            "inicio": "2026-10-20T17:00:00.000Z",
+            "fin": "2026-10-20T17:45:00.000Z",
+            "duracionMin": 45,
+            "precioCentavos": 22000,
+            "estado": "COMPLETADA",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-17T17:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                },
+                {
+                    "estado": "CONFIRMADA",
+                    "fecha": "2026-10-18T17:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                },
+                {
+                    "estado": "COMPLETADA",
+                    "fecha": "2026-10-20T17:45:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.617Z",
+            "updatedAt": "2026-10-23T15:02:09.617Z",
+            "id": "6adb76f193e4e8e352d403b5",
+            "fecha": "2026-10-20",
+            "horaInicio": "11:00",
+            "horaFin": "11:45"
+        },
+        {
+            "paciente": {
+                "nombres": "Mateo",
+                "apellidos": "Hernández Morales",
+                "fechaNacimiento": "2020-08-23",
+                "id": "6adb76f193e4e8e352d403a4",
+                "edad": 6,
+                "esMenor": true
+            },
+            "servicio": {
+                "nombre": "Estimulación auditiva verbal",
+                "id": "6adb76f193e4e8e352d4038f"
+            },
+            "profesional": {
+                "nombre": "Lic. Mario Pérez",
+                "id": "6adb76f193e4e8e352d4038b"
+            },
+            "inicio": "2026-10-24T14:00:00.000Z",
+            "fin": "2026-10-24T14:45:00.000Z",
+            "duracionMin": 45,
+            "precioCentavos": 20000,
+            "estado": "CONFIRMADA",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-21T14:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                },
+                {
+                    "estado": "CONFIRMADA",
+                    "fecha": "2026-10-22T14:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.617Z",
+            "updatedAt": "2026-10-23T15:02:09.617Z",
+            "id": "6adb76f193e4e8e352d403b6",
+            "fecha": "2026-10-24",
+            "horaInicio": "08:00",
+            "horaFin": "08:45"
+        },
+        {
+            "paciente": {
+                "nombres": "Valeria",
+                "apellidos": "Castillo Juárez",
+                "fechaNacimiento": "2017-09-23",
+                "id": "6adb76f193e4e8e352d403a6",
+                "edad": 9,
+                "esMenor": true
+            },
+            "servicio": {
+                "nombre": "Atención psicológica",
+                "id": "6adb76f193e4e8e352d4038d"
+            },
+            "profesional": {
+                "nombre": "Dra. Ana López",
+                "id": "6adb76f193e4e8e352d4038a"
+            },
+            "inicio": "2026-10-24T15:00:00.000Z",
+            "fin": "2026-10-24T15:50:00.000Z",
+            "duracionMin": 50,
+            "precioCentavos": 25000,
+            "estado": "CONFIRMADA",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-21T15:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                },
+                {
+                    "estado": "CONFIRMADA",
+                    "fecha": "2026-10-22T15:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.617Z",
+            "updatedAt": "2026-10-23T15:02:09.617Z",
+            "id": "6adb76f193e4e8e352d403b7",
+            "fecha": "2026-10-24",
+            "horaInicio": "09:00",
+            "horaFin": "09:50"
+        },
+        {
+            "paciente": {
+                "nombres": "Mateo",
+                "apellidos": "Hernández Morales",
+                "fechaNacimiento": "2020-08-23",
+                "id": "6adb76f193e4e8e352d403a4",
+                "edad": 6,
+                "esMenor": true
+            },
+            "servicio": {
+                "nombre": "Estimulación auditiva verbal",
+                "id": "6adb76f193e4e8e352d4038f"
+            },
+            "profesional": {
+                "nombre": "Lic. Mario Pérez",
+                "id": "6adb76f193e4e8e352d4038b"
+            },
+            "inicio": "2026-10-26T14:00:00.000Z",
+            "fin": "2026-10-26T14:45:00.000Z",
+            "duracionMin": 45,
+            "precioCentavos": 20000,
+            "estado": "PENDIENTE",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-23T14:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.617Z",
+            "updatedAt": "2026-10-23T15:02:09.617Z",
+            "id": "6adb76f193e4e8e352d403b9",
+            "fecha": "2026-10-26",
+            "horaInicio": "08:00",
+            "horaFin": "08:45"
+        },
+        {
+            "paciente": {
+                "nombres": "Sebastián",
+                "apellidos": "Pérez Gómez",
+                "fechaNacimiento": "2008-12-23",
+                "id": "6adb76f193e4e8e352d403a8",
+                "edad": 17,
+                "esMenor": true
+            },
+            "servicio": {
+                "nombre": "Atención psicológica",
+                "id": "6adb76f193e4e8e352d4038d"
+            },
+            "profesional": {
+                "nombre": "Dra. Ana López",
+                "id": "6adb76f193e4e8e352d4038a"
+            },
+            "inicio": "2026-10-26T15:00:00.000Z",
+            "fin": "2026-10-26T15:50:00.000Z",
+            "duracionMin": 50,
+            "precioCentavos": 25000,
+            "estado": "CONFIRMADA",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-23T15:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                },
+                {
+                    "estado": "CONFIRMADA",
+                    "fecha": "2026-10-24T15:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.617Z",
+            "updatedAt": "2026-10-23T15:02:09.617Z",
+            "id": "6adb76f193e4e8e352d403ba",
+            "fecha": "2026-10-26",
+            "horaInicio": "09:00",
+            "horaFin": "09:50"
+        },
+        {
+            "paciente": {
+                "nombres": "Camila",
+                "apellidos": "Ortiz Barrios",
+                "fechaNacimiento": "2011-03-23",
+                "id": "6adb76f193e4e8e352d403a7",
+                "edad": 15,
+                "esMenor": true
+            },
+            "servicio": {
+                "nombre": "Atención psicológica",
+                "id": "6adb76f193e4e8e352d4038d"
+            },
+            "profesional": {
+                "nombre": "Dra. Ana López",
+                "id": "6adb76f193e4e8e352d4038a"
+            },
+            "inicio": "2026-10-26T16:00:00.000Z",
+            "fin": "2026-10-26T16:50:00.000Z",
+            "duracionMin": 50,
+            "precioCentavos": 25000,
+            "estado": "PENDIENTE",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-23T16:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.617Z",
+            "updatedAt": "2026-10-23T15:02:09.617Z",
+            "id": "6adb76f193e4e8e352d403b8",
+            "fecha": "2026-10-26",
+            "horaInicio": "10:00",
+            "horaFin": "10:50"
+        },
+        {
+            "paciente": {
+                "nombres": "Pedro",
+                "apellidos": "Cifuentes Soto",
+                "fechaNacimiento": "1981-08-23",
+                "id": "6adb76f193e4e8e352d403ac",
+                "edad": 45,
+                "esMenor": false
+            },
+            "servicio": {
+                "nombre": "Evaluación psicológica",
+                "id": "6adb76f193e4e8e352d4038e"
+            },
+            "profesional": {
+                "nombre": "Licda. Sofía Castillo",
+                "id": "6adb76f193e4e8e352d4038c"
+            },
+            "inicio": "2026-10-27T14:30:00.000Z",
+            "fin": "2026-10-27T15:30:00.000Z",
+            "duracionMin": 60,
+            "precioCentavos": 35000,
+            "estado": "CONFIRMADA",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-24T14:30:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                },
+                {
+                    "estado": "CONFIRMADA",
+                    "fecha": "2026-10-25T14:30:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.617Z",
+            "updatedAt": "2026-10-23T15:02:09.617Z",
+            "id": "6adb76f193e4e8e352d403bb",
+            "fecha": "2026-10-27",
+            "horaInicio": "08:30",
+            "horaFin": "09:30"
+        },
+        {
+            "paciente": {
+                "nombres": "Diego",
+                "apellidos": "Hernández Morales",
+                "fechaNacimiento": "2014-05-23",
+                "id": "6adb76f193e4e8e352d403a5",
+                "edad": 12,
+                "esMenor": true
+            },
+            "servicio": {
+                "nombre": "Terapia de lenguaje",
+                "id": "6adb76f193e4e8e352d40390"
+            },
+            "profesional": {
+                "nombre": "Licda. Sofía Castillo",
+                "id": "6adb76f193e4e8e352d4038c"
+            },
+            "inicio": "2026-10-28T16:00:00.000Z",
+            "fin": "2026-10-28T16:45:00.000Z",
+            "duracionMin": 45,
+            "precioCentavos": 22000,
+            "estado": "PENDIENTE",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-25T16:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.617Z",
+            "updatedAt": "2026-10-23T15:02:09.617Z",
+            "id": "6adb76f193e4e8e352d403bc",
+            "fecha": "2026-10-28",
+            "horaInicio": "10:00",
+            "horaFin": "10:45"
+        },
+        {
+            "paciente": {
+                "nombres": "Jorge",
+                "apellidos": "Alvarado Méndez",
+                "fechaNacimiento": "1992-06-23",
+                "id": "6adb76f193e4e8e352d403aa",
+                "edad": 34,
+                "esMenor": false
+            },
+            "servicio": {
+                "nombre": "Evaluación psicológica",
+                "id": "6adb76f193e4e8e352d4038e"
+            },
+            "profesional": {
+                "nombre": "Licda. Sofía Castillo",
+                "id": "6adb76f193e4e8e352d4038c"
+            },
+            "inicio": "2026-10-29T15:00:00.000Z",
+            "fin": "2026-10-29T16:00:00.000Z",
+            "duracionMin": 60,
+            "precioCentavos": 35000,
+            "estado": "PENDIENTE",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-26T15:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.617Z",
+            "updatedAt": "2026-10-23T15:02:09.617Z",
+            "id": "6adb76f193e4e8e352d403bd",
+            "fecha": "2026-10-29",
+            "horaInicio": "09:00",
+            "horaFin": "10:00"
+        },
+        {
+            "paciente": {
+                "nombres": "Sofía",
+                "apellidos": "Marroquín Díaz",
+                "fechaNacimiento": "1998-01-23",
+                "id": "6adb76f193e4e8e352d403ab",
+                "edad": 28,
+                "esMenor": false
+            },
+            "servicio": {
+                "nombre": "Atención psicológica",
+                "id": "6adb76f193e4e8e352d4038d"
+            },
+            "profesional": {
+                "nombre": "Dra. Ana López",
+                "id": "6adb76f193e4e8e352d4038a"
+            },
+            "inicio": "2026-10-30T14:00:00.000Z",
+            "fin": "2026-10-30T14:50:00.000Z",
+            "duracionMin": 50,
+            "precioCentavos": 25000,
+            "estado": "CANCELADA",
+            "motivoCancelacion": "Cambio de planes de la paciente",
+            "creadoPor": "6adb76f193e4e8e352d40388",
+            "historial": [
+                {
+                    "estado": "PENDIENTE",
+                    "fecha": "2026-10-27T14:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cita programada"
+                },
+                {
+                    "estado": "CANCELADA",
+                    "fecha": "2026-10-28T14:00:00.000Z",
+                    "usuario": "6adb76f193e4e8e352d40388",
+                    "nota": "Cancelada: Cambio de planes de la paciente"
+                }
+            ],
+            "createdAt": "2026-10-23T15:02:09.617Z",
+            "updatedAt": "2026-10-23T15:02:09.617Z",
+            "id": "6adb76f193e4e8e352d403be",
+            "fecha": "2026-10-30",
+            "horaInicio": "08:00",
+            "horaFin": "08:50"
+        }
+    ],
+    "total": 17,
+    "page": 1,
+    "limit": 50,
+    "pages": 1
+}

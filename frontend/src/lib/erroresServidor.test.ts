@@ -21,6 +21,11 @@ describe("erroresDeServidor", () => {
     expect(erroresDeServidor(e, "email").fields).toEqual({ email: "Ya existe un usuario con ese correo electrónico" });
   });
 
+  it("un conflicto con detalles (sin lista de campos) se muestra como mensaje general del formulario", () => {
+    const e = new ApiError(409, "El profesional ya tiene una cita de 14:00 a 14:50 ese día", undefined, { conflicto: { horaInicio: "14:00" } });
+    expect(erroresDeServidor(e)).toEqual({ form: "El profesional ya tiene una cita de 14:00 a 14:50 ese día", fields: {} });
+  });
+
   it("un error que no es de la API da un mensaje genérico", () => {
     expect(erroresDeServidor(new TypeError("x")).form).toMatch(/Inténtalo de nuevo/);
   });

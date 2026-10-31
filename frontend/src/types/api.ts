@@ -159,3 +159,51 @@ export interface Paciente {
   esMenor: boolean;
   responsables: ResponsableDePaciente[];
 }
+
+export type EstadoCita = "PENDIENTE" | "CONFIRMADA" | "COMPLETADA" | "CANCELADA";
+
+export interface Cita {
+  id: string;
+  paciente: { id: string; nombres: string; apellidos: string; fotoUrl?: string; fechaNacimiento: string; edad: number; esMenor: boolean };
+  servicio: { id: string; nombre: string };
+  profesional: { id: string; nombre: string };
+  /** Fecha y horas de pared en Guatemala (el servidor ya las convierte). */
+  fecha: string;
+  horaInicio: string;
+  horaFin: string;
+  /** Instantes exactos (UTC). */
+  inicio: string;
+  fin: string;
+  duracionMin: number;
+  /** En centavos. No viene para el rol profesional. */
+  precioCentavos?: number;
+  estado: EstadoCita;
+  observaciones?: string;
+  motivoCancelacion?: string;
+  historial: { estado: EstadoCita; fecha: string; usuario?: { id: string; nombre: string } | string; nota?: string }[];
+  createdAt: string;
+}
+
+export interface Disponibilidad {
+  fecha: string;
+  duracionMin: number;
+  horarios: { horaInicio: string; horaFin: string }[];
+}
+
+export interface Profesional {
+  id: string;
+  nombre: string;
+  email: string;
+}
+
+/** Paciente tal como lo ve un profesional: solo informacion basica. */
+export interface PacienteBasico {
+  id: string;
+  nombres: string;
+  apellidos: string;
+  sexo: Sexo;
+  fotoUrl?: string;
+  estado: "ACTIVO" | "INACTIVO";
+  edad: number;
+  esMenor: boolean;
+}

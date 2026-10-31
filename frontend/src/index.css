@@ -55,3 +55,26 @@
     }
   }
 }
+
+/* Calendario (FullCalendar) con la paleta del sistema */
+.fc {
+  --fc-border-color: var(--color-marea-100);
+  --fc-today-bg-color: var(--color-sol-100);
+  --fc-page-bg-color: #fff;
+  --fc-neutral-bg-color: var(--color-marea-50);
+  --fc-non-business-color: rgb(15 61 68 / 0.05);
+  --fc-now-indicator-color: var(--color-danger);
+  --fc-button-bg-color: var(--color-marea-700);
+  --fc-button-border-color: var(--color-marea-700);
+  --fc-button-hover-bg-color: var(--color-marea-800);
+  --fc-button-hover-border-color: var(--color-marea-800);
+  --fc-button-active-bg-color: var(--color-marea-900);
+  --fc-button-active-border-color: var(--color-marea-900);
+  font-family: var(--font-sans);
+}
+.fc .fc-toolbar-title { font-size: 1.25rem; font-weight: 600; color: var(--color-marea-900); text-transform: capitalize; }
+.fc .fc-button { border-radius: 0.5rem; font-size: 0.875rem; }
+.fc .fc-col-header-cell-cushion, .fc .fc-daygrid-day-number { color: var(--color-ink); text-transform: capitalize; }
+.fc .fc-event { cursor: pointer; border-left-width: 4px; }
+.fc .cita-cancelada .fc-event-title, .fc .cita-cancelada .fc-event-time { text-decoration: line-through; opacity: 0.7; }
+.fc .fc-toolbar { flex-wrap: wrap; gap: 0.5rem; }

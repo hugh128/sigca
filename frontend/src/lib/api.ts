@@ -12,7 +12,10 @@ export class ApiError extends Error {
   constructor(
     public readonly status: number,
     message: string,
+    /** Errores por campo (solo si el servidor mando una lista). */
     public readonly errores?: ErrorCampo[],
+    /** Otros datos del error (p. ej. el horario con el que choca una cita). */
+    public readonly detalles?: unknown,
   ) {
     super(message);
     this.name = "ApiError";
@@ -59,8 +62,10 @@ export async function api<T>(path: string, { method = "GET", body, signal, auth 
   if (!respuesta.ok) {
     // Token vencido o usuario desactivado: se cierra la sesion y los guards redirigen al login.
     if (respuesta.status === 401 && token) useAuthStore.getState().expirarSesion();
-    const d = datos as { message?: string; errors?: ErrorCampo[] } | null;
-    throw new ApiError(respuesta.status, d?.message ?? "Ocurrió un error inesperado", d?.errors);
+    const d = datos as { message?: string; errors?: unknown; detalles?: unknown } | null;
+    // `errors` solo se acepta si es una lista: asi un detalle con otra forma nunca rompe a quien lo recorre
+    const errores = Array.isArray(d?.errors) ? (d.errors as ErrorCampo[]) : undefined;
+    throw new ApiError(respuesta.status, d?.message ?? "Ocurrió un error inesperado", errores, d?.detalles);
   }
 
   return datos as T;

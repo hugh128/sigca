@@ -2,6 +2,7 @@ import type { QueryFilter } from "mongoose";
 import { Usuario, type IUsuario, type Rol, type UsuarioDoc } from "../models/Usuario";
 import { AppError } from "../utils/AppError";
 import { hashPassword } from "../utils/password";
+import { contarCitasFuturas } from "./cita.service";
 
 export interface FiltrosUsuarios {
   rol?: Rol;
@@ -63,6 +64,17 @@ export async function actualizar(
   if (cambios.email && cambios.email !== usuario.email) {
     if (await Usuario.exists({ email: cambios.email, _id: { $ne: id } })) {
       throw AppError.conflict("Ya existe un usuario con ese correo electrónico");
+    }
+  }
+
+  // Un profesional con citas pendientes o confirmadas no puede desactivarse ni dejar de ser profesional
+  const dejaDeAtender = usuario.rol === "PROFESIONAL" && (cambios.activo === false || (cambios.rol !== undefined && cambios.rol !== "PROFESIONAL"));
+  if (dejaDeAtender) {
+    const futuras = await contarCitasFuturas({ profesional: id });
+    if (futuras > 0) {
+      throw AppError.unprocessable(
+        `No se puede: ${usuario.nombre} tiene ${futuras} cita${futuras === 1 ? "" : "s"} pendiente${futuras === 1 ? "" : "s"} o confirmada${futuras === 1 ? "" : "s"}. Reprográmalas o cancélalas primero`,
+      );
     }
   }
 

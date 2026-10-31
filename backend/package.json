@@ -9,6 +9,8 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "test:e2e": "npm run build && node scripts/verificar-integracion.mjs",
     "seed": "tsx src/seed/seed.ts",
     "test:r2": "tsx src/scripts/probarDriverR2.ts",
     "storage:probar": "tsx src/scripts/probarStorage.ts"
