@@ -11,6 +11,8 @@ import { SolicitudCita } from "../models/SolicitudCita";
 import { Material } from "../models/Material";
 import { AsignacionMaterial } from "../models/AsignacionMaterial";
 import { Caja } from "../models/Caja";
+import { Pago } from "../models/Pago";
+import { Contador } from "../models/Contador";
 import { Usuario, type Rol } from "../models/Usuario";
 import { esquemasContenido } from "../schemas/contenido.schema";
 import { CONTENIDO_POR_DEFECTO } from "../services/contenido.defaults";
@@ -167,6 +169,8 @@ async function main() {
     Material.deleteMany({}),
     AsignacionMaterial.deleteMany({}),
     Caja.deleteMany({}),
+    Pago.deleteMany({}),
+    Contador.deleteMany({}),
     MensajeContacto.deleteMany({}),
   ]);
 
@@ -228,7 +232,18 @@ async function main() {
   const citasCreadas = await Cita.insertMany(aInsertar);
   // Deja admin y recepcion1 sin caja para ensayar la apertura desde la interfaz.
   await Caja.init();
-  await Caja.create({ usuario: usuariosCreados.find(u => u.email === "recepcion2@sigca.test")!._id, montoInicialCentavos: 20000 });
+  const cajaDemo = await Caja.create({ usuario: usuariosCreados.find(u => u.email === "recepcion2@sigca.test")!._id, montoInicialCentavos: 20000 });
+  await Pago.init();
+  const pagosDemo = citasCreadas.filter(c => c.estado === "COMPLETADA").slice(0, 5).flatMap((c, i) => {
+    const abono = Math.floor(c.precioCentavos / 4);
+    return [abono, i % 2 ? c.precioCentavos - abono : abono].map((montoCentavos, j) => ({
+      comprobante: `COMP-${hoyGuatemala().slice(0, 4)}-${String(i * 2 + j + 1).padStart(6, "0")}`,
+      paciente: c.paciente, cita: c._id, caja: cajaDemo._id, montoCentavos,
+      metodo: (["EFECTIVO", "TRANSFERENCIA", "TARJETA"] as const)[(i + j) % 3]!, registradoPor: cajaDemo.usuario,
+    }));
+  });
+  await Pago.insertMany(pagosDemo);
+  await Contador.create({ _id: "pagos", valor: pagosDemo.length });
   const materiales = await Material.insertMany([
     { titulo: "Reconocer emociones", descripcion: "Actividad ficticia para identificar y nombrar emociones.", tipo: "Actividad", enlace: "https://example.com/recursos/emociones" },
     { titulo: "Rutinas de escucha", descripcion: "Guía ficticia de apoyo a la estimulación auditiva.", tipo: "Documento", enlace: "https://example.com/recursos/escucha" },

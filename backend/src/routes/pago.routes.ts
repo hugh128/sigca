@@ -1,0 +1,12 @@
+import { Router } from "express";
+import * as ctrl from "../controllers/pago.controller";
+import { authenticate, authorize } from "../middlewares/auth";
+import { validate } from "../middlewares/validate";
+import { idParams } from "../schemas/common.schema";
+import { crearPagoBody, listarPagosQuery } from "../schemas/pago.schema";
+const router = Router();
+router.use(authenticate, authorize("ADMINISTRADOR", "RECEPCIONISTA"));
+router.get("/citas/:id/resumen", validate({ params: idParams }), ctrl.resumen);
+router.get("/", validate({ query: listarPagosQuery }), ctrl.listar);
+router.post("/", validate({ body: crearPagoBody }), ctrl.crear);
+export default router;

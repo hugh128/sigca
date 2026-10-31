@@ -22,6 +22,26 @@ El indice unico parcial por usuario cuando estado=ABIERTA garantiza una sola caj
 
 El seed incluye una caja abierta de recepcion2 con Q200.00. Admin y recepcion1 quedan sin caja para ensayar apertura. Las tres cajas abiertas/cerradas requeridas para la entrega final se completaran al implementar cierres y pagos. Las pruebas financieras utilizan bases temporales y no abren cajas en la base de desarrollo.
 
+## Pagos, abonos y saldos
+
+Administrador y recepcionista registran y consultan pagos. Profesional sin acceso (403); sin sesion 401. El pago toma paciente, caja propia abierta, responsable, fecha y estado desde el servidor. No hay edicion ni borrado fisico. La anulacion y el cierre se implementaran en la siguiente entrega.
+
+| Metodo | Ruta | Contrato |
+|---|---|---|
+| POST | `/api/pagos` | `{ citaId, montoCentavos, metodo }`, 201 con pago y comprobante |
+| GET | `/api/pagos?page=&limit=&pacienteId=&citaId=&desde=&hasta=&metodo=` | Listado paginado reciente primero; consulta autorizada de todos los usuarios |
+| GET | `/api/pagos/citas/:id/resumen` | Cita, costo, total pagado valido, saldo y estado financiero derivado |
+
+Montos enteros positivos (hasta 999999999 centavos), metodos EFECTIVO/TRANSFERENCIA/TARJETA. `desde`/`hasta` son fechas inclusivas AAAA-MM-DD en America/Guatemala. No se cobra una cita CANCELADA ni se supera su precio copiado. Una cita COMPLETADA puede recibir pagos pendientes. Caja faltante/cerrada y sobrepago devuelven 422; cita inexistente 404. Las respuestas de pago incluyen `comprobante`, `paciente`, `cita`, `caja` (id), `montoCentavos`, `metodo`, `fecha`, `registradoPor` y `estado`.
+
+Saldo y estado financiero se calculan sumando solo pagos REGISTRADO: PENDIENTE sin pagos validos, PARCIAL con saldo y PAGADO al cubrir el costo. Nunca se editan ni almacenan como valores independientes. El precio utilizado siempre es el copiado en la cita, no el actual del servicio.
+
+Cada registro usa una transaccion con escritura compartida de caja y cita, contador global y alta de pago. Comprobantes `COMP-AAAA-NNNNNN`, con indice unico y contador que no reinicia por ano. Un fallo revierte el pago y el incremento del contador. Las operaciones dentro de la transaccion son secuenciales, conforme a [Mongoose](https://mongoosejs.com/docs/transactions.html). Las revisiones internas no salen en JSON. Se requiere el replica set ya configurado.
+
+Cancelar una cita tambien es transaccional: pagos validos bloquean la cancelacion (RN-27), incluso si cobro y cancelacion compiten. Primero deben anularse los pagos mientras su caja permanezca abierta; esa operacion autorizada se incorporara en la siguiente entrega.
+
+El seed crea diez abonos asociados a citas completadas, incluyendo pagos completos/parciales y los tres metodos, vinculados a la caja abierta de recepcion2. Admin y recepcion1 siguen libres para abrir su caja. No hay pagos anulados ficticios sin auditoria: el seed de anulaciones/cierres se completara junto con esas operaciones.
+
 ## Requisitos
 
 La revision operativa de RF-01 a RF-09 y RN-01 a RN-14, con evidencias y pendientes financieros, esta en [verificacion del avance 2](../tasks/verificacion-avance-2.md). `npm run test:e2e` comprueba tambien los minimos del seed y la coherencia de referencias, duraciones y precios antes del recorrido HTTP, sobre una base temporal.

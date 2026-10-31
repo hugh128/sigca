@@ -244,3 +244,13 @@ export interface Caja {
   id: string; usuario: { id: string; nombre: string }; apertura: string;
   montoInicialCentavos: number; estado: "ABIERTA" | "CERRADA";
 }
+export type MetodoPago = "EFECTIVO" | "TRANSFERENCIA" | "TARJETA";
+export interface Pago {
+  id: string; comprobante: string; paciente: { id: string; nombres: string; apellidos: string };
+  cita: { id: string; fecha: string; estado: EstadoCita }; caja: string;
+  montoCentavos: number; metodo: MetodoPago; fecha: string; registradoPor: { id: string; nombre: string }; estado: "REGISTRADO" | "ANULADO";
+}
+export interface ResumenPago {
+  cita: { id: string; paciente: Pago["paciente"]; servicio: { id: string; nombre: string }; fecha: string; estado: EstadoCita };
+  costoCentavos: number; totalPagadoCentavos: number; saldoCentavos: number; estadoFinanciero: "PENDIENTE" | "PARCIAL" | "PAGADO";
+}

@@ -97,8 +97,9 @@ Detallar contratos e incrementos antes de implementar, con los criterios siguien
 - Dependencias: 5. Incrementos: modelo/schema/servicio/pruebas; controlador/rutas/indice/pruebas; API/pagina/menu/rutas/pruebas (4–5 archivos).
 
 ### 12. Pagos y saldos
-- [ ] Pago/abono en centavos asociado a cita y caja propia abierta; no superar costo incluso con peticiones concurrentes.
-- [ ] Comprobante unico y saldo/estado financiero derivados de pagos validos, visibles en cita y paciente.
+- [x] Pago/abono en centavos asociado a cita y caja propia abierta; no superar costo incluso con peticiones concurrentes.
+- [x] Comprobante unico y saldo/estado financiero derivados de pagos validos; consulta desde cita e historial financiero desde paciente.
+- Verificado en `feature/pagos-abonos`: 262 pruebas frontend, 37 backend, 379 comprobaciones HTTP, 2 contratos, builds y navegador (abono Q19.99, saldo Q80.01 y pago completo; movil y comprobante). Seed con diez abonos, parciales/completos y tres metodos. Anulaciones/cierres pendientes. Publicacion requiere OK del usuario.
 - Verificacion: RN-15 a RN-20, RN-24 a RN-26 y RN-28; carrera entre dos abonos.
 - Dependencias: 11. Descomponer antes de implementar: persistencia/contador; servicio transaccional; API; interfaz de registro; consulta de historial.
 

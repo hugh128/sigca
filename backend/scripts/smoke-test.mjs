@@ -611,6 +611,21 @@ r = await req("GET", "/cajas", { token: recep }); ok(r.s === 200 && r.j.total ==
 r = await req("GET", "/cajas", { token: admin }); ok(r.s === 200 && r.j.total === 2, "cajas: administrador lista todas");
 r = await req("GET", "/cajas/actual", { token: admin }); ok(r.s === 200 && r.j === null, "cajas: caja actual del admin es solo la propia");
 
+// --- pagos: saldo derivado, comprobante y caja propia
+r = await req("GET", "/pagos", { token: prof }); ok(r.s === 403, "pagos: profesional sin acceso financiero");
+r = await req("GET", "/pagos", { token: admin }); ok(r.s === 200 && r.j.total === 10, "pagos: diez abonos ficticios en seed");
+r = await req("GET", `/pagos/citas/${citaSolicitud}/resumen`, { token: recep });
+const costoPago = r.j.costoCentavos, primerPago = Math.floor(costoPago / 2);
+ok(r.s === 200 && r.j.estadoFinanciero === "PENDIENTE" && r.j.saldoCentavos === costoPago, "pagos: cita nueva sin pagos");
+r = await req("POST", "/pagos", { token: recep, body: { citaId: citaSolicitud, montoCentavos: primerPago, metodo: "EFECTIVO" } });
+ok(r.s === 201 && r.j.comprobante && r.j.caja && r.j.montoCentavos === primerPago, "pagos: abono con comprobante y caja");
+r = await req("GET", `/pagos/citas/${citaSolicitud}/resumen`, { token: recep }); ok(r.j.estadoFinanciero === "PARCIAL" && r.j.saldoCentavos === costoPago - primerPago, "pagos: saldo parcial calculado");
+r = await req("PATCH", `/citas/${citaSolicitud}/estado`, { token: recep, body: { estado: "CANCELADA" } }); ok(r.s === 422, "pagos: RN-27 no cancela cita con pagos validos");
+r = await req("POST", "/pagos", { token: recep, body: { citaId: citaSolicitud, montoCentavos: costoPago - primerPago, metodo: "TRANSFERENCIA" } }); ok(r.s === 201, "pagos: segundo abono completa costo");
+r = await req("GET", `/pagos/citas/${citaSolicitud}/resumen`, { token: recep }); ok(r.j.estadoFinanciero === "PAGADO" && r.j.saldoCentavos === 0, "pagos: saldo cero y estado pagado");
+r = await req("POST", "/pagos", { token: recep, body: { citaId: citaSolicitud, montoCentavos: 1, metodo: "EFECTIVO" } }); ok(r.s === 422, "pagos: sobrepago rechazado");
+r = await req("GET", `/pagos?pacienteId=${datosConversion.pacienteId}`, { token: recep }); ok(r.s === 200 && r.j.total === 2, "pagos: consulta por paciente");
+
 // --- rate limit login
 let got429 = false;
 for (let i = 0; i < 12; i++) { const x = await login("admin@sigca.test", "mal" + i + "xx"); if (x.s === 429) { got429 = true; break; } }

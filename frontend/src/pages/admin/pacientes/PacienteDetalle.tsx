@@ -102,6 +102,7 @@ export default function PacienteDetalle() {
       </Link>
 
       {admin && <Link to={`/admin/materiales/pacientes/${id}`} className="ml-4 inline-block rounded text-sm text-marea-700 underline">Materiales del paciente</Link>}
+      <Link to={`/admin/pagos?paciente=${id}`} className="ml-4 inline-block rounded text-sm text-marea-700 underline">Pagos del paciente</Link>
 
       <header className="mt-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4">

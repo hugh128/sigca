@@ -27,11 +27,12 @@ function entrarComo(rol: Usuario["rol"], ruta: string) {
 }
 
 describe("permisos por rol (router real)", () => {
-  it("el profesional no puede consultar caja por URL", async () => {
-    entrarComo("PROFESIONAL", "/admin/caja");
+  it.each(["caja", "pagos"])("el profesional no puede consultar %s por URL", async modulo => {
+    entrarComo("PROFESIONAL", `/admin/${modulo}`);
     // El router resuelve los módulos lazy antes de mostrar el guard, incluso al denegar.
     expect(await screen.findByText("No tienes acceso a esta sección", {}, { timeout: 4000 })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Caja diaria" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Pagos" })).not.toBeInTheDocument();
   });
   it("recepción puede consultar horarios por URL sin editar", async () => {
     entrarComo("RECEPCIONISTA", "/admin/horarios");
