@@ -557,6 +557,30 @@ r = await req("POST", "/contacto", { body: { ...mensajeContacto, correo: "incorr
 r = await req("POST", "/contacto", { body: { ...mensajeContacto, mensaje: "" } }); ok(r.s === 400, "contacto: mensaje vacio 400");
 r = await req("GET", "/contacto", { token: admin }); ok(r.j.total === mensajesAntes + 1, "contacto: datos invalidos no se guardan");
 
+// --- solicitudes: visitante -> recepcion -> cita consultable en agenda
+r = await req("GET", "/solicitudes-cita"); ok(r.s === 401, "solicitudes: listado privado 401");
+r = await req("GET", "/solicitudes-cita", { token: prof }); ok(r.s === 403, "solicitudes: profesional sin acceso 403");
+r = await req("GET", "/solicitudes-cita", { token: recep }); ok(r.s === 200 && r.j.total === 5, "solicitudes: seed incluye cinco solicitudes");
+const solicitudPrueba = { nombre: "Visitante de prueba", correo: "solicitud@example.test", telefono: "5555-0902", servicioId: evaluacion.id, fechaPreferida: laboral(60), mensaje: "Solicitud ficticia para prueba integral" };
+r = await req("POST", "/solicitudes-cita", { body: solicitudPrueba }); ok(r.s === 201 && !r.j.id && !r.j.correo, "solicitudes: envio publico sin exponer datos");
+r = await req("GET", "/solicitudes-cita?estado=PENDIENTE", { token: recep });
+const solicitudNueva = r.j.items.find(s => s.correo === solicitudPrueba.correo);
+ok(solicitudNueva?.estado === "PENDIENTE" && !solicitudNueva.cita, "solicitudes: persistida pendiente sin reservar cita");
+r = await req("POST", "/pacientes", { token: recep, body: pac({ nombres: "Paciente", apellidos: "Solicitud" }) });
+const datosConversion = { pacienteId: r.j.id, profesionalId: pAna.id, fecha: solicitudPrueba.fechaPreferida, horaInicio: "08:00" };
+r = await req("POST", `/solicitudes-cita/${solicitudNueva.id}/convertir`, { token: recep, body: datosConversion });
+ok(r.s === 201 && r.j.estado === "ATENDIDA" && r.j.cita?.id, "solicitudes: recepcion convierte y conserva referencia", JSON.stringify(r));
+const citaSolicitud = r.j.cita.id;
+r = await req("GET", `/citas/${citaSolicitud}`, { token: recep });
+ok(r.s === 200 && r.j.estado === "PENDIENTE" && r.j.servicio.id === evaluacion.id, "solicitudes: cita generada accesible con servicio solicitado");
+r = await req("GET", `/citas?desde=${datosConversion.fecha}&hasta=${datosConversion.fecha}`, { token: recep });
+ok(r.s === 200 && r.j.items.some(c => c.id === citaSolicitud), "solicitudes: cita incluida en el rango de agenda");
+r = await req("POST", `/solicitudes-cita/${solicitudNueva.id}/convertir`, { token: admin, body: datosConversion }); ok(r.s === 409, "solicitudes: conversion repetida bloqueada 409");
+r = await req("GET", "/solicitudes-cita?estado=PENDIENTE", { token: recep }); const pendienteRechazo = r.j.items[0].id;
+r = await req("PATCH", `/solicitudes-cita/${pendienteRechazo}/rechazar`, { token: recep, body: { motivo: "El solicitante desistio" } });
+ok(r.s === 200 && r.j.estado === "RECHAZADA" && r.j.fechaGestion && !r.j.cita, "solicitudes: rechazo auditado sin crear cita");
+r = await req("PATCH", `/solicitudes-cita/${pendienteRechazo}/rechazar`, { token: admin, body: {} }); ok(r.s === 409, "solicitudes: rechazo repetido bloqueado 409");
+
 // --- rate limit login
 let got429 = false;
 for (let i = 0; i < 12; i++) { const x = await login("admin@sigca.test", "mal" + i + "xx"); if (x.s === 429) { got429 = true; break; } }

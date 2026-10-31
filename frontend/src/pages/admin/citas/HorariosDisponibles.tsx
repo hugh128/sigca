@@ -10,21 +10,24 @@ interface Props {
   valor: string;
   onElegir: (horaInicio: string) => void;
   error?: string;
+  enviando?: boolean;
 }
 
 /**
  * Horarios libres del profesional para ese servicio y fecha, ya filtrados por el servidor
  * (horario de atencion, citas existentes y hora actual). Elegir uno garantiza una cita valida.
  */
-export function HorariosDisponibles({ params, valor, onElegir, error }: Props) {
+export function HorariosDisponibles({ params, valor, onElegir, error, enviando = false }: Props) {
   const nombre = useId();
   const q = useDisponibilidad(params);
   const horarios = q.data?.horarios ?? [];
 
   // Si el horario elegido deja de estar libre (alguien mas lo tomo), se deselecciona
   useEffect(() => {
-    if (q.data && valor && !q.data.horarios.some((h) => h.horaInicio === valor)) onElegir("");
-  }, [q.data, valor, onElegir]);
+    // Al guardar, el propio horario reservado desaparece del listado. No invalidar
+    // el formulario mientras espera que terminen las consultas posteriores al guardado.
+    if (!enviando && q.data && valor && !q.data.horarios.some((h) => h.horaInicio === valor)) onElegir("");
+  }, [q.data, valor, onElegir, enviando]);
 
   const grupos = [
     { titulo: "Mañana", items: horarios.filter((h) => h.horaInicio < "12:00") },

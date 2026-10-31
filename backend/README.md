@@ -3,7 +3,7 @@
 API REST del **Sistema Integral de Gestion de Citas y Atencion (SIGCA)**.
 Node.js + Express 5 + TypeScript + MongoDB (Mongoose).
 
-> Estado: **Avance 1 + Avance 2 (en curso: pacientes, responsables y citas)**. Avance 1: (configuracion, autenticacion, usuarios, servicios, contenido institucional, horarios e imagenes en Cloudflare R2).
+> Estado: **Avance 1 + Avance 2 en curso**: pacientes, responsables, citas/calendario, contacto y solicitudes de cita. Pendientes materiales y finanzas.
 
 ## Requisitos
 
@@ -242,6 +242,24 @@ Que hace el servidor con cada archivo:
 - Acepta JPG, PNG, WebP y GIF. **SVG no** (puede contener scripts).
 - Maximo **5 MB** (`413`) y **40 millones de pixeles** (proteccion contra imagenes "bomba").
 - Aplica la orientacion EXIF, **elimina los metadatos** (ubicacion GPS, modelo de camara; importante en fotos de pacientes), reduce a un maximo de **1600 px** y la guarda como **WebP** con nombre aleatorio (`carpeta/anio/uuid.webp`).
+
+## Solicitudes de cita
+
+| Metodo | Ruta | Acceso |
+|---|---|---|
+| POST | `/api/solicitudes-cita` | Publico; comparte el limite de 20 envios por IP/hora con contacto |
+| GET | `/api/solicitudes-cita?page=&limit=&estado=` | Administrador o recepcionista; mas recientes primero |
+| GET | `/api/solicitudes-cita/:id` | Administrador o recepcionista |
+| POST | `/api/solicitudes-cita/:id/convertir` | Administrador o recepcionista |
+| PATCH | `/api/solicitudes-cita/:id/rechazar` | Administrador o recepcionista |
+
+El alta recibe `nombre`, `correo`, `telefono`, `servicioId` activo, `fechaPreferida` (`AAAA-MM-DD`, desde hoy en Guatemala) y `mensaje` opcional. Responde 201 con una confirmacion sin datos personales. Guarda una solicitud PENDIENTE; no crea citas ni reserva horarios.
+
+La conversion recibe `pacienteId`, `profesionalId`, `fecha`, `horaInicio` y `observaciones` opcionales. Usa el servicio guardado en la solicitud y las mismas validaciones de citas (paciente activo, responsable de menor, profesional activo, horario y traslapes). Devuelve 201 con la solicitud ATENDIDA y su referencia `cita`. Conserva usuario y fecha de gestion. El rechazo recibe `motivo` opcional (maximo 300 caracteres) y devuelve la solicitud RECHAZADA. Solo se gestionan solicitudes pendientes; repetir o competir por una ya gestionada devuelve 409.
+
+La conversion y la cita se guardan en una misma transaccion: un fallo revierte ambas. Crear y reprogramar citas tambien usan transacciones y una escritura compartida por profesional (`revisionAgenda`, campo interno oculto), para que reservas concurrentes desde distintas sesiones no produzcan traslapes. Se requiere el replica set configurado; las operaciones dentro de cada transaccion son secuenciales. Referencia: [transacciones de Mongoose](https://mongoosejs.com/docs/transactions.html).
+
+El seed recrea cinco solicitudes ficticias: tres pendientes, una atendida vinculada a una cita y una rechazada. Las pruebas cubren conversion repetida, carreras con reservas normales/rechazos y rollback despues de crear la cita. `npm run test:e2e` incluye el recorrido publico hasta su consulta en agenda, sobre una base temporal. El helper `node scripts/verificar-integracion.mjs --servir` imprime un puerto temporal libre para pruebas manuales; no ocupa el 4100 del desarrollo habitual.
 
 ## Cloudflare R2
 

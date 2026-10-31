@@ -20,7 +20,7 @@ export function renderConRutas(rutas: RouteObject[], entrada = "/") {
 }
 
 type Respuesta = { status?: number; body?: unknown };
-type Manejador = Respuesta | ((init: RequestInit | undefined, url: URL) => Respuesta);
+type Manejador = Respuesta | ((init: RequestInit | undefined, url: URL) => Respuesta | Promise<Respuesta>);
 
 /** Simula fetch segun la ruta de la API (ej. "GET /contenido"). Una ruta no declarada falla la prueba. */
 export function simularApi(rutas: Record<string, Manejador>) {
@@ -29,7 +29,7 @@ export function simularApi(rutas: Record<string, Manejador>) {
     const ruta = `${init?.method ?? "GET"} ${url.pathname.replace(/^\/api/, "")}`;
     const m = rutas[ruta];
     if (!m) throw new Error(`Peticion no simulada: ${ruta}`);
-    const { status = 200, body = null } = typeof m === "function" ? m(init, url) : m;
+    const { status = 200, body = null } = typeof m === "function" ? await m(init, url) : m;
     return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
   });
   vi.stubGlobal("fetch", mock);

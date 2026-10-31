@@ -30,7 +30,7 @@ try {
   const require = createRequire(import.meta.url);
   const { createApp } = require("../dist/app.js");
   const servir = process.argv.includes("--servir");
-  server = createApp().listen(servir ? 4100 : 0);
+  server = createApp().listen(0);
   await new Promise((resolve, reject) => { server.once("listening", resolve); server.once("error", reject); });
   const api = `http://localhost:${server.address().port}/api`;
   console.log(`API temporal de verificacion: ${api}`);

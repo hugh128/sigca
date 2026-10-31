@@ -25,6 +25,10 @@ function entrarComo(rol: Usuario["rol"], ruta: string) {
 }
 
 describe("permisos por rol (router real)", () => {
+  it("el profesional no puede gestionar solicitudes por URL", async () => {
+    entrarComo("PROFESIONAL", "/admin/solicitudes");
+    expect(await screen.findByText("No tienes acceso a esta sección")).toBeInTheDocument();
+  });
   it.each(["RECEPCIONISTA", "PROFESIONAL"] as const)("%s no puede abrir mensajes por URL", async rol => {
     entrarComo(rol, "/admin/mensajes");
     expect(await screen.findByText("No tienes acceso a esta sección")).toBeInTheDocument();
@@ -33,7 +37,7 @@ describe("permisos por rol (router real)", () => {
     entrarComo("ADMINISTRADOR", "/admin");
     const menu = (await screen.findAllByRole("navigation", { name: "Módulos" }))[0]!;
     expect(within(menu).getByRole("link", { name: "Panel" })).toBeInTheDocument();
-    for (const nombre of ["Calendario", "Citas", "Pacientes", "Responsables", "Servicios", "Horarios", "Contenido", "Usuarios", "Mensajes"]) {
+    for (const nombre of ["Calendario", "Citas", "Solicitudes", "Pacientes", "Responsables", "Servicios", "Horarios", "Contenido", "Usuarios", "Mensajes"]) {
       expect(within(menu).getByRole("link", { name: nombre })).toBeInTheDocument();
     }
     expect(within(menu).queryByRole("link", { name: "Mis pacientes" })).not.toBeInTheDocument(); // es solo para profesionales
@@ -42,7 +46,7 @@ describe("permisos por rol (router real)", () => {
   it("la recepcionista ve Pacientes, Responsables y Servicios, pero no Usuarios, Contenido ni Horarios", async () => {
     entrarComo("RECEPCIONISTA", "/admin");
     const menu = (await screen.findAllByRole("navigation", { name: "Módulos" }))[0]!;
-    for (const nombre of ["Calendario", "Citas", "Pacientes", "Responsables", "Servicios"]) expect(within(menu).getByRole("link", { name: nombre })).toBeInTheDocument();
+    for (const nombre of ["Calendario", "Citas", "Solicitudes", "Pacientes", "Responsables", "Servicios"]) expect(within(menu).getByRole("link", { name: nombre })).toBeInTheDocument();
     for (const nombre of ["Usuarios", "Contenido", "Horarios", "Mis pacientes", "Mensajes"]) expect(within(menu).queryByRole("link", { name: nombre })).not.toBeInTheDocument();
   });
 

@@ -12,6 +12,7 @@ const ENLACES = [
   { to: "/corporativo", etiqueta: "Corporativo" },
   { to: "/horarios", etiqueta: "Horarios" },
   { to: "/contacto", etiqueta: "Contacto" },
+  { to: "/solicitar-cita", etiqueta: "Solicitar cita" },
 ];
 
 const claseEnlace = ({ isActive }: { isActive: boolean }) =>

@@ -5,11 +5,12 @@ Fecha: 2026-10-31. Base revisada: `adcb498` (PR #1 integrado).
 ## Estado verificado
 
 - Implementados: autenticacion y roles, usuarios y profesionales, servicios, contenido institucional, horarios, almacenamiento local/R2, pacientes, responsables, citas, disponibilidad y calendario.
-- Contacto implementado en `feature/contacto`, pendiente de revision y autorizacion para publicar: formulario `/contacto`, persistencia y bandeja `/admin/mensajes` exclusiva del administrador.
-- Pendientes: solicitudes de cita y conversion, materiales y asignaciones, pagos, caja y entregables finales.
+- Contacto integrado en main mediante PR #3: formulario `/contacto`, persistencia y bandeja `/admin/mensajes` exclusiva del administrador.
+- Solicitudes implementadas en `feature/solicitudes-cita`, pendientes de revision del usuario: formulario publico, bandeja de administrador/recepcion, rechazo y conversion transaccional a cita.
+- Pendientes: materiales y asignaciones, pagos, caja y entregables finales.
 - Recepcion consulta los horarios publicos, pero no tiene una vista administrativa de consulta. Revisar ese acceso al cerrar el avance 2.
 - MongoDB original en 27017 se conserva. Instancia de SIGCA en 27018 con replica set local `sigca-rs`, respaldo y copia verificada de documentos e indices. Comandos y conexion documentados en backend/README.md.
-- Validacion de contacto: 238 pruebas frontend, 13 pruebas backend con MongoDB, 335 comprobaciones HTTP, 2 contratos, builds y recorrido de envio/lectura en navegador.
+- Validacion con solicitudes: 245 pruebas frontend, 23 pruebas backend con MongoDB, 346 comprobaciones HTTP, 2 contratos, builds y recorrido de solicitud/conversion/calendario en navegador. Vista movil comprobada; bases temporales independientes.
 
 ## Orden propuesto
 
@@ -46,7 +47,7 @@ Cada modulo incluye API, interfaz y pruebas. Los pasos internos estan en `todo.m
 
 ## Flujo de Git
 
-- Main actualizado al PR #2 (`2db710f`). Contacto implementado en `feature/contacto`, con cambios sin commit pendientes del OK del usuario.
+- Main actualizado al PR #3 (`e2c19c6`). Solicitudes implementadas en `feature/solicitudes-cita`, con cambios sin commit pendientes del OK del usuario.
 - Las implementaciones salen del main actualizado en ramas propias. No mezclar contacto, solicitudes, materiales y finanzas en un unico PR.
 - Commit, push y PR requieren el OK del usuario para cada entrega. El usuario aprueba y fusiona.
 - El usuario aprobo el plan y autorizo configurar el replica set. Los modulos se desarrollan por entrega; publicar cambios requiere su OK.
@@ -56,11 +57,11 @@ Cada modulo incluye API, interfaz y pruebas. Los pasos internos estan en `todo.m
 | Tema | Tratamiento |
 | --- | --- |
 | Disponibilidad de MongoDB local | Ejecutar `npm run db:start` antes de la API; replica set local configurado con pruebas de rollback y concurrencia. |
-| Agenda bajo concurrencia | El bloqueo existente solo protege una instancia. Integrar transacciones sin asumir que por si solas impiden traslapes; definir una escritura compartida o serializacion y probar conflictos. |
+| Agenda bajo concurrencia | Crear, convertir y reprogramar usan transacciones y escritura compartida por profesional. Pruebas de sesiones independientes verifican conflictos sin depender del bloqueo en memoria. |
 | Permisos sobre asignaciones | Profesional opera sobre pacientes propios; backend valida propiedad, paciente activo y material activo. Administrador tiene control completo. |
 | Datos personales | Solo datos ficticios en seed y pruebas; no publicar mensajes ni solicitudes en endpoints de lectura publicos. |
 | Amplitud de finanzas | Separar apertura, pagos, anulacion y cierre, manteniendo invariantes entre modulos. |
 
 ## Siguiente entrega recomendada
 
-Revisar y publicar contacto con el OK del usuario. Despues, implementar solicitudes de cita y su conversion consistente usando el replica set ya configurado. Contacto no incluye envio de correo electronico: el requisito pide guardar el mensaje en MongoDB.
+Revisar y publicar solicitudes con el OK del usuario. Despues, implementar catalogo de materiales y asignaciones por paciente. Contacto y solicitudes no envian correo automatico: el equipo coordina la atencion con los datos guardados.
