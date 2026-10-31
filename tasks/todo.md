@@ -104,7 +104,8 @@ Detallar contratos e incrementos antes de implementar, con los criterios siguien
 - Dependencias: 11. Descomponer antes de implementar: persistencia/contador; servicio transaccional; API; interfaz de registro; consulta de historial.
 
 ### 13. Anulacion y cierre
-- [ ] Anular con motivo, fecha y usuario solo en caja abierta; impedir cancelar cita con pagos validos.
+- [x] Anular con motivo, fecha y usuario solo en caja abierta; impedir cancelar cita con pagos validos.
+- Verificacion de anulaciones: 268 pruebas frontend, 43 backend, 389 comprobaciones HTTP, 2 contratos, builds y navegador (auditoria, saldo recalculado y movil). Incluye cache al reabrir, propiedad/caja cerrada, repeticion, carreras y rollback. Seed con una anulacion auditada. Pendiente OK para publicar.
 - [ ] Cierre calcula totales/efectivo/diferencia, conserva detalle y bloquea pagos, anulaciones y cambios posteriores.
 - Verificacion: RN-19 a RN-29, carreras pago/cierre y anulacion/cierre; demostracion completa.
 - Dependencias: 12. Descomponer antes de implementar: anulacion; integracion con cancelacion; calculo/cierre; API; interfaz/historial.

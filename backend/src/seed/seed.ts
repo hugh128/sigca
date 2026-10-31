@@ -240,6 +240,8 @@ async function main() {
       comprobante: `COMP-${hoyGuatemala().slice(0, 4)}-${String(i * 2 + j + 1).padStart(6, "0")}`,
       paciente: c.paciente, cita: c._id, caja: cajaDemo._id, montoCentavos,
       metodo: (["EFECTIVO", "TRANSFERENCIA", "TARJETA"] as const)[(i + j) % 3]!, registradoPor: cajaDemo.usuario,
+      fecha: new Date(),
+      ...(i === 0 && j === 0 ? { estado: "ANULADO" as const, motivoAnulacion: "Registro duplicado de demostración", anuladoPor: cajaDemo.usuario, fechaAnulacion: new Date() } : {}),
     }));
   });
   await Pago.insertMany(pagosDemo);

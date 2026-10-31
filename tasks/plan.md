@@ -11,8 +11,9 @@ Fecha: 2026-10-31. Base revisada: `adcb498` (PR #1 integrado).
 - Revision operativa del avance 2 integrada mediante PR #6. Matriz de evidencia y limites en `verificacion-avance-2.md`.
 - Recepcion ya consulta horarios desde el panel, sin controles de edicion. El backend conserva PUT exclusivo de administrador.
 - Apertura y consulta de caja integradas mediante PR #7. Contrato en `apertura-caja.md`: propia por usuario, indice unico parcial, montos en centavos y consultas por propietario/administrador.
-- Pagos, abonos y saldos implementados en `feature/pagos-abonos`, pendientes de revision/publicacion. Comprobantes unicos, transacciones y consulta financiera de paciente/cita. Contrato en `pagos-abonos.md`.
-- Pendientes: anulaciones auditadas, movimientos/cierre de caja y entregables finales.
+- Pagos, abonos y saldos integrados mediante PR #8. Comprobantes unicos, transacciones y consulta financiera de paciente/cita. Contrato en `pagos-abonos.md`.
+- Anulacion auditada implementada en `feature/anulacion-pagos`, pendiente de revision/publicacion. Detalle fresco, motivo obligatorio y caja abierta; contrato en `anulacion-pagos.md`.
+- Pendientes: movimientos, totales/cierre de caja y entregables finales.
 - MongoDB original en 27017 se conserva. Instancia de SIGCA en 27018 con replica set local `sigca-rs`, respaldo y copia verificada de documentos e indices. Comandos y conexion documentados en backend/README.md.
 - Validacion de cierre: 253 pruebas frontend, 25 backend con MongoDB, 358 comprobaciones HTTP, 2 contratos y ambos builds. Seed verificado antes del smoke. Navegador: recepcion consulta horarios en escritorio/movil, sin formulario ni errores de consola. Bases temporales para pruebas con escrituras.
 
@@ -51,7 +52,7 @@ Cada modulo incluye API, interfaz y pruebas. Los pasos internos estan en `todo.m
 
 ## Flujo de Git
 
-- Main actualizado al PR #7 (`ef5e54d`). Pagos y abonos en `feature/pagos-abonos`, con cambios sin commit pendientes del OK del usuario.
+- Main actualizado al PR #8 (`0c1d4fb`). Anulaciones en `feature/anulacion-pagos`, con cambios sin commit pendientes del OK del usuario.
 - Las implementaciones salen del main actualizado en ramas propias. No mezclar contacto, solicitudes, materiales y finanzas en un unico PR.
 - Commit, push y PR requieren el OK del usuario para cada entrega. El usuario aprueba y fusiona.
 - El usuario aprobo el plan y autorizo configurar el replica set. Los modulos se desarrollan por entrega; publicar cambios requiere su OK.
@@ -68,4 +69,4 @@ Cada modulo incluye API, interfaz y pruebas. Los pasos internos estan en `todo.m
 
 ## Siguiente entrega recomendada
 
-Revisar y publicar pagos/abonos con el OK del usuario. Despues, implementar anulacion autorizada con motivo/fecha/usuario y solo en caja abierta; despues, movimientos y cierre calculado de caja. Mantener escritura compartida de caja/cita y pruebas de carreras. Contacto y solicitudes no envian correo automatico: el equipo coordina la atencion con los datos guardados.
+Revisar y publicar anulaciones con el OK del usuario. Despues, implementar movimientos/totales y cierre calculado de caja con efectivo contado/diferencia e historial. Mantener escritura compartida de caja/cita y probar carreras cobro/cierre y anulacion/cierre. Contacto y solicitudes no envian correo automatico: el equipo coordina la atencion con los datos guardados.

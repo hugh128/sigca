@@ -14,7 +14,35 @@ export async function totalPagado(citaId: string, session: ClientSession | null 
   ]).session(session);
   return totales[0]?.total ?? 0;
 }
-const POPULAR = [{ path: "paciente", select: "nombres apellidos" }, { path: "cita", select: "inicio fin estado precioCentavos duracionMin" }, { path: "registradoPor", select: "nombre" }];
+const POPULAR = [{ path: "paciente", select: "nombres apellidos" }, { path: "cita", select: "inicio fin estado precioCentavos duracionMin" }, { path: "registradoPor", select: "nombre" }, { path: "anuladoPor", select: "nombre" }];
+export async function obtener(id: string, actor: ActorCaja) {
+  const pago = await Pago.findById(id).populate(POPULAR);
+  if (!pago) throw AppError.notFound("Pago no encontrado");
+  const caja = await Caja.findById(pago.caja);
+  return {
+    ...pago.toJSON(), cajaEstado: caja?.estado ?? null,
+    puedeAnular: pago.estado === "REGISTRADO" && caja?.estado === "ABIERTA" && (actor.rol === "ADMINISTRADOR" || String(caja.usuario) === actor.id),
+  };
+}
+export async function anular(id: string, motivo: string, actor: ActorCaja) {
+  await mongoose.connection.transaction(async session => {
+    const pago = await Pago.findById(id).session(session);
+    if (!pago) throw AppError.notFound("Pago no encontrado");
+    if (pago.estado !== "REGISTRADO") throw AppError.conflict("Este pago ya fue anulado. Actualiza el comprobante.");
+    const caja = await Caja.findById(pago.caja).session(session);
+    if (!caja) throw AppError.notFound("Caja no encontrada");
+    if (actor.rol !== "ADMINISTRADOR" && String(caja.usuario) !== actor.id) throw AppError.forbidden("Solo puedes anular pagos de tu propia caja");
+    if (caja.estado !== "ABIERTA") throw AppError.unprocessable("No se pueden anular pagos de una caja cerrada");
+    // Mismo orden que el cobro: caja y despues cita. El cierre futuro debe escribir esta caja.
+    await Caja.updateOne({ _id: caja.id }, { $inc: { revisionMovimientos: 1 } }, { session });
+    const cita = await Cita.findOneAndUpdate({ _id: pago.cita }, { $inc: { revisionFinanciera: 1 } }, { session, returnDocument: "after" });
+    if (!cita) throw AppError.notFound("Cita no encontrada");
+    pago.estado = "ANULADO"; pago.motivoAnulacion = motivo;
+    pago.anuladoPor = new mongoose.Types.ObjectId(actor.id); pago.fechaAnulacion = new Date();
+    await pago.save({ session });
+  });
+  return obtener(id, actor);
+}
 export async function crear(d: { citaId: string; montoCentavos: number; metodo: IPago["metodo"] }, actor: ActorCaja) {
   await Promise.all([Pago.init(), Contador.init()]);
   // Inicializacion fuera de la transaccion: dos primeras solicitudes pueden competir por el mismo contador.

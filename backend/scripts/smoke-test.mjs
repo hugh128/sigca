@@ -625,6 +625,17 @@ r = await req("POST", "/pagos", { token: recep, body: { citaId: citaSolicitud, m
 r = await req("GET", `/pagos/citas/${citaSolicitud}/resumen`, { token: recep }); ok(r.j.estadoFinanciero === "PAGADO" && r.j.saldoCentavos === 0, "pagos: saldo cero y estado pagado");
 r = await req("POST", "/pagos", { token: recep, body: { citaId: citaSolicitud, montoCentavos: 1, metodo: "EFECTIVO" } }); ok(r.s === 422, "pagos: sobrepago rechazado");
 r = await req("GET", `/pagos?pacienteId=${datosConversion.pacienteId}`, { token: recep }); ok(r.s === 200 && r.j.total === 2, "pagos: consulta por paciente");
+const pagosAnular = r.j.items;
+r = await req("GET", `/pagos/${pagosAnular[0].id}`, { token: recep }); ok(r.s === 200 && r.j.puedeAnular && r.j.cajaEstado === "ABIERTA", "anulacion: detalle fresco de caja abierta propia");
+r = await req("PATCH", `/pagos/${pagosAnular[0].id}/anular`, { token: prof, body: { motivo: "Error de registro" } }); ok(r.s === 403, "anulacion: profesional sin permiso");
+r = await req("PATCH", `/pagos/${pagosAnular[0].id}/anular`, { token: recep, body: { motivo: " " } }); ok(r.s === 400, "anulacion: exige motivo");
+r = await req("PATCH", `/pagos/${pagosAnular[0].id}/anular`, { token: recep, body: { motivo: "Error de registro de prueba" } }); ok(r.s === 200 && r.j.estado === "ANULADO" && r.j.fechaAnulacion && r.j.anuladoPor.nombre, "anulacion: persiste auditoria sin borrar pago");
+r = await req("GET", `/pagos/citas/${citaSolicitud}/resumen`, { token: recep }); ok(r.j.estadoFinanciero === "PARCIAL" && r.j.saldoCentavos > 0, "anulacion: recalcula saldo con pagos restantes");
+r = await req("PATCH", `/citas/${citaSolicitud}/estado`, { token: recep, body: { estado: "CANCELADA" } }); ok(r.s === 422, "anulacion: pagos restantes aun bloquean cancelacion");
+r = await req("PATCH", `/pagos/${pagosAnular[0].id}/anular`, { token: recep, body: { motivo: "Segundo intento" } }); ok(r.s === 409, "anulacion: repeticion rechazada");
+r = await req("PATCH", `/pagos/${pagosAnular[1].id}/anular`, { token: recep, body: { motivo: "Error de registro de prueba" } }); ok(r.s === 200, "anulacion: segundo pago anulado");
+r = await req("GET", `/pagos/citas/${citaSolicitud}/resumen`, { token: recep }); ok(r.j.estadoFinanciero === "PENDIENTE" && r.j.totalPagadoCentavos === 0, "anulacion: todos anulados no suman al saldo");
+r = await req("PATCH", `/citas/${citaSolicitud}/estado`, { token: recep, body: { estado: "CANCELADA" } }); ok(r.s === 200, "anulacion: cancelacion permitida tras anular todos");
 
 // --- rate limit login
 let got429 = false;
