@@ -246,10 +246,12 @@ export interface Caja {
 }
 export type MetodoPago = "EFECTIVO" | "TRANSFERENCIA" | "TARJETA";
 export interface Pago {
+  motivoAnulacion?: string; anuladoPor?: { id: string; nombre: string }; fechaAnulacion?: string;
   id: string; comprobante: string; paciente: { id: string; nombres: string; apellidos: string };
   cita: { id: string; fecha: string; estado: EstadoCita }; caja: string;
   montoCentavos: number; metodo: MetodoPago; fecha: string; registradoPor: { id: string; nombre: string }; estado: "REGISTRADO" | "ANULADO";
 }
+export interface PagoDetalle extends Pago { cajaEstado: "ABIERTA" | "CERRADA" | null; puedeAnular: boolean }
 export interface ResumenPago {
   cita: { id: string; paciente: Pago["paciente"]; servicio: { id: string; nombre: string }; fecha: string; estado: EstadoCita };
   costoCentavos: number; totalPagadoCentavos: number; saldoCentavos: number; estadoFinanciero: "PENDIENTE" | "PARCIAL" | "PAGADO";

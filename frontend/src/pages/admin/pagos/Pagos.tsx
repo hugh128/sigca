@@ -6,13 +6,12 @@ import { EncabezadoPagina } from "@/components/admin/EncabezadoPagina";
 import { claseControl } from "@/components/forms/TextField";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { Modal } from "@/components/ui/Modal";
 import { Cargando, ErrorCarga, Vacio } from "@/components/ui/Estados";
 import { Paginacion } from "@/components/ui/Paginacion";
 import { formatearFechaHora, formatearFecha, formatearQuetzales } from "@/lib/format";
 import { useDocumentTitle } from "@/lib/useDocumentTitle";
-import type { Pago } from "@/types/api";
 import { FormularioPago } from "./FormularioPago";
+import { ComprobantePago } from "./ComprobantePago";
 const METODOS = { EFECTIVO: "Efectivo", TRANSFERENCIA: "Transferencia", TARJETA: "Tarjeta" };
 export default function Pagos() {
   useDocumentTitle("Pagos", "SIGCA");
@@ -21,7 +20,7 @@ export default function Pagos() {
   const numero = Number(params.get("page") ?? 1); const page = Number.isSafeInteger(numero) && numero > 0 ? numero : 1;
   const cambiar = (c: Record<string, string>) => setParams(p => { const n = new URLSearchParams(p); n.delete("page"); for (const [k, v] of Object.entries(c)) v ? n.set(k, v) : n.delete(k); return n; });
   const lista = usePagos({ page, citaId, pacienteId, desde: params.get("desde") || undefined, hasta: params.get("hasta") || undefined, metodo: params.get("metodo") || undefined });
-  const resumen = useResumenPago(citaId); const caja = useCajaActual(); const [detalle, setDetalle] = useState<Pago>();
+  const resumen = useResumenPago(citaId); const caja = useCajaActual(); const [detalle, setDetalle] = useState<string>();
   return <div className="mx-auto max-w-5xl">
     <EncabezadoPagina titulo="Pagos" descripcion="Consulta comprobantes y registra pagos o abonos desde la cita correspondiente." />
     <div className="mt-4 flex flex-wrap gap-4"><Link className="rounded text-marea-700 underline" to="/admin/citas">Elegir una cita para cobrar</Link>{(citaId || pacienteId) && <Link className="rounded text-marea-700 underline" to="/admin/pagos">Ver todos los pagos</Link>}</div>
@@ -51,11 +50,9 @@ export default function Pagos() {
       <ul className="mt-5 divide-y divide-marea-100 rounded-xl border border-marea-100 bg-white" aria-label="Pagos registrados">{lista.data.items.map(p => <li key={p.id} className="space-y-3 p-5">
         <div className="flex flex-wrap items-center justify-between gap-3"><p className="font-semibold">{p.comprobante}</p><Badge tono={p.estado === "REGISTRADO" ? "ok" : "neutro"}>{p.estado === "REGISTRADO" ? "Registrado" : "Anulado"}</Badge></div>
         <p className="break-words">{p.paciente.nombres} {p.paciente.apellidos}</p><p className="text-lg font-medium">{formatearQuetzales(p.montoCentavos)} · {METODOS[p.metodo]}</p><p className="text-sm text-ink-soft">{formatearFechaHora(p.fecha)} · {p.registradoPor.nombre}</p>
-        <div className="flex flex-wrap items-center gap-4"><Button variante="contorno" onClick={() => setDetalle(p)} aria-label={`Ver comprobante ${p.comprobante}`}>Ver comprobante</Button><Link className="rounded text-sm text-marea-700 underline" to={`/admin/pagos?cita=${p.cita.id}`}>Ver saldo de la cita</Link></div>
+        <div className="flex flex-wrap items-center gap-4"><Button variante="contorno" onClick={() => setDetalle(p.id)} aria-label={`Ver comprobante ${p.comprobante}`}>Ver comprobante</Button><Link className="rounded text-sm text-marea-700 underline" to={`/admin/pagos?cita=${p.cita.id}`}>Ver saldo de la cita</Link></div>
       </li>)}</ul><Paginacion {...lista.data} etiqueta="pagos" onCambiar={p => cambiar({ page: String(p) })} />
     </>}
-    <Modal abierto={Boolean(detalle)} onCerrar={() => setDetalle(undefined)} titulo="Comprobante interno">
-      {detalle && <div className="space-y-3"><p className="font-semibold">{detalle.comprobante}</p><p>{detalle.paciente.nombres} {detalle.paciente.apellidos}</p><p>{formatearQuetzales(detalle.montoCentavos)} · {METODOS[detalle.metodo]}</p><p>{formatearFechaHora(detalle.fecha)}</p><p>Registrado por {detalle.registradoPor.nombre}</p><p>Estado: {detalle.estado === "REGISTRADO" ? "Registrado" : "Anulado"}</p><p className="text-sm text-ink-soft">Comprobante de control interno.</p></div>}
-    </Modal>
+    {detalle && <ComprobantePago id={detalle} onCerrar={() => setDetalle(undefined)} />}
   </div>;
 }

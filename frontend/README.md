@@ -51,7 +51,9 @@ El listado es paginado, filtra por estado y permite ver detalle. Administrador c
 
 Para registrar un abono se necesita caja propia abierta. El formulario convierte quetzales a centavos, permite elegir Efectivo/Transferencia/Tarjeta y valida monto positivo sin superar saldo. Tras persistir confirma el comprobante y refresca saldo/historial; al completar el costo desaparece el formulario. Ante rechazo conserva valores y refresca el saldo por si otra sesion ya registro un abono. Una cita cancelada no ofrece registro de pagos. Los enlaces permiten elegir cita o abrir caja cuando hace falta.
 
-El profesional carece de menu, ruta y API financiera. No se incluyen todavia anulaciones, movimientos, cierre ni totales de caja. La API ya impide cancelar una cita con pagos validos. El comprobante es de control interno; no se genera factura fiscal.
+El profesional carece de menu, ruta y API financiera. Movimientos, cierre y totales de caja siguen pendientes. La API impide cancelar una cita con pagos validos. El comprobante es de control interno; no se genera factura fiscal.
+
+Al abrir un comprobante se consulta `GET /pagos/:id`; al reabrirlo se espera la respuesta actual antes de ofrecer acciones, sin usar permisos viejos del cache. Si la API permite anular, aparece un formulario con motivo obligatorio y confirmacion explicita. Tras persistir, muestra motivo, fecha y responsable de la anulacion y refresca historial/saldo. Administrador puede anular en cualquier caja abierta; recepcionista solo en la propia. Pago anulado o caja cerrada/ajena no ofrece el boton. La operacion conserva el comprobante y no procesa devoluciones automaticas.
 
 ## Scripts
 

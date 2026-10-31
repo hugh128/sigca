@@ -76,6 +76,13 @@ test("comprobantes unicos, filtros y exclusion de anulados del saldo", async () 
   await mongoose.connection.db!.collection("pagos").updateOne({ comprobante: r[0]!.body.comprobante }, { $set: { estado: "ANULADO" } });
   assert.equal((await resumen()).body.totalPagadoCentavos, 100);
 });
+test("un pago valido restante sigue bloqueando la cancelacion tras anular otro", async () => {
+  const primero = (await pagar(100)).body; const segundo = (await pagar(100)).body;
+  await pedir("PATCH", `/pagos/${primero.id}/anular`, { motivo: "Registro duplicado" });
+  assert.equal((await pedir("PATCH", `/citas/${citaId}/estado`, { estado: "CANCELADA" })).status, 422);
+  await pedir("PATCH", `/pagos/${segundo.id}/anular`, { motivo: "Registro duplicado" });
+  assert.equal((await pedir("PATCH", `/citas/${citaId}/estado`, { estado: "CANCELADA" })).status, 200);
+});
 test("fallo al crear pago revierte contador y no deja cobros parciales", async () => {
   const { Pago } = await import("../src/models/Pago");
   const fallo = mock.method(Pago, "create", async () => { throw new Error("Fallo simulado al guardar pago"); });
@@ -92,4 +99,50 @@ test("primeros pagos en citas distintas comparten contador sin duplicar comproba
     pagar(100), pedir("POST", "/pagos", { citaId: segunda.id, montoCentavos: 200, metodo: "TARJETA" }, "otra"),
   ]);
   assert.deepEqual(r.map(p => p.status), [201, 201]); assert.equal(new Set(r.map(p => p.body.comprobante)).size, 2);
+});
+test("anula con auditoria y permite cancelar solo tras anular todos los pagos validos", async () => {
+  const pago = (await pagar(10000)).body;
+  assert.equal((await pedir("GET", `/pagos/${pago.id}`)).body.puedeAnular, true);
+  for (const motivo of ["", "  ", "x".repeat(301)]) assert.equal((await pedir("PATCH", `/pagos/${pago.id}/anular`, { motivo })).status, 400);
+  const r = await pedir("PATCH", `/pagos/${pago.id}/anular`, { motivo: "Error de registro", anuladoPor: ids.otra, fechaAnulacion: "2000-01-01" });
+  assert.equal(r.status, 200); assert.equal(r.body.estado, "ANULADO"); assert.equal(r.body.anuladoPor.id, ids.recep);
+  assert.equal(r.body.motivoAnulacion, "Error de registro"); assert.ok(new Date(r.body.fechaAnulacion).getFullYear() >= 2026);
+  assert.equal(r.body.comprobante, pago.comprobante); assert.equal(r.body.montoCentavos, 10000);
+  assert.equal(r.body.puedeAnular, false); assert.equal((await resumen()).body.estadoFinanciero, "PENDIENTE");
+  assert.equal((await pedir("PATCH", `/pagos/${pago.id}/anular`, { motivo: "Segundo intento" })).status, 409);
+  assert.equal((await pedir("PATCH", `/citas/${citaId}/estado`, { estado: "CANCELADA" })).status, 200);
+  assert.equal(await mongoose.connection.db!.collection("pagos").countDocuments(), 1);
+});
+test("propiedad de caja, administrador autorizado y caja cerrada inmutable", async () => {
+  const pago = (await pagar(100)).body;
+  assert.equal((await pedir("GET", `/pagos/${pago.id}`, undefined, "prof")).status, 403);
+  assert.equal((await pedir("PATCH", `/pagos/${pago.id}/anular`, { motivo: "Error de registro" }, "prof")).status, 403);
+  assert.equal((await pedir("GET", `/pagos/${pago.id}`, undefined, "otra")).body.puedeAnular, false);
+  assert.equal((await pedir("PATCH", `/pagos/${pago.id}/anular`, { motivo: "Error de registro" }, "otra")).status, 403);
+  await Caja.updateOne({ usuario: ids.recep }, { estado: "CERRADA" });
+  assert.equal((await pedir("PATCH", `/pagos/${pago.id}/anular`, { motivo: "Error de registro" }, "admin")).status, 422);
+  assert.equal((await pedir("GET", `/pagos/${pago.id}`, undefined, "admin")).body.puedeAnular, false);
+  await Caja.updateOne({ usuario: ids.recep }, { estado: "ABIERTA" });
+  assert.equal((await pedir("PATCH", `/pagos/${pago.id}/anular`, { motivo: "Corrección autorizada" }, "admin")).body.anuladoPor.id, ids.admin);
+});
+test("dos anulaciones concurrentes preservan un solo registro de auditoria", async () => {
+  const pago = (await pagar(100)).body;
+  const r = await Promise.all(["recep", "admin"].map(u => pedir("PATCH", `/pagos/${pago.id}/anular`, { motivo: `Error indicado por ${u}` }, u)));
+  assert.deepEqual(r.map(x => x.status).sort(), [200, 409]);
+  assert.equal((await resumen()).body.totalPagadoCentavos, 0);
+});
+test("anulacion y nuevo abono compiten sin sobrepago ni perdida de registros", async () => {
+  const pago = (await pagar(15000)).body;
+  const r = await Promise.all([pedir("PATCH", `/pagos/${pago.id}/anular`, { motivo: "Registro incorrecto" }), pagar(15000, "otra")]);
+  assert.equal(r[0]!.status, 200); assert.ok([201, 422].includes(r[1]!.status));
+  assert.equal((await resumen()).body.totalPagadoCentavos, r[1]!.status === 201 ? 15000 : 0);
+});
+test("fallo de guardado al anular revierte estado, auditoria y revisiones", async () => {
+  const pago = (await pagar(100)).body;
+  const { Pago } = await import("../src/models/Pago");
+  const fallo = mock.method(Pago.prototype, "save", async () => { throw new Error("Fallo simulado al anular"); });
+  try { assert.equal((await pedir("PATCH", `/pagos/${pago.id}/anular`, { motivo: "Error de registro" })).status, 500); } finally { fallo.mock.restore(); }
+  const r = await pedir("GET", `/pagos/${pago.id}`);
+  assert.equal(r.body.estado, "REGISTRADO"); assert.ok(!r.body.anuladoPor && !r.body.fechaAnulacion);
+  assert.equal((await resumen()).body.totalPagadoCentavos, 100);
 });

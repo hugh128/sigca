@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import type { MetodoPago, Pago, Pagina, ResumenPago } from "@/types/api";
+import type { MetodoPago, Pago, PagoDetalle, Pagina, ResumenPago } from "@/types/api";
+export const usePago = (id: string) => useQuery({ queryKey: ["pagos", "detalle", id], queryFn: ({ signal }) => api<PagoDetalle>(`/pagos/${id}`, { signal }), staleTime: 0 });
+export const useAnularPago = () => useMutation({ mutationFn: ({ id, motivo }: { id: string; motivo: string }) => api<PagoDetalle>(`/pagos/${id}/anular`, { method: "PATCH", body: { motivo } }) });
 export function usePagos(f: { page: number; citaId?: string; pacienteId?: string; desde?: string; hasta?: string; metodo?: string }) {
   const params = new URLSearchParams({ page: String(f.page), limit: "15" });
   for (const [k, v] of Object.entries(f)) if (v && k !== "page") params.set(k, String(v));

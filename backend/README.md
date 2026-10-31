@@ -24,7 +24,7 @@ El seed incluye una caja abierta de recepcion2 con Q200.00. Admin y recepcion1 q
 
 ## Pagos, abonos y saldos
 
-Administrador y recepcionista registran y consultan pagos. Profesional sin acceso (403); sin sesion 401. El pago toma paciente, caja propia abierta, responsable, fecha y estado desde el servidor. No hay edicion ni borrado fisico. La anulacion y el cierre se implementaran en la siguiente entrega.
+Administrador y recepcionista registran y consultan pagos. Profesional sin acceso (403); sin sesion 401. El pago toma paciente, caja propia abierta, responsable, fecha y estado desde el servidor. No hay edicion ni borrado fisico. La anulacion auditada esta disponible; movimientos, totales y cierre de caja siguen pendientes.
 
 | Metodo | Ruta | Contrato |
 |---|---|---|
@@ -38,9 +38,17 @@ Saldo y estado financiero se calculan sumando solo pagos REGISTRADO: PENDIENTE s
 
 Cada registro usa una transaccion con escritura compartida de caja y cita, contador global y alta de pago. Comprobantes `COMP-AAAA-NNNNNN`, con indice unico y contador que no reinicia por ano. Un fallo revierte el pago y el incremento del contador. Las operaciones dentro de la transaccion son secuenciales, conforme a [Mongoose](https://mongoosejs.com/docs/transactions.html). Las revisiones internas no salen en JSON. Se requiere el replica set ya configurado.
 
-Cancelar una cita tambien es transaccional: pagos validos bloquean la cancelacion (RN-27), incluso si cobro y cancelacion compiten. Primero deben anularse los pagos mientras su caja permanezca abierta; esa operacion autorizada se incorporara en la siguiente entrega.
+Cancelar una cita tambien es transaccional: pagos validos bloquean la cancelacion (RN-27), incluso si cobro y cancelacion compiten. Primero deben anularse todos los pagos validos mientras su caja permanezca abierta.
 
-El seed crea diez abonos asociados a citas completadas, incluyendo pagos completos/parciales y los tres metodos, vinculados a la caja abierta de recepcion2. Admin y recepcion1 siguen libres para abrir su caja. No hay pagos anulados ficticios sin auditoria: el seed de anulaciones/cierres se completara junto con esas operaciones.
+El seed crea diez abonos asociados a citas completadas, incluyendo pagos completos/parciales, los tres metodos y una anulacion auditada, vinculados a la caja abierta de recepcion2. Admin y recepcion1 siguen libres para abrir su caja. El seed de cierres se completara junto con esa operacion.
+
+### Anulacion autorizada
+
+`GET /api/pagos/:id` devuelve el comprobante actualizado, su auditoria y `cajaEstado`/`puedeAnular` calculados para el usuario. `PATCH /api/pagos/:id/anular` recibe `{ motivo }`, texto recortado de 3 a 300 caracteres. Administrador puede anular en cualquier caja abierta; recepcionista solo en su propia caja abierta. No requiere una segunda caja propia del administrador. Profesional 403; sin sesion 401.
+
+La anulacion cambia a ANULADO y conserva `motivoAnulacion`, `anuladoPor` (id/nombre) y `fechaAnulacion` del servidor, junto con los datos originales del pago. Caja cerrada devuelve 422; caja ajena a recepcion 403; pago inexistente 404; repeticion o anulaciones simultaneas 409. La transaccion escribe caja y luego cita, igual que el cobro, y conserva saldo/auditoria ante fallos intermedios. El futuro cierre debe escribir la misma caja para competir de forma consistente.
+
+El pago anulado se conserva y se excluye del saldo. Si queda otro pago valido, la cancelacion de la cita sigue bloqueada. Anular no cancela la cita ni procesa una devolucion de dinero automaticamente. No existen endpoints de edicion o borrado de pagos. Contrato y evidencia en [anulacion-pagos.md](../tasks/anulacion-pagos.md).
 
 ## Requisitos
 
