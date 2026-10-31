@@ -1,0 +1,89 @@
+{
+    "dias": [
+        {
+            "dia": "LUNES",
+            "atiende": true,
+            "franjas": [
+                {
+                    "inicio": "08:00",
+                    "fin": "12:00"
+                },
+                {
+                    "inicio": "14:00",
+                    "fin": "18:00"
+                }
+            ]
+        },
+        {
+            "dia": "MARTES",
+            "atiende": true,
+            "franjas": [
+                {
+                    "inicio": "08:00",
+                    "fin": "12:00"
+                },
+                {
+                    "inicio": "14:00",
+                    "fin": "18:00"
+                }
+            ]
+        },
+        {
+            "dia": "MIERCOLES",
+            "atiende": true,
+            "franjas": [
+                {
+                    "inicio": "08:00",
+                    "fin": "12:00"
+                },
+                {
+                    "inicio": "14:00",
+                    "fin": "18:00"
+                }
+            ]
+        },
+        {
+            "dia": "JUEVES",
+            "atiende": true,
+            "franjas": [
+                {
+                    "inicio": "08:00",
+                    "fin": "12:00"
+                },
+                {
+                    "inicio": "14:00",
+                    "fin": "18:00"
+                }
+            ]
+        },
+        {
+            "dia": "VIERNES",
+            "atiende": true,
+            "franjas": [
+                {
+                    "inicio": "08:00",
+                    "fin": "12:00"
+                },
+                {
+                    "inicio": "14:00",
+                    "fin": "18:00"
+                }
+            ]
+        },
+        {
+            "dia": "SABADO",
+            "atiende": true,
+            "franjas": [
+                {
+                    "inicio": "08:00",
+                    "fin": "12:00"
+                }
+            ]
+        },
+        {
+            "dia": "DOMINGO",
+            "atiende": false,
+            "franjas": []
+        }
+    ]
+}

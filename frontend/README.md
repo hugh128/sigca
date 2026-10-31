@@ -1,0 +1,112 @@
+# SIGCA - Frontend
+
+Portal público y sistema administrativo del **Sistema Integral de Gestión de Citas y Atención (SIGCA)**.
+React 19 + TypeScript + Vite + Tailwind CSS 4.
+
+> Estado: **Avance 1** completo en lo funcional: portal público, inicio de sesión, panel, administración de usuarios y servicios, y edición del contenido y los horarios del portal. Las imágenes se suben al backend (Cloudflare R2 o carpeta local).
+
+## Requisitos
+
+- Node.js 20 o superior
+- El backend corriendo (ver `../backend/README.md`)
+
+## Instalación
+
+```bash
+cd frontend
+npm install
+cp .env.example .env     # VITE_API_URL apunta al backend
+npm run dev              # http://localhost:5173
+```
+
+El backend debe tener `CLIENT_URL=http://localhost:5173` para que CORS permita las peticiones.
+
+## Scripts
+
+| Comando | Acción |
+|---|---|
+| `npm run dev` | Servidor de desarrollo |
+| `npm run build` | Verifica tipos y genera `dist/` |
+| `npm run typecheck` | Solo verificación de tipos |
+| `npm test` | Pruebas (Vitest + Testing Library) |
+
+## Tecnologías (equivalencias con los lineamientos originales)
+
+| Lineamiento | Este proyecto |
+|---|---|
+| Vue.js | React + TypeScript |
+| Vue Router | React Router |
+| Pinia | Zustand (sesión y avisos) |
+| — | TanStack Query (datos del servidor) |
+| — | TanStack Form + Zod (formularios y validación) |
+| CSS | Tailwind CSS |
+
+## Estructura
+
+```
+src/
+  api/          consultas al backend (hooks de TanStack Query)
+  components/   ui/ (botones, estados, avisos), forms/ (campos), public/, admin/
+  config/       menú del sistema administrativo (qué módulos ve cada rol)
+  layouts/      PublicLayout (portal) y AdminLayout (panel con menú lateral)
+  lib/          cliente HTTP, formatos, utilidades
+  pages/        public/ y admin/
+  routes/       router y guards (RequireAuth, RequireRole, GuestOnly)
+  schemas/      esquemas Zod de formularios
+  store/        Zustand: auth (sesión) y toast (avisos)
+  types/        tipos de las respuestas de la API
+  test/         utilidades de prueba y fixtures (respuestas reales de la API)
+```
+
+## Módulos administrativos
+
+| Ruta | Módulo | Roles | Qué permite |
+|---|---|---|---|
+| `/admin` | Panel | todos | Resumen |
+| `/admin/usuarios` | Usuarios | Administrador | Crear, editar, buscar y filtrar; activar o desactivar; restablecer contraseña |
+| `/admin/servicios` | Servicios | Administrador (gestiona), Recepcionista (consulta) | Crear, editar, activar o desactivar; precio en quetzales |
+| `/admin/pacientes` | Pacientes | Administrador, Recepcionista | Listado con búsqueda (sin tildes), filtros por edad y estado, paginación y filtros guardados en la URL; registrar, editar, desactivar y reactivar. Muestra la edad al escribir la fecha de nacimiento |
+| `/admin/pacientes/:id` | Ficha del paciente | Administrador, Recepcionista | Datos y responsables; asociar uno existente (buscador), registrar uno nuevo ya asociado o quitarlo. Alerta si un menor no tiene responsable (RN-04) |
+| `/admin/responsables` | Responsables | Administrador, Recepcionista | Listado, registrar, editar y gestionar los pacientes de cada responsable |
+| `/admin/contenido` | Contenido del portal | Administrador | Editar las 6 secciones: General, Inicio (carrusel de 5 a 12 imágenes), Misión y visión, Contacto, Corporativo y Contenido educativo |
+| `/admin/horarios` | Horarios de atención | Administrador | Días y franjas (varias por día), con vista previa de cómo se verá en el portal |
+
+Patrones que los siguientes módulos reutilizan:
+- **Listado + modal + confirmación:** `Usuarios.tsx` es el modelo (tabla, filtros, `Modal` basado en `<dialog>`, `ConfirmDialog`).
+- **Errores del servidor en el formulario:** el envío se hace dentro de `validators.onSubmitAsync` y los errores de la API se muestran bajo el campo correspondiente con `erroresDeServidor()` (por ejemplo, un correo repetido aparece bajo «Correo electrónico»).
+- **Formularios largos con listas** (carrusel, actividades, publicaciones, franjas): `FormularioSeccion` aporta la barra fija «Descartar / Guardar» (solo activa si hay cambios), `FilaLista` los botones de subir, bajar y quitar, y `AvisoSinGuardar` advierte antes de salir con cambios pendientes (enlaces, cambio de sección, recargar la página).
+- **Imágenes:** `ControlImagen` (subir, cambiar, quitar, o pegar una dirección web) guarda la URL y la `key` del archivo en el formulario. Subir una imagen **no la publica**: se publica al guardar el formulario. Valida tipo y tamaño (5 MB) antes de enviar; el servidor lo vuelve a validar. Se usa en el logo, el carrusel, corporativo, publicaciones y servicios, y es el que usarán las fotos de pacientes y responsables.
+- **Listados paginados con filtros en la URL:** `Pacientes.tsx` guarda búsqueda, filtros y página en la barra de direcciones (se pueden compartir y «volver» no los pierde). La búsqueda espera a que se termine de escribir (`useDebounce`) antes de consultar.
+- **Asociar registros existentes:** `BuscadorAsociar` (buscar y elegir) sirve para responsable→paciente y paciente→responsable, y lo reutilizarán las citas.
+- **Modales:** `Modal` distingue «la persona lo cerró» de «lo cerré por código»; así se puede pasar de una ventana a otra sin que la segunda se cierre sola.
+- **Un solo origen para los valores iniciales:** `pages/admin/contenido/valores.ts` convierte lo que devuelve la API en los valores del formulario; la misma conversión usan los componentes y las pruebas.
+- **Dinero:** el formulario trabaja con quetzales como texto y `lib/dinero.ts` convierte a **centavos enteros** sin usar decimales de punto flotante (`19.99` → `1999`).
+- **Desactivar en lugar de eliminar:** conserva el historial (las citas y pagos futuros referencian usuarios y servicios).
+
+## Cómo se maneja la sesión
+
+- Al iniciar sesión se guarda el token en `localStorage` y el usuario en el store (Zustand).
+- Al abrir la app, si hay token se verifica con `GET /auth/me` antes de decidir si mostrar el panel o el login.
+- Si el servidor responde 401 a una petición autenticada (token vencido, usuario desactivado o contraseña restablecida), la sesión se cierra y los guards envían al login con un aviso.
+- Un 403 (rol sin permiso) **no** cierra la sesión: solo se muestra "No tienes acceso".
+- El portal público consulta la API **sin token**, así que siempre muestra la vista de visitante (servicios activos y sin precios) aunque haya alguien con sesión abierta en otra pestaña.
+- Las rutas y menús se ocultan por rol para mejorar la experiencia, pero la autorización real está en el backend.
+
+> Nota de seguridad: guardar el token en `localStorage` es práctico para un proyecto académico, pero queda expuesto si hubiera una vulnerabilidad XSS. En producción conviene una cookie `httpOnly`.
+
+## Agregar un módulo administrativo
+
+1. Crear la página en `src/pages/admin/`.
+2. Registrar la ruta en `src/routes/router.tsx` (dentro de `AdminLayout`; envolver en `<RequireRole roles={[...]}>` si no es para todos los roles).
+3. Agregarla a `src/config/adminNav.ts` con los roles que la ven.
+
+## Formularios
+
+Se usa TanStack Form con esquemas Zod. Ver `src/pages/admin/Login.tsx` como modelo y
+`src/components/forms/TextField.tsx` para el campo reutilizable (muestra errores, `aria-invalid` y `aria-describedby`).
+
+## Diseño
+
+Tokens definidos en `src/index.css` (`@theme`): paleta `marea` (azul-verde), `sol` (acento amarillo), `ink`/`paper`/`bruma`.
+Tipografías: **Lexend** (títulos e interfaz) y **Source Serif 4** (textos largos), instaladas con `@fontsource` (funcionan sin conexión).
+Accesibilidad: enlace "Saltar al contenido", foco visible, carrusel con controles y sin movimiento automático si el sistema pide menos movimiento.

@@ -1,0 +1,12 @@
+{
+  "token": "token-de-prueba",
+  "usuario": {
+    "nombre": "Administrador SIGCA",
+    "email": "admin@sigca.test",
+    "rol": "ADMINISTRADOR",
+    "activo": true,
+    "createdAt": "2026-10-17T23:24:24.527Z",
+    "updatedAt": "2026-10-17T23:24:24.527Z",
+    "id": "6ad403a8c1543be19dfe2595"
+  }
+}

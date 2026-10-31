@@ -1,0 +1,109 @@
+{
+    "items": [
+        {
+            "nombres": "Carlos",
+            "apellidos": "Castillo Juárez",
+            "parentesco": "Padre",
+            "telefono": "5555-0102",
+            "email": "carlos.castillo@sigca.test",
+            "direccion": "Calzada Roosevelt 24-15, zona 7, Ciudad de Guatemala",
+            "createdAt": "2026-10-19T04:19:05.323Z",
+            "updatedAt": "2026-10-19T04:19:05.323Z",
+            "id": "6ad59a39b797e85a1c97ba8a",
+            "pacientes": [
+                {
+                    "id": "6ad59a39b797e85a1c97ba90",
+                    "nombres": "Valeria",
+                    "apellidos": "Castillo Juárez",
+                    "estado": "ACTIVO"
+                }
+            ]
+        },
+        {
+            "nombres": "Rosa",
+            "apellidos": "Gómez Alvarado",
+            "parentesco": "Abuela",
+            "telefono": "5555-0105",
+            "email": "rosa.gomez@sigca.test",
+            "direccion": "12 calle 5-60, zona 3, Ciudad de Guatemala",
+            "createdAt": "2026-10-19T04:19:05.331Z",
+            "updatedAt": "2026-10-19T04:19:05.331Z",
+            "id": "6ad59a39b797e85a1c97ba8d",
+            "pacientes": [
+                {
+                    "id": "6ad59a39b797e85a1c97ba92",
+                    "nombres": "Sebastián",
+                    "apellidos": "Pérez Gómez",
+                    "estado": "ACTIVO"
+                }
+            ]
+        },
+        {
+            "nombres": "Ana María",
+            "apellidos": "Morales Cruz",
+            "parentesco": "Madre",
+            "telefono": "5555-0101",
+            "email": "ana.morales@sigca.test",
+            "direccion": "6a avenida 12-30, zona 1, Ciudad de Guatemala",
+            "createdAt": "2026-10-19T04:19:05.319Z",
+            "updatedAt": "2026-10-19T04:19:05.319Z",
+            "id": "6ad59a39b797e85a1c97ba89",
+            "pacientes": [
+                {
+                    "id": "6ad59a39b797e85a1c97ba8f",
+                    "nombres": "Diego",
+                    "apellidos": "Hernández Morales",
+                    "estado": "ACTIVO"
+                },
+                {
+                    "id": "6ad59a39b797e85a1c97ba8e",
+                    "nombres": "Mateo",
+                    "apellidos": "Hernández Morales",
+                    "estado": "ACTIVO"
+                }
+            ]
+        },
+        {
+            "nombres": "Luis",
+            "apellidos": "Ortiz Barrios",
+            "parentesco": "Padre",
+            "telefono": "5555-0103",
+            "email": "luis.ortiz@sigca.test",
+            "direccion": "3a calle 8-45, zona 10, Ciudad de Guatemala",
+            "createdAt": "2026-10-19T04:19:05.325Z",
+            "updatedAt": "2026-10-19T04:19:05.325Z",
+            "id": "6ad59a39b797e85a1c97ba8b",
+            "pacientes": [
+                {
+                    "id": "6ad59a39b797e85a1c97ba91",
+                    "nombres": "Camila",
+                    "apellidos": "Ortiz Barrios",
+                    "estado": "ACTIVO"
+                }
+            ]
+        },
+        {
+            "nombres": "Marta",
+            "apellidos": "Pérez López",
+            "parentesco": "Madre",
+            "telefono": "5555-0104",
+            "email": "marta.perez@sigca.test",
+            "direccion": "Boulevard Los Próceres 18-20, zona 10, Ciudad de Guatemala",
+            "createdAt": "2026-10-19T04:19:05.328Z",
+            "updatedAt": "2026-10-19T04:19:05.328Z",
+            "id": "6ad59a39b797e85a1c97ba8c",
+            "pacientes": [
+                {
+                    "id": "6ad59a39b797e85a1c97ba92",
+                    "nombres": "Sebastián",
+                    "apellidos": "Pérez Gómez",
+                    "estado": "ACTIVO"
+                }
+            ]
+        }
+    ],
+    "total": 5,
+    "page": 1,
+    "limit": 15,
+    "pages": 1
+}

@@ -1,0 +1,120 @@
+{
+    "general": {
+        "nombreCentro": "Centro Armonía",
+        "eslogan": "Psicología y estimulación auditiva verbal",
+        "textoPiePagina": "© Centro Armonía. Todos los derechos reservados.",
+        "notaHorarios": "Atendemos con cita previa."
+    },
+    "inicio": {
+        "titulo": "Bienvenidos a Centro Armonía",
+        "subtitulo": "Acompañamos el desarrollo emocional y la comunicación de cada persona",
+        "descripcion": "Somos un centro de atención psicológica y estimulación auditiva verbal. Brindamos un espacio profesional, cálido y cercano para niños, adolescentes, adultos y sus familias.",
+        "carrusel": [
+            {
+                "id": "carrusel-1",
+                "url": "https://picsum.photos/seed/sigca1/1600/700",
+                "alt": "Imagen 1 del carrusel"
+            },
+            {
+                "id": "carrusel-2",
+                "url": "https://picsum.photos/seed/sigca2/1600/700",
+                "alt": "Imagen 2 del carrusel"
+            },
+            {
+                "id": "carrusel-3",
+                "url": "https://picsum.photos/seed/sigca3/1600/700",
+                "alt": "Imagen 3 del carrusel"
+            },
+            {
+                "id": "carrusel-4",
+                "url": "https://picsum.photos/seed/sigca4/1600/700",
+                "alt": "Imagen 4 del carrusel"
+            },
+            {
+                "id": "carrusel-5",
+                "url": "https://picsum.photos/seed/sigca5/1600/700",
+                "alt": "Imagen 5 del carrusel"
+            }
+        ]
+    },
+    "misionVision": {
+        "mision": "Brindar atención psicológica y de estimulación auditiva verbal de calidad, con calidez humana y enfoque profesional, contribuyendo al bienestar de nuestros pacientes y sus familias.",
+        "vision": "Ser un centro de referencia por la excelencia de nuestros servicios, la innovación en la atención y el acompañamiento integral a las familias."
+    },
+    "contacto": {
+        "direccion": "Ciudad de Guatemala, Guatemala",
+        "telefono": "+502 0000-0000",
+        "correo": "contacto@centroarmonia.test",
+        "whatsapp": ""
+    },
+    "corporativo": {
+        "capacitaciones": {
+            "descripcion": "Capacitaciones para instituciones educativas y empresas sobre salud emocional, comunicación y desarrollo infantil.",
+            "actividades": [
+                {
+                    "id": "05c22253-7c64-41f1-8491-07d5cb8c2143",
+                    "titulo": "Taller de comunicación efectiva",
+                    "descripcion": "Herramientas prácticas para mejorar la comunicación en equipos de trabajo."
+                },
+                {
+                    "id": "d5a4e7a5-6d08-40ba-a5cd-1dc79f50a53d",
+                    "titulo": "Detección temprana en el aula",
+                    "descripcion": "Orientación a docentes para identificar señales de alerta en el desarrollo del lenguaje."
+                }
+            ],
+            "imagenes": [
+                {
+                    "id": "f8716380-9577-4aa2-b00f-41634091c901",
+                    "url": "https://picsum.photos/seed/capacitacion/800/500",
+                    "alt": "Capacitacion"
+                }
+            ]
+        },
+        "escuelaPadres": {
+            "descripcion": "Espacio mensual de formación y acompañamiento para padres, madres y responsables.",
+            "actividades": [
+                {
+                    "id": "512adaf3-9b3e-4ef1-95dd-0381cb0fc74a",
+                    "titulo": "Límites y disciplina positiva",
+                    "descripcion": "Estrategias de crianza respetuosa para cada etapa del desarrollo."
+                },
+                {
+                    "id": "88e3cea8-cf9e-4178-b327-8d2da568ae97",
+                    "titulo": "Estimulación del lenguaje en casa",
+                    "descripcion": "Actividades sencillas para reforzar en familia lo trabajado en terapia."
+                }
+            ],
+            "imagenes": [
+                {
+                    "id": "b4306fad-8260-4c18-8d64-21a828fa31d0",
+                    "url": "https://picsum.photos/seed/padres/800/500",
+                    "alt": "Escuela para padres"
+                }
+            ]
+        }
+    },
+    "educativo": {
+        "publicaciones": [
+            {
+                "id": "f491785d-bab2-46c5-8d14-4ec39f65b462",
+                "titulo": "Cuándo consultar por el desarrollo del lenguaje",
+                "descripcion": "Señales que pueden indicar que un nino necesita una evaluación: poca intención comunicativa, vocabulario limitado para su edad o dificultad para seguir instrucciones sencillas.",
+                "fechaPublicacion": "2026-09-15",
+                "imagenUrl": "https://picsum.photos/seed/lenguaje/800/500"
+            },
+            {
+                "id": "ec99cdba-e2ed-48f3-96cc-376ebe9b694f",
+                "titulo": "La importancia de la escucha en el desarrollo",
+                "descripcion": "La audición es la base del aprendizaje del lenguaje. Conoce cómo se relacionan la escucha, la atención y la comunicación.",
+                "fechaPublicacion": "2026-08-20"
+            },
+            {
+                "id": "7e9893b7-791c-430c-be46-dd8fec8e8850",
+                "titulo": "Cómo acompañar emocionalmente a tu hijo",
+                "descripcion": "Validar las emociones, poner límites con calma y ofrecer rutinas predecibles ayuda a que los niños se sientan seguros.",
+                "fechaPublicacion": "2026-07-05",
+                "enlaceUrl": "https://example.com/guia-emociones"
+            }
+        ]
+    }
+}

@@ -1,0 +1,242 @@
+{
+    "items": [
+        {
+            "nombres": "Jorge",
+            "apellidos": "Alvarado Méndez",
+            "fechaNacimiento": "1992-06-18",
+            "sexo": "MASCULINO",
+            "telefono": "5555-0206",
+            "direccion": "Avenida Reforma 9-55, zona 9",
+            "fechaInicio": "2026-07-18",
+            "estado": "ACTIVO",
+            "responsables": [],
+            "createdAt": "2026-10-19T04:19:05.365Z",
+            "updatedAt": "2026-10-19T04:19:05.365Z",
+            "id": "6ad59a39b797e85a1c97ba94",
+            "edad": 34,
+            "esMenor": false
+        },
+        {
+            "nombres": "Elena",
+            "apellidos": "Barrios Quiñónez",
+            "fechaNacimiento": "1974-04-18",
+            "sexo": "FEMENINO",
+            "telefono": "5555-0209",
+            "direccion": "7a avenida 20-12, zona 11",
+            "fechaInicio": "2026-07-18",
+            "observaciones": "Concluyó su proceso.",
+            "estado": "INACTIVO",
+            "responsables": [],
+            "createdAt": "2026-10-19T04:19:05.375Z",
+            "updatedAt": "2026-10-19T04:19:05.375Z",
+            "id": "6ad59a39b797e85a1c97ba97",
+            "edad": 52,
+            "esMenor": false
+        },
+        {
+            "nombres": "Valeria",
+            "apellidos": "Castillo Juárez",
+            "fechaNacimiento": "2017-09-18",
+            "sexo": "FEMENINO",
+            "telefono": "5555-0202",
+            "direccion": "Calzada Roosevelt 24-15, zona 7",
+            "fechaInicio": "2026-07-18",
+            "estado": "ACTIVO",
+            "responsables": [
+                {
+                    "nombres": "Carlos",
+                    "apellidos": "Castillo Juárez",
+                    "parentesco": "Padre",
+                    "telefono": "5555-0102",
+                    "email": "carlos.castillo@sigca.test",
+                    "direccion": "Calzada Roosevelt 24-15, zona 7, Ciudad de Guatemala",
+                    "createdAt": "2026-10-19T04:19:05.323Z",
+                    "updatedAt": "2026-10-19T04:19:05.323Z",
+                    "id": "6ad59a39b797e85a1c97ba8a"
+                }
+            ],
+            "createdAt": "2026-10-19T04:19:05.346Z",
+            "updatedAt": "2026-10-19T04:19:05.346Z",
+            "id": "6ad59a39b797e85a1c97ba90",
+            "edad": 9,
+            "esMenor": true
+        },
+        {
+            "nombres": "Pedro",
+            "apellidos": "Cifuentes Soto",
+            "fechaNacimiento": "1981-08-18",
+            "sexo": "MASCULINO",
+            "telefono": "5555-0208",
+            "direccion": "Calle Real 3-10, Mixco",
+            "fechaInicio": "2026-07-18",
+            "estado": "ACTIVO",
+            "responsables": [],
+            "createdAt": "2026-10-19T04:19:05.372Z",
+            "updatedAt": "2026-10-19T04:19:05.372Z",
+            "id": "6ad59a39b797e85a1c97ba96",
+            "edad": 45,
+            "esMenor": false
+        },
+        {
+            "nombres": "Lucía",
+            "apellidos": "Gómez Alvarado",
+            "fechaNacimiento": "2018-07-18",
+            "sexo": "FEMENINO",
+            "telefono": "5555-0205",
+            "direccion": "12 calle 5-60, zona 3",
+            "fechaInicio": "2026-07-18",
+            "observaciones": "Pendiente registrar a su responsable.",
+            "estado": "ACTIVO",
+            "responsables": [],
+            "createdAt": "2026-10-19T04:19:05.361Z",
+            "updatedAt": "2026-10-19T04:19:05.361Z",
+            "id": "6ad59a39b797e85a1c97ba93",
+            "edad": 8,
+            "esMenor": true
+        },
+        {
+            "nombres": "Diego",
+            "apellidos": "Hernández Morales",
+            "fechaNacimiento": "2014-05-18",
+            "sexo": "MASCULINO",
+            "telefono": "5555-0201",
+            "direccion": "6a avenida 12-30, zona 1",
+            "fechaInicio": "2026-07-18",
+            "estado": "ACTIVO",
+            "responsables": [
+                {
+                    "nombres": "Ana María",
+                    "apellidos": "Morales Cruz",
+                    "parentesco": "Madre",
+                    "telefono": "5555-0101",
+                    "email": "ana.morales@sigca.test",
+                    "direccion": "6a avenida 12-30, zona 1, Ciudad de Guatemala",
+                    "createdAt": "2026-10-19T04:19:05.319Z",
+                    "updatedAt": "2026-10-19T04:19:05.319Z",
+                    "id": "6ad59a39b797e85a1c97ba89"
+                }
+            ],
+            "createdAt": "2026-10-19T04:19:05.340Z",
+            "updatedAt": "2026-10-19T04:19:05.340Z",
+            "id": "6ad59a39b797e85a1c97ba8f",
+            "edad": 12,
+            "esMenor": true
+        },
+        {
+            "nombres": "Mateo",
+            "apellidos": "Hernández Morales",
+            "fechaNacimiento": "2020-08-18",
+            "sexo": "MASCULINO",
+            "telefono": "5555-0201",
+            "direccion": "6a avenida 12-30, zona 1",
+            "fechaInicio": "2026-07-18",
+            "observaciones": "Derivado por la escuela. Requiere estimulación auditiva.",
+            "estado": "ACTIVO",
+            "responsables": [
+                {
+                    "nombres": "Ana María",
+                    "apellidos": "Morales Cruz",
+                    "parentesco": "Madre",
+                    "telefono": "5555-0101",
+                    "email": "ana.morales@sigca.test",
+                    "direccion": "6a avenida 12-30, zona 1, Ciudad de Guatemala",
+                    "createdAt": "2026-10-19T04:19:05.319Z",
+                    "updatedAt": "2026-10-19T04:19:05.319Z",
+                    "id": "6ad59a39b797e85a1c97ba89"
+                }
+            ],
+            "createdAt": "2026-10-19T04:19:05.336Z",
+            "updatedAt": "2026-10-19T04:19:05.336Z",
+            "id": "6ad59a39b797e85a1c97ba8e",
+            "edad": 6,
+            "esMenor": true
+        },
+        {
+            "nombres": "Sofía",
+            "apellidos": "Marroquín Díaz",
+            "fechaNacimiento": "1998-01-18",
+            "sexo": "FEMENINO",
+            "telefono": "5555-0207",
+            "direccion": "15 avenida 14-20, zona 13",
+            "fechaInicio": "2026-07-18",
+            "estado": "ACTIVO",
+            "responsables": [],
+            "createdAt": "2026-10-19T04:19:05.369Z",
+            "updatedAt": "2026-10-19T04:19:05.369Z",
+            "id": "6ad59a39b797e85a1c97ba95",
+            "edad": 28,
+            "esMenor": false
+        },
+        {
+            "nombres": "Camila",
+            "apellidos": "Ortiz Barrios",
+            "fechaNacimiento": "2011-03-18",
+            "sexo": "FEMENINO",
+            "telefono": "5555-0203",
+            "direccion": "3a calle 8-45, zona 10",
+            "fechaInicio": "2026-07-18",
+            "estado": "ACTIVO",
+            "responsables": [
+                {
+                    "nombres": "Luis",
+                    "apellidos": "Ortiz Barrios",
+                    "parentesco": "Padre",
+                    "telefono": "5555-0103",
+                    "email": "luis.ortiz@sigca.test",
+                    "direccion": "3a calle 8-45, zona 10, Ciudad de Guatemala",
+                    "createdAt": "2026-10-19T04:19:05.325Z",
+                    "updatedAt": "2026-10-19T04:19:05.325Z",
+                    "id": "6ad59a39b797e85a1c97ba8b"
+                }
+            ],
+            "createdAt": "2026-10-19T04:19:05.350Z",
+            "updatedAt": "2026-10-19T04:19:05.350Z",
+            "id": "6ad59a39b797e85a1c97ba91",
+            "edad": 15,
+            "esMenor": true
+        },
+        {
+            "nombres": "Sebastián",
+            "apellidos": "Pérez Gómez",
+            "fechaNacimiento": "2008-12-18",
+            "sexo": "MASCULINO",
+            "telefono": "5555-0204",
+            "direccion": "Boulevard Los Próceres 18-20, zona 10",
+            "fechaInicio": "2026-07-18",
+            "estado": "ACTIVO",
+            "responsables": [
+                {
+                    "nombres": "Marta",
+                    "apellidos": "Pérez López",
+                    "parentesco": "Madre",
+                    "telefono": "5555-0104",
+                    "email": "marta.perez@sigca.test",
+                    "direccion": "Boulevard Los Próceres 18-20, zona 10, Ciudad de Guatemala",
+                    "createdAt": "2026-10-19T04:19:05.328Z",
+                    "updatedAt": "2026-10-19T04:19:05.328Z",
+                    "id": "6ad59a39b797e85a1c97ba8c"
+                },
+                {
+                    "nombres": "Rosa",
+                    "apellidos": "Gómez Alvarado",
+                    "parentesco": "Abuela",
+                    "telefono": "5555-0105",
+                    "email": "rosa.gomez@sigca.test",
+                    "direccion": "12 calle 5-60, zona 3, Ciudad de Guatemala",
+                    "createdAt": "2026-10-19T04:19:05.331Z",
+                    "updatedAt": "2026-10-19T04:19:05.331Z",
+                    "id": "6ad59a39b797e85a1c97ba8d"
+                }
+            ],
+            "createdAt": "2026-10-19T04:19:05.355Z",
+            "updatedAt": "2026-10-19T04:19:05.355Z",
+            "id": "6ad59a39b797e85a1c97ba92",
+            "edad": 17,
+            "esMenor": true
+        }
+    ],
+    "total": 10,
+    "page": 1,
+    "limit": 15,
+    "pages": 1
+}
