@@ -45,3 +45,7 @@ Ingreso al sistema: http://localhost:5173/admin — usuario `admin@sigca.test`, 
 ## Coleccion de API
 
 Importar la [coleccion Postman](postman/SIGCA.postman_collection.json) y el [entorno local ficticio](postman/SIGCA-local.postman_environment.json). La [guia de pruebas](postman/README.md) explica las variables, permisos y el recorrido de citas, abonos, comprobantes y cierre de caja. Incluye una carpeta de lectura/sesion para ejecutar con Runner; los ejemplos de escritura se ejecutan individualmente con datos preparados.
+
+## Evidencias y ZIP de entrega
+
+Ver las [capturas y resultados del ensayo](docs/evidencias/README.md). Para generar un ZIP de codigo y evidencias con SHA256, ejecutar desde la raiz `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/preparar-entrega.ps1`. El resultado queda en `.local/entrega/`, fuera de Git. Regenerarlo tras aprobar y fusionar la version definitiva; el envio a Canvas lo realiza el autor.

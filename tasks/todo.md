@@ -116,6 +116,7 @@ Detallar contratos e incrementos antes de implementar, con los criterios siguien
 - [x] Preparar coleccion Postman y entorno ficticio, documentar dependencias/recorrido, verificar cobertura de 64 rutas y ejecutar 16 peticiones/scripts de lectura contra API local.
 - [x] Completar README con Hugo Ordo?ez, carne 2690-23-10929, responsabilidades y requisito real de Node; documentar ejecucion local y guion de defensa.
 - [x] Verificar npm ci, suites y builds desde exportacion limpia: 271 frontend, 49 backend, 397 HTTP, 2 contratos. Corregir origen de imagenes de API temporal, con comprobacion de regresion.
-- [ ] Ejecutar recorrido manual completo en navegador/Postman y preparar capturas y ZIP.
-- [ ] Ensayar manualmente seccion 16 y defensa individual usando `../docs/entrega-final.md`; instalacion desde copia limpia ya verificada.
+- [x] Ejecutar recorrido de interfaz, restricciones por API y verificacion directa en MongoDB; once capturas y script de ZIP/SHA256. Postman/Compass no operados.
+- [x] Ensayar el flujo funcional de seccion 16 en navegador/API/MongoDB, documentando el alcance en evidencias; instalacion limpia verificada.
+- [ ] Autor: defensa oral, aprobacion final, regeneracion del ZIP definitivo y entrega en Canvas.
 - Dependencias: 13. Incrementos de datos, documentacion/coleccion y evidencias, independientes del codigo funcional.
