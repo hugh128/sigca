@@ -1,0 +1,15 @@
+# Contrato: pagos, abonos y saldos
+
+Rama desde PR #7 integrado. Esta entrega registra y consulta pagos; anulaciones y cierre se implementaran despues. La proteccion de cancelacion con pagos validos se incorpora ahora (RN-27).
+
+Verificacion completada: 262 pruebas frontend, 37 backend, 379 comprobaciones HTTP y 2 contratos; ambos builds correctos. Navegador sobre base temporal: abono Q19.99, saldo Q80.01, pago de saldo completo, comprobante y vista movil sin desbordamiento ni errores de consola. Seed con diez abonos en citas completadas, parciales/completos y tres metodos. Datos de desarrollo conservados. Pendiente OK del usuario para commit/push/PR.
+
+- POST `/api/pagos`: administrador/recepcionista. Body `{ citaId, montoCentavos, metodo }`; entero positivo hasta 999999999 y metodo EFECTIVO/TRANSFERENCIA/TARJETA. Paciente, caja, responsable, fecha, estado y comprobante los deriva el servidor. Se exige la caja propia ABIERTA y cita no CANCELADA. Cita completada puede recibir pagos. Devuelve 201 con pago persistido.
+- GET `/api/pagos?page=&limit=&pacienteId=&citaId=&desde=&hasta=&metodo=`: administrador/recepcionista, pagos de todos los usuarios como consulta financiera autorizada. Fechas AAAA-MM-DD en Guatemala, limites inclusivos. Listado reciente primero; incluye estado, comprobante, paciente, cita, caja y responsable. No hay DELETE ni edicion.
+- GET `/api/pagos/citas/:id/resumen`: costo copiado de la cita, total de pagos REGISTRADO, saldo y estado financiero derivado PENDIENTE/PARCIAL/PAGADO. Nunca se almacenan ni editan saldo/estado financiero. Profesional sin acceso al modulo.
+
+Transaccion: escribir caja abierta propia (revision interna), escribir cita (revision interna), validar estado y suma de pagos, incrementar contador y crear pago. Contador global de comprobantes, formato COMP-AAAA-NNNNNN (contador no reinicia); indice unico. Operaciones secuenciales dentro de la transaccion. Un fallo revierte pago y contador. La escritura compartida de cita evita sobrepago concurrente entre cajas distintas. Cancelar se vuelve transaccional y comprueba pagos validos; compite por el mismo documento de cita, sin permitir cancelar y cobrar simultaneamente.
+
+UI: pagos accesibles desde detalle de cita y ficha del paciente; listado privado filtrado, detalle/comprobante y formulario de abono por cita con costo/pagado/saldo. Formulario solo si hay caja propia abierta, cita cobrable y saldo positivo. Se convierte texto de quetzales a centavos con utilidad existente. Confirmacion tras persistencia, sin sugerir exito ante error. No se calcula ingreso de caja ni se muestran botones de anulacion/cierre antes de implementarlos.
+
+Pruebas: abonos parciales/completo, anulados excluidos del saldo, pago no positivo/decimal/excesivo, caja faltante/cerrada/ajena, comprobantes unicos entre citas, rollback intermedio, dos abonos que excederian costo, carrera pago/cancelacion, permisos y filtros por paciente/cita/fecha/metodo. Datos ficticios sobre bases temporales; no registrar pagos reales durante verificacion.

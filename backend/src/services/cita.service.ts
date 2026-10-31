@@ -10,6 +10,7 @@ import {
   aInstante, calcularEdad, diaSemana, horaAMinutos, MAYORIA_DE_EDAD, minutosAHora, partesGuatemala, sumarDias, sumarMinutos,
 } from "../utils/fechas";
 import { armarPagina } from "../utils/paginar";
+import { totalPagado } from "./pago.service";
 
 export interface Actor {
   id: string;
@@ -324,36 +325,40 @@ const PUEDE_ASIGNAR: Record<Rol, EstadoCita[]> = {
 };
 
 export async function cambiarEstado(id: string, estado: EstadoCita, motivo: string | undefined, actor: Actor) {
-  const cita = await Cita.findById(id);
-  if (!cita || (actor.rol === "PROFESIONAL" && String(cita.profesional) !== actor.id)) throw AppError.notFound("Cita no encontrada");
+  await mongoose.connection.transaction(async session => {
+    const cita = await Cita.findById(id).session(session);
+    if (!cita || (actor.rol === "PROFESIONAL" && String(cita.profesional) !== actor.id)) throw AppError.notFound("Cita no encontrada");
 
-  if (!PUEDE_ASIGNAR[actor.rol].includes(estado)) {
-    throw AppError.forbidden(`Tu rol no puede marcar una cita como ${estado.toLowerCase()}`);
-  }
+    if (!PUEDE_ASIGNAR[actor.rol].includes(estado)) {
+      throw AppError.forbidden(`Tu rol no puede marcar una cita como ${estado.toLowerCase()}`);
+    }
 
-  const desde = cita.estado;
-  if (desde === estado) throw AppError.unprocessable(`La cita ya está ${estado.toLowerCase()}`);
-  if (desde === "CANCELADA") {
-    throw AppError.unprocessable(
-      estado === "COMPLETADA"
-        ? "Una cita cancelada no puede pasar a completada. Programa una nueva cita"
-        : "Una cita cancelada no puede volver a activarse. Programa una nueva cita",
-    );
-  }
-  if (desde === "COMPLETADA") throw AppError.unprocessable("Una cita completada no puede cambiar de estado");
-  if (desde === "PENDIENTE" && estado === "COMPLETADA") throw AppError.unprocessable("Confirma la cita antes de marcarla como completada");
-  if (!TRANSICIONES[desde].includes(estado)) throw AppError.unprocessable(`No se puede pasar de ${desde.toLowerCase()} a ${estado.toLowerCase()}`);
+    const desde = cita.estado;
+    if (desde === estado) throw AppError.unprocessable(`La cita ya está ${estado.toLowerCase()}`);
+    if (desde === "CANCELADA") {
+      throw AppError.unprocessable(
+        estado === "COMPLETADA"
+          ? "Una cita cancelada no puede pasar a completada. Programa una nueva cita"
+          : "Una cita cancelada no puede volver a activarse. Programa una nueva cita",
+      );
+    }
+    if (desde === "COMPLETADA") throw AppError.unprocessable("Una cita completada no puede cambiar de estado");
+    if (desde === "PENDIENTE" && estado === "COMPLETADA") throw AppError.unprocessable("Confirma la cita antes de marcarla como completada");
+    if (!TRANSICIONES[desde].includes(estado)) throw AppError.unprocessable(`No se puede pasar de ${desde.toLowerCase()} a ${estado.toLowerCase()}`);
 
-  if (estado === "CONFIRMADA" && cita.inicio.getTime() < Date.now()) {
-    throw AppError.unprocessable("No se puede confirmar una cita cuya hora ya pasó. Cancélala o reprográmala");
-  }
+    if (estado === "CONFIRMADA" && cita.inicio.getTime() < Date.now()) {
+      throw AppError.unprocessable("No se puede confirmar una cita cuya hora ya pasó. Cancélala o reprográmala");
+    }
 
-  cita.estado = estado;
-  if (estado === "CANCELADA" && motivo) cita.motivoCancelacion = motivo;
-  cita.historial.push({
-    estado, fecha: new Date(), usuario: actor.id as unknown as ICita["creadoPor"],
-    nota: estado === "CANCELADA" && motivo ? `Cancelada: ${motivo}` : undefined,
+    if (estado === "CANCELADA" && await totalPagado(id, session) > 0) throw AppError.unprocessable("La cita tiene pagos válidos. Primero deben anularse mientras su caja permanezca abierta");
+
+    cita.estado = estado;
+    if (estado === "CANCELADA" && motivo) cita.motivoCancelacion = motivo;
+    cita.historial.push({
+      estado, fecha: new Date(), usuario: actor.id as unknown as ICita["creadoPor"],
+      nota: estado === "CANCELADA" && motivo ? `Cancelada: ${motivo}` : undefined,
+    });
+    await cita.save({ session });
   });
-  await cita.save();
   return obtener(id, actor);
 }

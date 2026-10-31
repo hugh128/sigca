@@ -21,6 +21,7 @@ export const NAV_ADMIN: ItemNav[] = [
   { to: "/admin/calendario", etiqueta: "Calendario", icono: CalendarDays, roles: TODOS },
   { to: "/admin/citas", etiqueta: "Citas", icono: CalendarCheck, roles: TODOS },
   { to: "/admin/caja", etiqueta: "Caja", icono: ClipboardList, roles: ["ADMINISTRADOR", "RECEPCIONISTA"] },
+  { to: "/admin/pagos", etiqueta: "Pagos", icono: ClipboardList, roles: ["ADMINISTRADOR", "RECEPCIONISTA"] },
   { to: "/admin/solicitudes", etiqueta: "Solicitudes", icono: ClipboardList, roles: ["ADMINISTRADOR", "RECEPCIONISTA"] },
   { to: "/admin/mis-pacientes", etiqueta: "Mis pacientes", icono: UserRound, roles: ["PROFESIONAL"] },
   { to: "/admin/materiales", etiqueta: "Materiales", icono: FileText, roles: ["ADMINISTRADOR", "PROFESIONAL"] },

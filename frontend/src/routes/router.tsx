@@ -37,6 +37,7 @@ const solicitarCita = async () => ({ Component: (await import("@/pages/public/So
 const solicitudes = async () => ({ Component: (await import("@/pages/admin/Solicitudes")).default });
 const materiales = async () => ({ Component: (await import("@/pages/admin/materiales/Materiales")).default });
 const caja = async () => ({ Component: (await import("@/pages/admin/caja/Caja")).default });
+const pagos = async () => ({ Component: (await import("@/pages/admin/pagos/Pagos")).default });
 const materialesPaciente = async () => ({ Component: (await import("@/pages/admin/materiales/MaterialesPaciente")).default });
 const prohibido = async () => ({ Component: (await import("@/pages/admin/Prohibido")).default });
 
@@ -96,6 +97,11 @@ export const rutas: RouteObject[] = [
             children: [{ index: true, lazy: horariosAdmin }],
           },
           { path: "calendario", lazy: calendario },
+          {
+            path: "pagos",
+            element: <RequireRole roles={["ADMINISTRADOR", "RECEPCIONISTA"]} />,
+            children: [{ index: true, lazy: pagos }],
+          },
           {
             path: "caja",
             element: <RequireRole roles={["ADMINISTRADOR", "RECEPCIONISTA"]} />,

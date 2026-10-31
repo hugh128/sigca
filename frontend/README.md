@@ -45,6 +45,14 @@ El contenido educativo del portal conserva su funcionamiento separado. El seed c
 
 El listado es paginado, filtra por estado y permite ver detalle. Administrador consulta todas las cajas y puede marcar Solo mis cajas; recepcion solo recibe las propias desde la API. El profesional no ve el menu ni puede entrar por URL. Esta entrega muestra apertura y monto inicial; pagos, ingresos calculados y cierre siguen pendientes. El seed deja libre recepcion1 para probar la apertura y contiene una caja de recepcion2 para verificar la vista del administrador.
 
+## Pagos y saldos
+
+`/admin/pagos`, para administrador y recepcionista, lista comprobantes por fecha/metodo y permite ver su detalle. Desde la ficha del paciente se abre `?paciente=id` y desde el detalle de una cita `?cita=id`: muestra costo, total pagado, saldo y estado financiero obtenidos de la API.
+
+Para registrar un abono se necesita caja propia abierta. El formulario convierte quetzales a centavos, permite elegir Efectivo/Transferencia/Tarjeta y valida monto positivo sin superar saldo. Tras persistir confirma el comprobante y refresca saldo/historial; al completar el costo desaparece el formulario. Ante rechazo conserva valores y refresca el saldo por si otra sesion ya registro un abono. Una cita cancelada no ofrece registro de pagos. Los enlaces permiten elegir cita o abrir caja cuando hace falta.
+
+El profesional carece de menu, ruta y API financiera. No se incluyen todavia anulaciones, movimientos, cierre ni totales de caja. La API ya impide cancelar una cita con pagos validos. El comprobante es de control interno; no se genera factura fiscal.
+
 ## Scripts
 
 | Comando | Acción |

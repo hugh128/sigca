@@ -24,6 +24,7 @@ export interface ICita {
   /** Copiados del servicio al programar (RF-07): si el servicio cambia, la cita conserva los suyos. */
   duracionMin: number;
   precioCentavos: number;
+  revisionFinanciera?: number;
   estado: EstadoCita;
   observaciones?: string;
   motivoCancelacion?: string;
@@ -55,6 +56,7 @@ const citaSchema = new Schema<ICita>(
     fin: { type: Date, required: true },
     duracionMin: { type: Number, required: true, min: 5, validate: Number.isInteger },
     precioCentavos: { type: Number, required: true, min: 1, validate: Number.isInteger },
+    revisionFinanciera: { type: Number, default: 0, select: false },
     estado: { type: String, enum: ESTADOS_CITA, default: "PENDIENTE" },
     observaciones: { type: String, trim: true, maxlength: 500 },
     motivoCancelacion: { type: String, trim: true, maxlength: 300 },
@@ -66,7 +68,7 @@ const citaSchema = new Schema<ICita>(
     collection: "citas",
     toJSON: {
       transform: (doc, ret: Record<string, unknown>) => {
-        jsonTransform()(doc, ret);
+        jsonTransform(["revisionFinanciera"])(doc, ret);
         // Fecha y horas en hora de Guatemala: el cliente no necesita convertir zonas horarias.
         const ini = partesGuatemala(ret.inicio as Date);
         ret.fecha = ini.fecha;

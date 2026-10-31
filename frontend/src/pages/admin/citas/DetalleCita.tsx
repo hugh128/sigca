@@ -82,6 +82,8 @@ export function DetalleCita({ citaId, onCerrar }: { citaId: string; onCerrar: ()
               {cita.motivoCancelacion && <div className="sm:col-span-2"><dt className="text-sm text-ink-soft">Motivo de la cancelación</dt><dd className="mt-1">{cita.motivoCancelacion}</dd></div>}
             </dl>
 
+            {gestion && <Link to={`/admin/pagos?cita=${cita.id}`} onClick={onCerrar} className="inline-block rounded text-marea-700 underline">Pagos y saldo de la cita</Link>}
+
             <section aria-labelledby="historial">
               <h3 id="historial" className="flex items-center gap-2 text-sm font-semibold text-marea-900">
                 <History className="size-4" aria-hidden="true" />
