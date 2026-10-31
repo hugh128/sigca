@@ -3,11 +3,11 @@
 API REST del **Sistema Integral de Gestion de Citas y Atencion (SIGCA)**.
 Node.js + Express 5 + TypeScript + MongoDB (Mongoose).
 
-> Estado: **Avance 1 + módulos del Avance 2**: pacientes, responsables, citas/calendario, contacto, solicitudes y materiales/asignaciones. Pendientes revision de cierre operativo y finanzas.
+> Estado: portal y operación del avance 2 revisados; finanzas implementadas con apertura, pagos/abonos, anulaciones y cierre de caja. Pendientes revisión final y entregables de presentación.
 
 ## Apertura y consulta de caja
 
-Primera entrega de RF-11: apertura y consulta, con RN-22 y montos en centavos (RN-28). Pagos, movimientos, totales y cierre se incorporaran en sus entregas; no hay endpoints de edicion ni borrado de cajas.
+RF-11: apertura, consulta, movimientos y cierre, con una caja abierta por usuario (RN-22) y montos en centavos (RN-28). No hay endpoints de edicion, reapertura ni borrado de cajas.
 
 | Metodo | Ruta | Acceso y respuesta |
 |---|---|---|
@@ -15,16 +15,26 @@ Primera entrega de RF-11: apertura y consulta, con RN-22 y montos en centavos (R
 | GET | `/api/cajas/actual` | Caja abierta propia o `null` (200), tambien para administrador |
 | GET | `/api/cajas?page=&limit=&estado=&usuarioId=` | Administrador todas o filtro por usuario; recepcion solo propias |
 | GET | `/api/cajas/:id` | Propietario o administrador; caja ajena para recepcion devuelve 404 |
+| GET | `/api/cajas/:id/movimientos?page=&limit=` | Pagos de esa caja, incluidos anulados con auditoria; mismos permisos de detalle |
+| POST | `/api/cajas/:id/cerrar` | Propietario o administrador; `{ efectivoContadoCentavos }`, cierre 200 y repeticion 409 |
 
 El alta acepta `montoInicialCentavos`, numero entero de 0 a 999999999 (Q0.00 a Q9,999,999.99). Responsable, apertura y estado ABIERTA los asigna el servidor; no se aceptan valores arbitrarios para esos campos. Las respuestas contienen `id`, `usuario` (id/nombre), `apertura` UTC, `montoInicialCentavos` y `estado`. Listados paginados por apertura descendente; estado opcional ABIERTA/CERRADA. Filtrar otro usuario como recepcionista devuelve 403. Profesional sin acceso (403); sin sesion 401.
 
 El indice unico parcial por usuario cuando estado=ABIERTA garantiza una sola caja abierta aun entre peticiones simultaneas. La apertura espera la inicializacion del indice. Referencia: [indices parciales de MongoDB](https://www.mongodb.com/docs/manual/core/index-partial/). Una caja historica cerrada no impide abrir otra.
 
-El seed incluye una caja abierta de recepcion2 con Q200.00. Admin y recepcion1 quedan sin caja para ensayar apertura. Las tres cajas abiertas/cerradas requeridas para la entrega final se completaran al implementar cierres y pagos. Las pruebas financieras utilizan bases temporales y no abren cajas en la base de desarrollo.
+El seed incluye tres cajas: recepcion2 abierta con Q200.00 y dos cierres generados por el servicio (administrador y recepcion1), con pagos asociados. Admin y recepcion1 quedan sin caja abierta para ensayar apertura. Las pruebas financieras utilizan bases temporales y no cierran ni abren cajas en la base de desarrollo del usuario.
+
+### Totales, movimientos y cierre
+
+Detalle y caja actual incluyen `resumen` y `puedeCerrar`. El resumen contiene `totalEfectivoCentavos`, `totalTransferenciaCentavos`, `totalTarjetaCentavos`, `totalIngresosCentavos` y `efectivoEsperadoCentavos`. Solo suman pagos REGISTRADO de esa caja; esperado = inicial + efectivo, sin transferencias ni tarjeta. Los anulados se conservan en movimientos y no cuentan como ingresos.
+
+El cierre acepta efectivo contado entero de 0 a 999999999; calcula diferencia = contado - esperado y guarda `cierre`, `cerradoPor`, `efectivoContadoCentavos`, `diferenciaCentavos` y `totalesCierre`. Se permiten faltantes/sobrantes y se muestran con su signo. No recibe totales, diferencia ni auditoria arbitrarios del cliente. Una caja cerrada utiliza su snapshot de cierre y conserva el detalle de pagos; no permite nuevos pagos, anulaciones, ediciones ni reabrirse. Puede abrirse una caja nueva sin alterar la anterior.
+
+El cierre escribe la misma caja que cobros y anulaciones dentro de una transaccion: un movimiento concurrente se incluye completo o se rechaza al encontrarla cerrada. Fallos revierten estado/auditoria/totales. Lecturas de detalle/resumen usan una sesion consistente y las referencias se consultan secuencialmente con `ordered: true`, conforme a [Mongoose](https://mongoosejs.com/docs/api/query.html#Query.prototype.populate()). Contrato y pruebas en [cierre-caja.md](../tasks/cierre-caja.md).
 
 ## Pagos, abonos y saldos
 
-Administrador y recepcionista registran y consultan pagos. Profesional sin acceso (403); sin sesion 401. El pago toma paciente, caja propia abierta, responsable, fecha y estado desde el servidor. No hay edicion ni borrado fisico. La anulacion auditada esta disponible; movimientos, totales y cierre de caja siguen pendientes.
+Administrador y recepcionista registran y consultan pagos. Profesional sin acceso (403); sin sesion 401. El pago toma paciente, caja propia abierta, responsable, fecha y estado desde el servidor. No hay edicion ni borrado fisico. Anulacion, movimientos, totales y cierre de caja estan disponibles.
 
 | Metodo | Ruta | Contrato |
 |---|---|---|
@@ -40,13 +50,13 @@ Cada registro usa una transaccion con escritura compartida de caja y cita, conta
 
 Cancelar una cita tambien es transaccional: pagos validos bloquean la cancelacion (RN-27), incluso si cobro y cancelacion compiten. Primero deben anularse todos los pagos validos mientras su caja permanezca abierta.
 
-El seed crea diez abonos asociados a citas completadas, incluyendo pagos completos/parciales, los tres metodos y una anulacion auditada, vinculados a la caja abierta de recepcion2. Admin y recepcion1 siguen libres para abrir su caja. El seed de cierres se completara junto con esa operacion.
+El seed crea diez abonos asociados a citas completadas, incluyendo pagos completos/parciales, los tres metodos y una anulacion auditada, distribuidos entre tres cajas. Los pagos de cajas historicas quedan bloqueados para anulacion; recepcion2 conserva una caja abierta para demostrar la operacion. Admin y recepcion1 siguen libres para abrir su caja.
 
 ### Anulacion autorizada
 
 `GET /api/pagos/:id` devuelve el comprobante actualizado, su auditoria y `cajaEstado`/`puedeAnular` calculados para el usuario. `PATCH /api/pagos/:id/anular` recibe `{ motivo }`, texto recortado de 3 a 300 caracteres. Administrador puede anular en cualquier caja abierta; recepcionista solo en su propia caja abierta. No requiere una segunda caja propia del administrador. Profesional 403; sin sesion 401.
 
-La anulacion cambia a ANULADO y conserva `motivoAnulacion`, `anuladoPor` (id/nombre) y `fechaAnulacion` del servidor, junto con los datos originales del pago. Caja cerrada devuelve 422; caja ajena a recepcion 403; pago inexistente 404; repeticion o anulaciones simultaneas 409. La transaccion escribe caja y luego cita, igual que el cobro, y conserva saldo/auditoria ante fallos intermedios. El futuro cierre debe escribir la misma caja para competir de forma consistente.
+La anulacion cambia a ANULADO y conserva `motivoAnulacion`, `anuladoPor` (id/nombre) y `fechaAnulacion` del servidor, junto con los datos originales del pago. Caja cerrada devuelve 422; caja ajena a recepcion 403; pago inexistente 404; repeticion o anulaciones simultaneas 409. La transaccion escribe caja y luego cita, igual que el cobro, y conserva saldo/auditoria ante fallos intermedios. El cierre tambien escribe la misma caja para competir de forma consistente.
 
 El pago anulado se conserva y se excluye del saldo. Si queda otro pago valido, la cancelacion de la cita sigue bloqueada. Anular no cancela la cita ni procesa una devolucion de dinero automaticamente. No existen endpoints de edicion o borrado de pagos. Contrato y evidencia en [anulacion-pagos.md](../tasks/anulacion-pagos.md).
 

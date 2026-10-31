@@ -6,7 +6,7 @@ import { useAuthStore } from "@/store/auth";
 import { usuarioPorRol } from "@/test/datos";
 import Caja from "./Caja";
 beforeEach(reiniciarEstado);
-const caja = { id: "c1", usuario: { id: "u1", nombre: "Laura" }, apertura: "2026-10-31T18:00:00Z", montoInicialCentavos: 1999, estado: "ABIERTA" };
+const caja = { id: "c1", usuario: { id: "u1", nombre: "Laura" }, apertura: "2026-10-31T18:00:00Z", montoInicialCentavos: 1999, estado: "ABIERTA", resumen: { totalEfectivoCentavos: 0, totalTransferenciaCentavos: 0, totalTarjetaCentavos: 0, totalIngresosCentavos: 0, efectivoEsperadoCentavos: 1999 }, puedeCerrar: true };
 function iniciar(rol: "ADMINISTRADOR" | "RECEPCIONISTA" = "RECEPCIONISTA", abierta = false, conflicto = false) {
   let actual = abierta ? caja : null;
   useAuthStore.setState({ token: "t", estado: "autenticado", usuario: usuarioPorRol(rol) });
@@ -15,6 +15,7 @@ function iniciar(rol: "ADMINISTRADOR" | "RECEPCIONISTA" = "RECEPCIONISTA", abier
     "GET /cajas": () => ({ body: { items: actual ? [actual] : [], total: actual ? 1 : 0, page: 1, pages: 1 } }),
     "POST /cajas/abrir": init => { actual = { ...caja, montoInicialCentavos: JSON.parse(init!.body as string).montoInicialCentavos }; return conflicto ? { status: 409, body: { message: "Ya tienes una caja abierta" } } : { status: 201, body: actual }; },
     "GET /cajas/c1": { body: caja },
+    "GET /cajas/c1/movimientos": { body: { items: [], total: 0, page: 1, pages: 1 } },
   });
   renderConRutas([{ path: "/", element: <Caja /> }]); return api;
 }

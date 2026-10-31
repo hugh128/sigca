@@ -43,7 +43,9 @@ El contenido educativo del portal conserva su funcionamiento separado. El seed c
 
 `/admin/caja`, para administrador y recepcionista, muestra la caja abierta propia o el formulario de apertura. El monto inicial se escribe en quetzales y se convierte a centavos con la utilidad existente, sin multiplicacion decimal de punto flotante. Permite cero; rechaza negativos, mas de dos decimales y valores fuera de rango. La confirmacion aparece tras guardar y el formulario desaparece al refrescar la caja actual. Si otra sesion ya abrio la caja, el conflicto 409 refresca y muestra la caja ganadora.
 
-El listado es paginado, filtra por estado y permite ver detalle. Administrador consulta todas las cajas y puede marcar Solo mis cajas; recepcion solo recibe las propias desde la API. El profesional no ve el menu ni puede entrar por URL. Esta entrega muestra apertura y monto inicial; pagos, ingresos calculados y cierre siguen pendientes. El seed deja libre recepcion1 para probar la apertura y contiene una caja de recepcion2 para verificar la vista del administrador.
+El listado es paginado, filtra por estado y permite ver detalle. Administrador consulta todas las cajas y puede marcar Solo mis cajas; recepcion solo recibe las propias desde la API. El profesional no ve el menu ni puede entrar por URL. La caja propia muestra ingresos por metodo, total y efectivo esperado; Movimientos y cierre abre el detalle actual con sus pagos, incluidos anulados.
+
+El cierre pide efectivo contado y muestra diferencia estimada (faltante/sobrante/sin diferencia). La confirmacion guarda en API los totales definitivos y auditoria, muestra el cierre persistido y libera la apertura de una caja nueva. Las cajas cerradas se consultan desde el historial, sin controles de edicion/cierre ni anulacion de sus pagos. La interfaz espera datos actuales antes de ofrecer cerrar y conserva los valores ante fallos. El seed contiene una caja abierta de recepcion2 y dos cierres con pagos; admin/recepcion1 pueden ensayar apertura.
 
 ## Pagos y saldos
 
@@ -51,7 +53,7 @@ El listado es paginado, filtra por estado y permite ver detalle. Administrador c
 
 Para registrar un abono se necesita caja propia abierta. El formulario convierte quetzales a centavos, permite elegir Efectivo/Transferencia/Tarjeta y valida monto positivo sin superar saldo. Tras persistir confirma el comprobante y refresca saldo/historial; al completar el costo desaparece el formulario. Ante rechazo conserva valores y refresca el saldo por si otra sesion ya registro un abono. Una cita cancelada no ofrece registro de pagos. Los enlaces permiten elegir cita o abrir caja cuando hace falta.
 
-El profesional carece de menu, ruta y API financiera. Movimientos, cierre y totales de caja siguen pendientes. La API impide cancelar una cita con pagos validos. El comprobante es de control interno; no se genera factura fiscal.
+El profesional carece de menu, ruta y API financiera. Los movimientos, cierre y totales se consultan en Caja diaria. La API impide cancelar una cita con pagos validos. El comprobante es de control interno; no se genera factura fiscal.
 
 Al abrir un comprobante se consulta `GET /pagos/:id`; al reabrirlo se espera la respuesta actual antes de ofrecer acciones, sin usar permisos viejos del cache. Si la API permite anular, aparece un formulario con motivo obligatorio y confirmacion explicita. Tras persistir, muestra motivo, fecha y responsable de la anulacion y refresca historial/saldo. Administrador puede anular en cualquier caja abierta; recepcionista solo en la propia. Pago anulado o caja cerrada/ajena no ofrece el boton. La operacion conserva el comprobante y no procesa devoluciones automaticas.
 

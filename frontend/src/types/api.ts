@@ -241,9 +241,12 @@ export interface AsignacionMaterial {
   id: string; material: Material; asignadoPor: { id: string; nombre: string }; createdAt: string;
 }
 export interface Caja {
+  cierre?: string; cerradoPor?: { id: string; nombre: string }; efectivoContadoCentavos?: number; diferenciaCentavos?: number; totalesCierre?: TotalesCaja;
   id: string; usuario: { id: string; nombre: string }; apertura: string;
   montoInicialCentavos: number; estado: "ABIERTA" | "CERRADA";
 }
+export interface TotalesCaja { totalEfectivoCentavos: number; totalTransferenciaCentavos: number; totalTarjetaCentavos: number; totalIngresosCentavos: number; efectivoEsperadoCentavos: number }
+export interface CajaDetalle extends Caja { resumen: TotalesCaja; puedeCerrar: boolean }
 export type MetodoPago = "EFECTIVO" | "TRANSFERENCIA" | "TARJETA";
 export interface Pago {
   motivoAnulacion?: string; anuladoPor?: { id: string; nombre: string }; fechaAnulacion?: string;
