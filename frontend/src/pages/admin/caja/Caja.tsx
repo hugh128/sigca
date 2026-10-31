@@ -1,36 +1,28 @@
 import { useState } from "react";
-import { useCaja, useCajaActual, useCajas } from "@/api/cajas";
+import { useCajaActual, useCajas } from "@/api/cajas";
 import { EncabezadoPagina } from "@/components/admin/EncabezadoPagina";
 import { claseControl } from "@/components/forms/TextField";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Cargando, ErrorCarga, Vacio } from "@/components/ui/Estados";
-import { Modal } from "@/components/ui/Modal";
 import { Paginacion } from "@/components/ui/Paginacion";
 import { formatearFechaHora, formatearQuetzales } from "@/lib/format";
 import { useDocumentTitle } from "@/lib/useDocumentTitle";
 import { useAuthStore } from "@/store/auth";
-import type { Caja as CajaDatos } from "@/types/api";
 import { FormularioApertura } from "./FormularioApertura";
-function DatosCaja({ caja }: { caja: CajaDatos }) {
-  return <dl className="mt-4 grid gap-4 text-sm sm:grid-cols-2">
-    <div><dt className="text-ink-soft">Responsable</dt><dd className="break-words font-medium">{caja.usuario.nombre}</dd></div>
-    <div><dt className="text-ink-soft">Apertura</dt><dd>{formatearFechaHora(caja.apertura)}</dd></div>
-    <div><dt className="text-ink-soft">Monto inicial de efectivo</dt><dd className="text-xl font-semibold">{formatearQuetzales(caja.montoInicialCentavos)}</dd></div>
-    <div><dt className="text-ink-soft">Estado</dt><dd><Badge tono={caja.estado === "ABIERTA" ? "ok" : "neutro"}>{caja.estado === "ABIERTA" ? "Abierta" : "Cerrada"}</Badge></dd></div>
-  </dl>;
-}
+import { DatosCaja, ResumenCaja } from "./DatosCaja";
+import { DetalleCaja } from "./DetalleCaja";
 export default function Caja() {
   useDocumentTitle("Caja diaria", "SIGCA");
   const usuario = useAuthStore(s => s.usuario); const admin = usuario?.rol === "ADMINISTRADOR";
   const actual = useCajaActual(); const [page, setPage] = useState(1); const [estado, setEstado] = useState(""); const [propias, setPropias] = useState(false);
   const lista = useCajas(page, estado, admin && propias ? usuario?.id : undefined);
-  const [id, setId] = useState<string>(); const detalle = useCaja(id);
+  const [id, setId] = useState<string>();
   return <div className="mx-auto max-w-5xl">
-    <EncabezadoPagina titulo="Caja diaria" descripcion="Abre tu caja con el efectivo inicial y consulta sus datos de apertura." />
+    <EncabezadoPagina titulo="Caja diaria" descripcion="Consulta ingresos, revisa movimientos y realiza el cierre de tu caja." />
     {actual.isPending && <Cargando texto="Consultando tu caja…" />}
     {actual.isError && <ErrorCarga error={actual.error} onReintentar={() => actual.refetch()} />}
-    {actual.data && <section className="mt-5 rounded-xl border border-marea-100 bg-white p-5"><h2 className="text-xl font-semibold">Mi caja abierta</h2><DatosCaja caja={actual.data} /></section>}
+    {actual.data && <section className="mt-5 rounded-xl border border-marea-100 bg-white p-5"><h2 className="text-xl font-semibold">Mi caja abierta</h2><DatosCaja caja={actual.data} />{actual.data.resumen && <ResumenCaja resumen={actual.data.resumen} />}<Button className="mt-5" onClick={() => setId(actual.data!.id)}>Movimientos y cierre</Button></section>}
     {actual.isSuccess && actual.data === null && <FormularioApertura />}
     <section className="mt-8" aria-labelledby="listado-cajas">
       <h2 id="listado-cajas" className="text-xl font-semibold">{admin ? "Todas las cajas" : "Mis cajas"}</h2>
@@ -49,8 +41,6 @@ export default function Caja() {
         </ul><Paginacion {...lista.data} etiqueta="cajas" onCambiar={setPage} />
       </>}
     </section>
-    <Modal abierto={Boolean(id)} onCerrar={() => setId(undefined)} titulo="Detalle de caja">
-      {detalle.isPending && <Cargando />}{detalle.isError && <ErrorCarga error={detalle.error} onReintentar={() => detalle.refetch()} />}{detalle.data && <DatosCaja caja={detalle.data} />}
-    </Modal>
+    {id && <DetalleCaja id={id} onCerrar={() => setId(undefined)} />}
   </div>;
 }

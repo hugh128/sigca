@@ -13,6 +13,7 @@ import { AsignacionMaterial } from "../models/AsignacionMaterial";
 import { Caja } from "../models/Caja";
 import { Pago } from "../models/Pago";
 import { Contador } from "../models/Contador";
+import { cerrar as cerrarCaja } from "../services/caja.service";
 import { Usuario, type Rol } from "../models/Usuario";
 import { esquemasContenido } from "../schemas/contenido.schema";
 import { CONTENIDO_POR_DEFECTO } from "../services/contenido.defaults";
@@ -233,19 +234,26 @@ async function main() {
   // Deja admin y recepcion1 sin caja para ensayar la apertura desde la interfaz.
   await Caja.init();
   const cajaDemo = await Caja.create({ usuario: usuariosCreados.find(u => u.email === "recepcion2@sigca.test")!._id, montoInicialCentavos: 20000 });
+  const cajasHistoricas = await Caja.insertMany([
+    { usuario: usuariosCreados.find(u => u.rol === "ADMINISTRADOR")!._id, montoInicialCentavos: 20000, apertura: new Date(Date.now() - 2 * 86400000) },
+    { usuario: recepcion._id, montoInicialCentavos: 15000, apertura: new Date(Date.now() - 86400000) },
+  ]);
   await Pago.init();
   const pagosDemo = citasCreadas.filter(c => c.estado === "COMPLETADA").slice(0, 5).flatMap((c, i) => {
     const abono = Math.floor(c.precioCentavos / 4);
+    const cajaPago = i < 2 ? cajasHistoricas[i]! : cajaDemo;
     return [abono, i % 2 ? c.precioCentavos - abono : abono].map((montoCentavos, j) => ({
       comprobante: `COMP-${hoyGuatemala().slice(0, 4)}-${String(i * 2 + j + 1).padStart(6, "0")}`,
-      paciente: c.paciente, cita: c._id, caja: cajaDemo._id, montoCentavos,
-      metodo: (["EFECTIVO", "TRANSFERENCIA", "TARJETA"] as const)[(i + j) % 3]!, registradoPor: cajaDemo.usuario,
+      paciente: c.paciente, cita: c._id, caja: cajaPago._id, montoCentavos,
+      metodo: (["EFECTIVO", "TRANSFERENCIA", "TARJETA"] as const)[(i + j) % 3]!, registradoPor: cajaPago.usuario,
       fecha: new Date(),
-      ...(i === 0 && j === 0 ? { estado: "ANULADO" as const, motivoAnulacion: "Registro duplicado de demostración", anuladoPor: cajaDemo.usuario, fechaAnulacion: new Date() } : {}),
+      ...(i === 0 && j === 0 ? { estado: "ANULADO" as const, motivoAnulacion: "Registro duplicado de demostración", anuladoPor: cajaPago.usuario, fechaAnulacion: new Date() } : {}),
     }));
   });
   await Pago.insertMany(pagosDemo);
   await Contador.create({ _id: "pagos", valor: pagosDemo.length });
+  await cerrarCaja(cajasHistoricas[0]!.id, 19000, { id: String(cajasHistoricas[0]!.usuario), rol: "ADMINISTRADOR" });
+  await cerrarCaja(cajasHistoricas[1]!.id, 15000, { id: String(cajasHistoricas[1]!.usuario), rol: "RECEPCIONISTA" });
   const materiales = await Material.insertMany([
     { titulo: "Reconocer emociones", descripcion: "Actividad ficticia para identificar y nombrar emociones.", tipo: "Actividad", enlace: "https://example.com/recursos/emociones" },
     { titulo: "Rutinas de escucha", descripcion: "Guía ficticia de apoyo a la estimulación auditiva.", tipo: "Documento", enlace: "https://example.com/recursos/escucha" },

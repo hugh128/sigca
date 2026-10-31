@@ -106,12 +106,13 @@ Detallar contratos e incrementos antes de implementar, con los criterios siguien
 ### 13. Anulacion y cierre
 - [x] Anular con motivo, fecha y usuario solo en caja abierta; impedir cancelar cita con pagos validos.
 - Verificacion de anulaciones: 268 pruebas frontend, 43 backend, 389 comprobaciones HTTP, 2 contratos, builds y navegador (auditoria, saldo recalculado y movil). Incluye cache al reabrir, propiedad/caja cerrada, repeticion, carreras y rollback. Seed con una anulacion auditada. Pendiente OK para publicar.
-- [ ] Cierre calcula totales/efectivo/diferencia, conserva detalle y bloquea pagos, anulaciones y cambios posteriores.
+- [x] Cierre calcula totales/efectivo/diferencia, conserva detalle y bloquea pagos, anulaciones y cambios posteriores.
+- Verificacion de cierre: 271 pruebas frontend, 49 backend, 396 comprobaciones HTTP, 2 contratos y builds. Navegador: cierre con esperado Q312.50/contado Q302.50, faltante Q10.00 y auditoria; historial inmutable y vista movil sin errores. Carreras y rollback probados en bases temporales. Publicacion autorizada por el usuario.
 - Verificacion: RN-19 a RN-29, carreras pago/cierre y anulacion/cierre; demostracion completa.
 - Dependencias: 12. Descomponer antes de implementar: anulacion; integracion con cancelacion; calculo/cierre; API; interfaz/historial.
 
 ### 14. Entrega final
-- [ ] Completar seed minimo: 10 pagos, 3 cajas abiertas/cerradas, abonos, anulaciones y saldos; conservar minimos operativos.
+- [x] Completar seed minimo: 10 pagos, 3 cajas abiertas/cerradas, abonos, anulaciones y saldos; conservar minimos operativos. Minimos y auditoria verificados en el helper de integracion.
 - [ ] Postman, capturas, README con autor/responsabilidades y ejecucion local reproducible.
 - [ ] Ensayar seccion 16 del TXT y defensa individual; verificar instalacion desde checkout limpio.
 - Dependencias: 13. Incrementos de datos, documentacion/coleccion y evidencias, independientes del codigo funcional.

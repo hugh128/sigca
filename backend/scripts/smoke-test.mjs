@@ -600,15 +600,16 @@ r = await req("GET", `/materiales/pacientes/${datosConversion.pacienteId}`, { to
 // --- apertura de caja y propiedad
 r = await req("GET", "/cajas/actual"); ok(r.s === 401, "cajas: requiere sesion");
 r = await req("GET", "/cajas", { token: prof }); ok(r.s === 403, "cajas: profesional sin acceso");
-r = await req("GET", "/cajas", { token: admin }); ok(r.s === 200 && r.j.total === 1, "cajas: seed deja una caja de demostracion");
+r = await req("GET", "/cajas", { token: admin }); ok(r.s === 200 && r.j.total === 3, "cajas: seed deja tres cajas, abiertas y cerradas");
 const cajaAjena = r.j.items[0];
 r = await req("GET", `/cajas/${cajaAjena.id}`, { token: recep }); ok(r.s === 404, "cajas: recepcion no consulta caja ajena");
 r = await req("GET", "/cajas/actual", { token: recep }); ok(r.s === 200 && r.j === null, "cajas: recepcion1 aun sin caja");
 r = await req("POST", "/cajas/abrir", { token: recep, body: { montoInicialCentavos: -1 } }); ok(r.s === 400, "cajas: monto negativo rechazado");
 r = await req("POST", "/cajas/abrir", { token: recep, body: { montoInicialCentavos: 1999 } }); ok(r.s === 201 && r.j.montoInicialCentavos === 1999 && r.j.estado === "ABIERTA", "cajas: apertura con centavos exactos");
 r = await req("POST", "/cajas/abrir", { token: recep, body: { montoInicialCentavos: 0 } }); ok(r.s === 409, "cajas: segunda apertura rechazada");
-r = await req("GET", "/cajas", { token: recep }); ok(r.s === 200 && r.j.total === 1 && r.j.items[0].id !== cajaAjena.id, "cajas: recepcion lista solo propia");
-r = await req("GET", "/cajas", { token: admin }); ok(r.s === 200 && r.j.total === 2, "cajas: administrador lista todas");
+r = await req("GET", "/cajas", { token: recep }); ok(r.s === 200 && r.j.total === 2 && r.j.items.every(c => c.id !== cajaAjena.id), "cajas: recepcion lista solo propias, incluida historica");
+const cajaPropia = r.j.items.find(c => c.estado === "ABIERTA");
+r = await req("GET", "/cajas", { token: admin }); ok(r.s === 200 && r.j.total === 4, "cajas: administrador lista todas");
 r = await req("GET", "/cajas/actual", { token: admin }); ok(r.s === 200 && r.j === null, "cajas: caja actual del admin es solo la propia");
 
 // --- pagos: saldo derivado, comprobante y caja propia
@@ -636,6 +637,13 @@ r = await req("PATCH", `/pagos/${pagosAnular[0].id}/anular`, { token: recep, bod
 r = await req("PATCH", `/pagos/${pagosAnular[1].id}/anular`, { token: recep, body: { motivo: "Error de registro de prueba" } }); ok(r.s === 200, "anulacion: segundo pago anulado");
 r = await req("GET", `/pagos/citas/${citaSolicitud}/resumen`, { token: recep }); ok(r.j.estadoFinanciero === "PENDIENTE" && r.j.totalPagadoCentavos === 0, "anulacion: todos anulados no suman al saldo");
 r = await req("PATCH", `/citas/${citaSolicitud}/estado`, { token: recep, body: { estado: "CANCELADA" } }); ok(r.s === 200, "anulacion: cancelacion permitida tras anular todos");
+r = await req("GET", `/cajas/${cajaPropia.id}`, { token: recep }); ok(r.s === 200 && r.j.resumen.totalIngresosCentavos === 0 && r.j.resumen.efectivoEsperadoCentavos === 1999, "cierre: anulados no cuentan en ingresos");
+r = await req("GET", `/cajas/${cajaPropia.id}/movimientos`, { token: recep }); ok(r.s === 200 && r.j.total === 2 && r.j.items.every(p => p.estado === "ANULADO"), "cierre: conserva movimientos anulados");
+r = await req("POST", `/cajas/${cajaPropia.id}/cerrar`, { token: recep, body: { efectivoContadoCentavos: 1998 } }); ok(r.s === 200 && r.j.estado === "CERRADA" && r.j.diferenciaCentavos === -1 && r.j.cerradoPor.nombre, "cierre: guarda diferencia y auditoria exactas");
+r = await req("POST", `/cajas/${cajaPropia.id}/cerrar`, { token: recep, body: { efectivoContadoCentavos: 1998 } }); ok(r.s === 409, "cierre: repeticion rechazada");
+r = await req("GET", "/cajas/actual", { token: recep }); ok(r.s === 200 && r.j === null, "cierre: libera caja actual");
+r = await req("POST", "/cajas/abrir", { token: recep, body: { montoInicialCentavos: 0 } }); ok(r.s === 201, "cierre: permite nueva caja sin reabrir la anterior");
+r = await req("GET", `/cajas/${cajaPropia.id}`, { token: recep }); ok(r.s === 200 && r.j.resumen.totalIngresosCentavos === 0 && r.j.diferenciaCentavos === -1, "cierre: historial y snapshot permanecen");
 
 // --- rate limit login
 let got429 = false;
