@@ -37,7 +37,7 @@ Resultado en la copia limpia, aplicando únicamente la corrección de los dos sc
 
 ## Guion de evaluación de la sección 16
 
-Preparar datos ficticios, una fecha futura dentro del horario y un profesional activo. Guardar los identificadores de paciente, servicio, cita, pagos y caja. Este guion describe el ensayo manual pendiente; la evidencia automatizada es complementaria y no acredita haber ejecutado toda la presentación en navegador o Postman.
+Preparar datos ficticios, una fecha futura dentro del horario y un profesional activo. Guardar los identificadores de paciente, servicio, cita, pagos y caja. El ensayo realizado y las capturas están en [evidencias](evidencias/README.md). Se distingue lo ejecutado en navegador de las comprobaciones adicionales por API y MongoDB.
 
 | Paso solicitado | Acción y resultado esperado |
 | --- | --- |
@@ -80,4 +80,8 @@ Las cajas preexistentes o cobros adicionales cambian los totales: comprobar movi
 
 Las capturas finales deben mostrar portal, administración, pacientes, calendario, pagos y caja, con datos ficticios y sin tokens ni archivos `.env`. Preparar también un ZIP de código sin `node_modules`, `.env`, `.local`, subidas de prueba ni archivos internos de Git, junto con el enlace al repositorio.
 
-Pendiente: ensayo completo de este guion en la interfaz/Postman, capturas finales y preparación del ZIP para Canvas. La entrega en Canvas corresponde al autor. Este documento no afirma que se haya realizado ese envío.
+Ensayo de interfaz y capturas completados; restricciones contrastadas por API y registros revisados directamente en MongoDB. Ver [evidencias](evidencias/README.md). La ejecución desde Postman/Compass y la defensa oral pueden repetirse con el guion; no se afirma haber operado esas aplicaciones.
+
+Desde la raíz, ejecutar `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/preparar-entrega.ps1` para generar un ZIP y su SHA256 en `.local/entrega/`. Incluye código, locks, ejemplos de entorno, documentación y capturas; rechaza archivos locales o secretos por nombre. Incluye los cambios de la rama, por lo que se debe regenerar después del commit/merge definitivo. Revisar que no se hayan añadido credenciales reales antes de empaquetar.
+
+Pendiente del autor: aprobar la entrega, regenerar el ZIP de la revisión definitiva, practicar la explicación del código y subir el ZIP y el enlace GitHub a Canvas. No se ha realizado ese envío.
