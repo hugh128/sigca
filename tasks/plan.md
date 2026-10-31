@@ -1,0 +1,66 @@
+# Continuacion de SIGCA
+
+Fecha: 2026-10-31. Base revisada: `adcb498` (PR #1 integrado).
+
+## Estado verificado
+
+- Implementados: autenticacion y roles, usuarios y profesionales, servicios, contenido institucional, horarios, almacenamiento local/R2, pacientes, responsables, citas, disponibilidad y calendario.
+- Pendientes: formulario de contacto y consulta de mensajes, solicitudes de cita y conversion, materiales y asignaciones, pagos, caja y entregables finales.
+- El portal muestra informacion de contacto en el pie; esto no sustituye el formulario con persistencia requerido por RF-01.
+- Recepcion consulta los horarios publicos, pero no tiene una vista administrativa de consulta. Revisar ese acceso al cerrar el avance 2.
+- MongoDB original en 27017 se conserva. Instancia de SIGCA en 27018 con replica set local `sigca-rs`, respaldo y copia verificada de documentos e indices. Comandos y conexion documentados en backend/README.md.
+- Ultima validacion de codigo: 229 pruebas frontend, 6 regresiones MongoDB, 325 comprobaciones HTTP, 2 contratos, builds y verificacion en navegador. No se han repetido en esta sesion de planificacion porque no cambio el codigo.
+
+## Orden propuesto
+
+1. Contacto: envio publico, persistencia y bandeja exclusiva del administrador. Entrega pequena que completa una omision del portal.
+2. MongoDB para transacciones: replica set local autorizado y configurado; pruebas de commit, rollback y concurrencia aprobadas. Mantener ejecucion local documentada.
+3. Solicitudes: envio publico sin reservar horarios, revision por administracion/recepcion, rechazo y conversion a cita existente en el calendario.
+4. Materiales: catalogo administrativo, enlaces, asignaciones y consulta por paciente/profesional.
+5. Revision de cierre del avance 2: permisos, seed, portal, reglas y recorrido de demostracion.
+6. Finanzas: apertura de caja; registro de pagos y abonos; saldos y comprobantes; anulacion; cierre e historial.
+7. Entrega: Postman, capturas, README y ensayo del procedimiento de evaluacion.
+
+Cada modulo incluye API, interfaz y pruebas. Los pasos internos estan en `todo.md`; un paso de API no constituye por si solo una entrega funcional completa.
+
+## Decisiones de arquitectura
+
+- Mantener React, TypeScript, TanStack Form/Query, Zustand, Zod, Express y Mongoose.
+- Reutilizar validadores, formularios, paginacion, buscadores, manejo de errores y servicios existentes.
+- Los mensajes y solicitudes publicos usan `limiteFormularioPublico`; nunca exponen listados ni datos privados al visitante.
+- Una solicitud no reserva ni garantiza una fecha. Al convertir se aplican las mismas reglas del servicio de citas, conservando la referencia entre solicitud y cita.
+- La conversion debe ser consistente e impedir conversiones duplicadas bajo concurrencia. Probar fallos intermedios; no basta con ocultar el boton en la interfaz. Definir contrato transaccional antes de implementar.
+- Materiales y publicaciones institucionales son conceptos distintos: las publicaciones actuales no sustituyen el catalogo asignable de RF-09.
+- Para materiales comenzar con enlaces: los archivos fisicos no son obligatorios. Ampliar R2 a PDF solo si se acuerda; el endpoint actual procesa imagenes.
+- Finanzas en centavos enteros; estados financieros derivados de pagos validos. Una caja abierta por usuario mediante indice unico parcial. Comprobantes unicos, operaciones atomicas y auditoria.
+- No agregar dependencias ni actualizar versiones sin una necesidad concreta.
+
+## Verificacion por entrega
+
+- Pruebas nuevas que reproduzcan los casos relevantes antes de la implementacion.
+- `npm test` y `npm run build` en ambos proyectos.
+- `npm run test:e2e` en backend cuando cambien contratos o integracion; ampliar el verificador por modulo.
+- Datos ficticios en bases de prueba independientes, con limpieza al terminar.
+- Navegador real: envio, errores, permisos, adaptacion a pantalla pequena y consola/red.
+- Revisar diff y credenciales antes de publicar.
+
+## Flujo de Git
+
+- Main local actualizado al PR #1. Plan aprobado; configuracion del replica set preparada en `chore/mongodb-replica-set`, pendiente de OK para publicar.
+- Las implementaciones salen del main actualizado en ramas propias. No mezclar contacto, solicitudes, materiales y finanzas en un unico PR.
+- Commit, push y PR requieren el OK del usuario para cada entrega. El usuario aprueba y fusiona.
+- El usuario aprobo el plan y autorizo configurar el replica set. Los modulos se desarrollan por entrega; publicar cambios requiere su OK.
+
+## Riesgos y decisiones pendientes
+
+| Tema | Tratamiento |
+| --- | --- |
+| Disponibilidad de MongoDB local | Ejecutar `npm run db:start` antes de la API; replica set local configurado con pruebas de rollback y concurrencia. |
+| Agenda bajo concurrencia | El bloqueo existente solo protege una instancia. Integrar transacciones sin asumir que por si solas impiden traslapes; definir una escritura compartida o serializacion y probar conflictos. |
+| Permisos sobre asignaciones | Profesional opera sobre pacientes propios; backend valida propiedad, paciente activo y material activo. Administrador tiene control completo. |
+| Datos personales | Solo datos ficticios en seed y pruebas; no publicar mensajes ni solicitudes en endpoints de lectura publicos. |
+| Amplitud de finanzas | Separar apertura, pagos, anulacion y cierre, manteniendo invariantes entre modulos. |
+
+## Siguiente entrega recomendada
+
+Contacto completo: `/contacto`, `POST /api/contacto`, `GET /api/contacto` protegido, bandeja `/admin/mensajes`, pruebas y documentacion. No incluye envio de correo electronico: el requisito pide guardar el mensaje en MongoDB.
