@@ -3,8 +3,6 @@
 API REST del **Sistema Integral de Gestion de Citas y Atencion (SIGCA)**.
 Node.js + Express 5 + TypeScript + MongoDB (Mongoose).
 
-> Estado: portal y operación del avance 2 revisados; finanzas implementadas con apertura, pagos/abonos, anulaciones y cierre de caja. Pendientes revisión final y entregables de presentación.
-
 ## Apertura y consulta de caja
 
 RF-11: apertura, consulta, movimientos y cierre, con una caja abierta por usuario (RN-22) y montos en centavos (RN-28). No hay endpoints de edicion, reapertura ni borrado de cajas.
