@@ -4,14 +4,14 @@ Proyecto final del curso de Desarrollo Web.
 
 Autor: **Hugo Ordoñez**. Carné: **2690-23-10929**.
 
-Proyecto individual autorizado por el catedrático. Responsabilidades del autor: backend y API REST, modelos y base de datos, frontend e integración, pruebas, documentación y presentación. El cambio de Vue a React y la elección de las bibliotecas complementarias fueron autorizados por el catedrático, según confirmación del autor.
+Proyecto individual autorizado por el catedrático. Responsabilidades del autor: backend y API REST, modelos y base de datos, frontend e integración, pruebas, documentación y presentación. El cambio de Vue a React y la elección de las bibliotecas complementarias fueron autorizados por el catedrático.
 
 Tecnologías: React, TypeScript, Vite, React Router, Zustand, TanStack Query/Form, Tailwind CSS, Zod, Express, Mongoose y MongoDB. Autenticación JWT; imágenes en almacenamiento local o Cloudflare R2.
 
 Requisitos: **Node.js 22.22 o superior** y MongoDB Server con replica set. Instalación verificada con Node.js 24.17.0 y npm 11.13.0. Compass es opcional y no sustituye al servidor MongoDB.
 
 | Carpeta | Contenido | Documentación |
-|---|---|---|
+| --- | --- | --- |
 | `backend/` | API REST: Node.js, Express, TypeScript, MongoDB (Mongoose) | `backend/README.md` |
 | `frontend/` | Portal y sistema administrativo: React, TypeScript, Tailwind | `frontend/README.md` |
 
@@ -39,7 +39,7 @@ La [verificación de entrega final](docs/entrega-final.md) registra la instalaci
 
 Las imágenes se guardan en la carpeta `backend/uploads/` por defecto. Para usar Cloudflare R2 (solo se guarda la URL en la base de datos) sigue la sección «Cloudflare R2» de `backend/README.md`.
 
-Ingreso al sistema: http://localhost:5173/admin — usuario `admin@sigca.test`, contraseña `Sigca2026!`
+Ingreso al sistema: <http://localhost:5173/admin> — usuario `admin@sigca.test`, contraseña `Sigca2026!`
 (todos los usuarios de prueba usan la misma contraseña; ver `backend/README.md`).
 
 ## Coleccion de API
@@ -48,4 +48,4 @@ Importar la [coleccion Postman](postman/SIGCA.postman_collection.json) y el [ent
 
 ## Evidencias y ZIP de entrega
 
-Ver las [capturas y resultados del ensayo](docs/evidencias/README.md). Para generar un ZIP de codigo y evidencias con SHA256, ejecutar desde la raiz `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/preparar-entrega.ps1`. El resultado queda en `.local/entrega/`, fuera de Git. Regenerarlo tras aprobar y fusionar la version definitiva; el envio a Canvas lo realiza el autor.
+Ver las [capturas y resultados del ensayo](docs/evidencias/README.md). Para generar un ZIP de codigo y evidencias con SHA256, ejecutar desde la raiz `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/preparar-entrega.ps1`. El resultado queda en `.local/entrega/`, fuera de Git.
