@@ -3,8 +3,6 @@
 Portal público y sistema administrativo del **Sistema Integral de Gestión de Citas y Atención (SIGCA)**.
 React 19 + TypeScript + Vite + Tailwind CSS 4.
 
-> Estado: portal y módulos administrativos implementados, incluidos pacientes, responsables, solicitudes, citas, calendario, materiales, pagos y caja. Las imágenes se suben al backend (Cloudflare R2 o carpeta local). La verificación y los pendientes de entrega están en [entrega-final.md](../docs/entrega-final.md).
-
 ## Requisitos
 
 - Node.js 22.22 o superior (verificado con 24.17.0).
